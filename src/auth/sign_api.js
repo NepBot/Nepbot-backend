@@ -4,13 +4,14 @@ const path = require("path");
 const homedir = require("os").homedir();
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
+const {config} = require("../utils/config");
 
 exports.getSign =  async (args)=> {
     // let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore("/home/bhc/.near-credentials");
     let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
     console.log(keyStore)
-    let account_id = "lzs.testnet"
-    const keyPair = await keyStore.getKey("testnet", account_id);
+    let account_id = config.ACCOUNT_ID
+    const keyPair = await keyStore.getKey(config.nearWallet.networkId, account_id);
     console.log("keyPair>>>>",keyPair)
     console.log(args)
     if(args[0].hasOwnProperty('signType')){

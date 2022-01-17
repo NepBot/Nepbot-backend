@@ -5,8 +5,7 @@ const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 let guild = '';
 exports.config = {
-    GUILD: "910881617491423242",
-    CLIENT_ID: '928559137179172874',
+    ACCOUNT_ID: 'nepbot.testnet',
     // CLIENT_ID: '912261381208801280',
     
     // TOKEN: 'OTEwNDI4OTM2Nzc1ODIzMzkx.YZStBQ.1FSI9OOVONY4LGe7Ob9GYSEMjms',
