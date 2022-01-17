@@ -29,8 +29,8 @@ app.use(allowCrossDomain);
 app.post('/api/set-info', async (req, res) => {
     // console.log(req.body)
     const params = Object.assign(req.body);
-    console.log(params)
-    console.log(encodeURIComponent(params.account_id))
+    //console.log(params)
+    //console.log(encodeURIComponent(params.account_id))
     try{
         await userService.addUser({
             user_id: params.user_id,
@@ -122,7 +122,7 @@ app.get('/api/getMemberList/:guildId', async (req, res) => {
 })
 
 app.get('/api/getRole/:guildId', async (req, res) => {
-    console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
+    //console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
     const roles = client.guilds.cache.get(req.params.guildId).roles.cache;
     res.json(roles);
 })
@@ -151,7 +151,7 @@ app.post('/api/role/add', async (req, res) => {
 })
 app.get('/api/role/list/:guildId', async (req, res) => {
     const data = req.query;
-    console.log(data)
+    //console.log(data)
     const rule = await queryRule({guild_id: req.params.guildId, ...data});
 
     res.json(rule)
@@ -164,7 +164,7 @@ app.put('/api/role/edit', async (req, res) => {
 })
 app.delete('/api/role/del', async (req, res) => {
     const data = req.body;
-    console.log(data)
+    //console.log(data)
     const rule = await deleteRule(data.id);
 
     res.json(rule)
@@ -195,10 +195,10 @@ app.get('/oauth',async (req,res,next)=>{
             'authorize':`Bot ${secret.TOKEN}`
         }
     }).then(resp=>{
-        console.log(resp)
+        //console.log(resp)
         res.sendFile('/index.html',options)
     }).catch((err)=>{
-        console.log(err)
+        //console.log(err)
         res.sendFile('/fail.html',options)
     })
 })

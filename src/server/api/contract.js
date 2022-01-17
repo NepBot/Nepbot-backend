@@ -31,7 +31,7 @@ exports.getMemberTokenAmount = async (token_id, user_id, walletId, time) => {
      *
      * */
     let result = {};
-    console.log(time, token_id)
+    //console.log(time, token_id)
     // 
     const expenditure = await queryExpenses(token_id, walletId, time);
     // 
