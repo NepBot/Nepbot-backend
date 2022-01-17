@@ -30,6 +30,6 @@ exports.config = {
             keyStore: new keyStores.UnencryptedFileSystemKeyStore(credentialsPath),
         },
     },
-    walletAuthUrl:'http://127.0.0.1:3000'
+    walletAuthUrl:'http://13.251.124.186/'
     // walletAuthUrl:'http://47.241.253.161'
 }
