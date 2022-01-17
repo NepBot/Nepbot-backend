@@ -4,6 +4,7 @@ const userService = require('./services/userService');
 const app = express();
 const port = 5000;
 const {config} = require('../utils/config');
+const {secret} = require('../utils/secret');
 const {rest} = require('../commands/index')
 const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
@@ -181,7 +182,7 @@ app.get('/oauth',async (req,res,next)=>{
         }
     }
     const service = axios.create({
-        baseURL:"https://discord.com/api/v9/applications/919973774286290974/guilds"
+        baseURL:`https://discord.com/api/v9/applications/${config.APPLICATION_ID}/guilds`
     })
     service.interceptors.response.use((response)=>{
         return response.data;
@@ -191,7 +192,7 @@ app.get('/oauth',async (req,res,next)=>{
     service.put(`/${req.query.guild_id}/commands`,{
         data:commands,
         headers:{
-            'authorize':'Bot OTE5OTczNzc0Mjg2MjkwOTc0.YbdmWA.FnyJkR3RNDtXl03rZk-uFdvI4_M'
+            'authorize':`Bot ${secret.TOKEN}`
         }
     }).then(resp=>{
         console.log(resp)
