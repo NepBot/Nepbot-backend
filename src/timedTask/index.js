@@ -19,8 +19,8 @@ const {client} = require("../Bot");
 exports.timestamp = String(Date.now()) + "000000"
 
 exports.timedTask = async () => {
-    let tokenList = await getTokenList()
-    let actions = await queryActions(tokenList, this.timestamp)
+    let allTokenList = await getTokenList()
+    let actions = await queryActions(allTokenList, this.timestamp)
     let accountIdList = []
     let tokenList = []
     for (action in actions) {
