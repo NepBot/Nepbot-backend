@@ -23,7 +23,7 @@ exports.config = {
     nearWallet: {
         nodeUrl: "https://rpc.testnet.near.org",
         networkId: "testnet",
-        keyStore: new keyStores.UnencryptedFileSystemKeyStore(credentialsPath + "testnet/nepbot.testnet.json"),
+        keyStore: new keyStores.UnencryptedFileSystemKeyStore(credentialsPath),
     },
     walletAuthUrl:'http://13.251.124.186'
     // walletAuthUrl:'http://47.241.253.161'
