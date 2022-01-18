@@ -31,10 +31,10 @@ exports.timedTask = async () => {
 
     let userTokens = await getUserTokenList({
         near_wallet_id: {
-            $in: accountIdList
+            $or: accountIdList
         },
         token_id: {
-            $in: tokenList
+            $or: tokenList
         }
     })
 
@@ -53,7 +53,7 @@ exports.timedTask = async () => {
         })
         let users = await getAllUser({
             guild_id: {
-                $in: guild_ids
+                $or: guild_ids
             },
             near_wallet_id: userToken.near_wallet_id,
         })
