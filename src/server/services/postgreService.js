@@ -8,10 +8,10 @@ exports.queryActions  = async (tokenIds, time)=>{
     let res = await pool.query(`
 
     SELECT
-        receipt_predecessor_account_id sender_id,
-        args -> 'args_json' ->> 'receiver_id' receiver_id,
-        receipt_receiver_account_id token_id,
-        receipt_included_in_block_timestamp timestamp
+        receipt_predecessor_account_id as sender_id,
+        args -> 'args_json' ->> 'receiver_id' as receiver_id,
+        receipt_receiver_account_id as token_id,
+        receipt_included_in_block_timestamp as timestamp
     FROM
         action_receipt_actions 
     WHERE
