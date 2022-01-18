@@ -79,11 +79,11 @@ app.post('/api/set-info', async (req, res) => {
                 let delRole = [];
                 for (const {amount, role_id} of _rules) {
                     if (!member._roles.includes(role_id) && tokenAmount >= amount) {
-                        const _role = getRoles(guild_id, role_id);
+                        const _role = getRoles(params.guild_id, role_id);
                         _role && role.push(_role)
                     }
                     if(member._roles.includes(role_id) &&  tokenAmount < amount){
-                        const _role = getRoles(guild_id, role_id);
+                        const _role = getRoles(params.guild_id, role_id);
                         _role && delRole.push(_role)
                     }
                 }
