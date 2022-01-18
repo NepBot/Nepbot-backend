@@ -61,6 +61,7 @@ app.post('/api/set-info', async (req, res) => {
         for (const tokenId of tokenList) {
             //，，
             const tokenAmount = await account.viewFunction(tokenId, "ft_balance_of", {account_id: params.account_id})
+            console.log("tokenAmount>>>", tokenAmount)
             const userToken = await addUserToken({
                 near_wallet_id: params.account_id,
                 token_id: tokenId,
@@ -74,30 +75,24 @@ app.post('/api/set-info', async (req, res) => {
             console.log("userTokenList>>>", userToken)
             if (userToken) {
                 console.log("rules>>>", _rules);
-                let role = []
-                for (const {amount, role_id} of _rules) {
-                    if ((!member._roles.includes(role_id)) && +userToken.amount >= +amount) {
-                        const _role = getRoles(params.guild_id, role_id);
-                       _role &&  role.push(_role);
+                let role = [];
+                let delRole = [];
+                for (const {amount, role_id} of guildRoles) {
+                    if (!member._roles.includes(role_id) && tokenAmount >= amount) {
+                        const _role = getRoles(guild_id, role_id);
+                        _role && role.push(_role)
+                    }
+                    if(member._roles.includes(role_id) &&  tokenAmount < amount){
+                        const _role = getRoles(guild_id, role_id);
+                        _role && delRole.push(_role)
                     }
                 }
-                member.roles.add(role).then((resp) => {
-                    resData.push({
-                        msg: "success",
-                        success: true,
-                    })
-                    console.group()
-                    console.log(JSON.stringify(member))
-                    console.log(JSON.stringify(role))
-                    console.groupEnd()
-                }).catch((err) => {
-                    resData.push('1');
-                    console.group()
-                    console.log(JSON.stringify(member))
-                    console.log(JSON.stringify(role))
-                    console.groupEnd()
-                    console.error(err)
-                })
+                if(role.length){
+                    member.roles.add(role).then(console.log).catch(console.error)
+                }
+                if(delRole.length){
+                    member.roles.remove(delRole).then(console.log).catch(console.error)
+                }
             }
         }
 
