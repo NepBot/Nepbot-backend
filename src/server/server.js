@@ -41,7 +41,9 @@ app.post('/api/set-info', async (req, res) => {
         for (user in doc) {
             if (user.user_id != params.user_id) {
                 let member = await getMembers(params.guild_id, user.user_id)
-                member.roles.remove(roleList).then(console.log).catch(console.error)
+                if (member.roles) {
+                    member.roles.remove(roleList).then(console.log).catch(console.error)
+                }
             }
         }
         await userService.addUser({
