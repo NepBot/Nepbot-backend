@@ -65,7 +65,7 @@ app.post('/api/set-info', async (req, res) => {
                 amount: tokenAmount, //   near.wallet  
             });
             const _rules = rules.filter(item => {
-                if (item.token_id === token) {
+                if (item.token_id === tokenId) {
                     return item;
                 }
             })
