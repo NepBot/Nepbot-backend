@@ -52,6 +52,6 @@ exports.getRoles = (guid_id,role_id)=>{
     return client.guilds.cache.get(guid_id).roles.cache;
 }
 
-exports.getMembersTokenList = async (walletId)=>{
-    return await axios.get(`${walletId}/likelyTokens`);
-}
+// exports.getMembersTokenList = async (walletId)=>{
+//     return await axios.get(`${walletId}/likelyTokens`);
+// }

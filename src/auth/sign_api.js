@@ -7,6 +7,7 @@ const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const {config} = require("../utils/config");
 
 exports.getSign =  async (args)=> {
+    console.log(args)
     // let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore("/home/bhc/.near-credentials");
     let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
     //console.log(keyStore)

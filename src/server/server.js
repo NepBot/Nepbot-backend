@@ -32,6 +32,18 @@ app.post('/api/set-info', async (req, res) => {
     //console.log(params)
     //console.log(encodeURIComponent(params.account_id))
     try{
+        const rules = await getRules(params.guild_id);
+        let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
+        let doc = await userService.getAllUser({
+            guild_id:params.guild_id,
+            near_wallet_id:params.account_id
+        })
+        for (user in doc) {
+            if (user.user_id != params.user_id) {
+                let member = await getMembers(params.guild_id, user.user_id)
+                member.roles.remove(roleList).then(console.log).catch(console.error)
+            }
+        }
         await userService.addUser({
             user_id: params.user_id,
             guild_id: params.guild_id,
@@ -41,25 +53,16 @@ app.post('/api/set-info', async (req, res) => {
         const account = await contract();
         const member = await getMembers(params.guild_id, params.user_id);
         let resData = [];
-        const memberTokenList = await getMembersTokenList(params.account_id);
-        // let tokenList = await getTokenList(params.guild_id);
 
-        const rules = await getRules(params.guild_id);
+        
         let tokenList = Array.from(new Set(rules.map(({token_id}) => token_id)));
-        for (const tokenId of memberTokenList) {
+        for (const tokenId of tokenList) {
             //，，
             const tokenAmount = await account.viewFunction(tokenId, "ft_balance_of", {account_id: params.account_id})
-            const user = await addUserToken({
-                user_id: params.user_id,
+            const userToken = await addUserToken({
+                near_wallet_id: params.account_id,
                 token_id: tokenId,
-                amount: tokenAmount / 10 ** 24, //   near.wallet  
-            });
-        }
-
-        for (const token of tokenList) {
-            const userToken = await getUserToken({
-                user_id: params.user_id,
-                token_id: token
+                amount: tokenAmount, //   near.wallet  
             });
             const _rules = rules.filter(item => {
                 if (item.token_id === token) {
