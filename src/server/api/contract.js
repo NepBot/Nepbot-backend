@@ -1,13 +1,6 @@
 const {connect, WalletConnection} = require('near-api-js');
-const path = require("path");
-const homedir = require("os").homedir();
-const CREDENTIALS_DIR = ".near-credentials";
-const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const {config} = require('../../utils/config');
 const {nearWallet,RULE_CONTRACT} = config;
-const {queryUser} = require("../services/userService");
-const {queryExpenses, queryIncome} = require("../services/postgreService");
-const {queryRule, getTokenList} = require("../services/RuleService");
 const contract = async () => {
     // connect to NEAR
     const near = await connect(nearWallet);

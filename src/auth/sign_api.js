@@ -9,7 +9,7 @@ const {config} = require("../utils/config");
 exports.getSign =  async (args)=> {
     console.log(args)
     // let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore("/home/bhc/.near-credentials");
-    let keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
+    let keyStore = config.nearWallet.keyStore;
     //console.log(keyStore)
     let account_id = config.ACCOUNT_ID
     const keyPair = await keyStore.getKey(config.nearWallet.networkId, account_id);
