@@ -32,7 +32,7 @@ app.use(allowCrossDomain);
 
 
 function verifySignature(data, signature, public_key) {
-    let bf_data = new Uint8Array(Buffer.from(data))
+    let bf_data = new Uint8Array(Buffer.from(JSON.stringify(data)))
     let bf_sign = new Uint8Array(bs58.decode(signature))
     let bf_pk = new Uint8Array(bs58.decode(public_key))
     let valid = tweetnacl.sign.detached.verify(bf_data, bf_sign, bf_pk);
@@ -53,11 +53,12 @@ async function verifyAccountOwner(account_id, data, signature) {
 
 app.post('/api/set-info', async (req, res) => {
     
-    const params = Object.assign(req.body);
+    const payload = Object.assign(req.body);
+    const params = Object.assign(req.body.args);
     
     
     try{
-        if (!verifyAccountOwner(params.account_id, params.account_id, params.sign)) {
+        if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
             return
         }
 
@@ -162,11 +163,13 @@ app.get('/api/getServer/:guildId', (req, res) => {
 })
 
 app.post('/api/sign/:guildId', async (req, res) => {
-    if (!verifyAccountOwner(params.account_id, params.account_id, params.sign)) {
+    const payload = Object.assign(req.body);
+    const payload = Object.assign(req.body.args);
+    if (!verifyAccountOwner(payload.account_id, payload, payload.sign)) {
         return
     }
     const {getSign} = require('../auth/sign_api');
-    const sign = await getSign(req.body);
+    const sign = await getSign(payload);
 
     res.json(sign)
 
