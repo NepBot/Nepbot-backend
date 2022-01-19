@@ -58,7 +58,7 @@ app.post('/api/set-info', async (req, res) => {
     
     try{
         if (!verifyAccountOwner(params.account_id, params.account_id, params.sign)) {
-            throw
+            return
         }
 
         const rules = await getRules(params.guild_id);
