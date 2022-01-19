@@ -13,7 +13,10 @@ const {getRoles, getMembers, getMembersTokenList} = require("./api/guild");
 const {getRules, getTokenList, contract} = require("./api/contract");
 const {addRule, deleteRule, updateRule, queryRule} = require("./services/RuleService");
 const commands  = require('../commands/commands')
-const {CLIENT_ID} = config;
+const {connect} = require('near-api-js');
+const {nearWallet} = config;
+const tweetnacl = require("tweetnacl");
+const bs58 = require('bs58');
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
@@ -26,12 +29,38 @@ const allowCrossDomain = function (req, res, next) {
 // noinspection JSCheckFunctionSignatures
 app.use(allowCrossDomain);
 /**  */
+
+
+function verifySignature(data, signature, public_key) {
+    let bf_data = new Uint8Array(Buffer.from(data))
+    let bf_sign = new Uint8Array(bs58.decode(signature))
+    let bf_pk = new Uint8Array(bs58.decode(public_key))
+    let valid = tweetnacl.sign.detached.verify(bf_data, bf_sign, bf_pk);
+    return valid;
+}
+
+async function verifyAccountOwner(account_id, data, signature) {
+    const near = await connect(nearWallet)
+    const account = await near.account(account_id)
+    const accessKeys = await account.getAccessKeys()
+    return accessKeys.some(it => {
+        const publicKey = it.public_key.replace('ed25519:', '');
+        return verifySignature(data, signature, publicKey)
+    });
+};
+
+
+
 app.post('/api/set-info', async (req, res) => {
-    // console.log(req.body)
+    
     const params = Object.assign(req.body);
-    //console.log(params)
-    //console.log(encodeURIComponent(params.account_id))
+    
+    
     try{
+        if (!verifyAccountOwner(params.account_id, params.account_id, params.sign)) {
+            throw
+        }
+
         const rules = await getRules(params.guild_id);
         let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
         let doc = await userService.getAllUser({
@@ -113,13 +142,13 @@ app.post('/api/set-info', async (req, res) => {
     }
 
 })
-/**  */
-app.get('/api/getMemberList/:guildId', async (req, res) => {
-    const rs = await rest.get(`${Routes.guildMembers(req.params.guildId)}?limit=5&after=1`, {
-        auth: true,
-    })
-    res.json(rs)
-})
+// /**  */
+// app.get('/api/getMemberList/:guildId', async (req, res) => {
+//     const rs = await rest.get(`${Routes.guildMembers(req.params.guildId)}?limit=5&after=1`, {
+//         auth: true,
+//     })
+//     res.json(rs)
+// })
 
 app.get('/api/getRole/:guildId', async (req, res) => {
     //console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
@@ -133,8 +162,9 @@ app.get('/api/getServer/:guildId', (req, res) => {
 })
 
 app.post('/api/sign/:guildId', async (req, res) => {
-    console.log('')
-    const data = req.body[0];
+    if (!verifyAccountOwner(params.account_id, params.account_id, params.sign)) {
+        return
+    }
     const {getSign} = require('../auth/sign_api');
     const sign = await getSign(req.body);
 
@@ -143,32 +173,32 @@ app.post('/api/sign/:guildId', async (req, res) => {
 })
 
 
-app.post('/api/role/add', async (req, res) => {
-    const data = req.body;
-    const rule = await addRule(data);
+// app.post('/api/role/add', async (req, res) => {
+//     const data = req.body;
+//     const rule = await addRule(data);
 
-    res.json(rule);
-})
-app.get('/api/role/list/:guildId', async (req, res) => {
-    const data = req.query;
-    //console.log(data)
-    const rule = await queryRule({guild_id: req.params.guildId, ...data});
+//     res.json(rule);
+// })
+// app.get('/api/role/list/:guildId', async (req, res) => {
+//     const data = req.query;
+//     //console.log(data)
+//     const rule = await queryRule({guild_id: req.params.guildId, ...data});
 
-    res.json(rule)
-})
-app.put('/api/role/edit', async (req, res) => {
-    const data = req.body;
-    const rule = await updateRule(data);
+//     res.json(rule)
+// })
+// app.put('/api/role/edit', async (req, res) => {
+//     const data = req.body;
+//     const rule = await updateRule(data);
 
-    res.json(rule)
-})
-app.delete('/api/role/del', async (req, res) => {
-    const data = req.body;
-    //console.log(data)
-    const rule = await deleteRule(data.id);
+//     res.json(rule)
+// })
+// app.delete('/api/role/del', async (req, res) => {
+//     const data = req.body;
+//     //console.log(data)
+//     const rule = await deleteRule(data.id);
 
-    res.json(rule)
-})
+//     res.json(rule)
+// })
 app.get('/oauth',async (req,res,next)=>{
     // const command = await rest.put(Routes.applicationGuildCommands(CLIENT_ID, req.query.guild_id), {body: commands});
     // res.json(res)
