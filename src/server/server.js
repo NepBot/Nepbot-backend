@@ -169,7 +169,13 @@ app.post('/api/sign/:guildId', async (req, res) => {
         return
     }
     const {getSign} = require('../auth/sign_api');
-    const sign = await getSign(params);
+    let sign = ''
+    if (params.hasOwnProperty('signType')) {
+        sign = await getSign(params.role_id);
+    }
+    else {
+        sign = await getSign(params)
+    }
 
     res.json(sign)
 
