@@ -164,12 +164,12 @@ app.get('/api/getServer/:guildId', (req, res) => {
 
 app.post('/api/sign/:guildId', async (req, res) => {
     const payload = Object.assign(req.body);
-    const payload = Object.assign(req.body.args);
-    if (!verifyAccountOwner(payload.account_id, payload, payload.sign)) {
+    const params = Object.assign(req.body.args);
+    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
     const {getSign} = require('../auth/sign_api');
-    const sign = await getSign(payload);
+    const sign = await getSign(params);
 
     res.json(sign)
 
