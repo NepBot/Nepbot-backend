@@ -11,7 +11,7 @@ exports.config = {
     // TOKEN: 'OTEwNDI4OTM2Nzc1ODIzMzkx.YZStBQ.1FSI9OOVONY4LGe7Ob9GYSEMjms',
     // CLIENT_SECRET: "WtEWzu82jb0l_HzDnRMKZyE3rKOf9coX",
     APPLICATION_ID: '928559137179172874',
-    RULE_CONTRACT:'discord-roles.bhc8521.testnet',
+    RULE_CONTRACT:'v2-discord-roles.bhc8521.testnet',
     // MYSQL: {
     //     host: '127.0.0.1',
     //     user: 'root',
