@@ -1,24 +1,75 @@
-const {getMemberTokenAmount, getRules, getTokenList, getBalanceOf} = require('../server/api/contract');
+const {getMemberTokenAmount, getRules, getTokenList, getBalanceOf, getRulesByField} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {queryActions} = require('../server/services/postgreService')
+const {queryActions, queryOctActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
-const to = require("await-to-js");
-const {
-    queryUserToken,
-    getUserTokenList,
-    deleteUserToken,
-    updateUserToken
-} = require("../server/services/UserTokenService");
-const {getUserToken, addUserToken} = require("../server/services/UserTokenService");
-const {client} = require("../Bot");
+const {getUserFieldList} = require("../server/services/UserFieldService");
 /**
  * member member
  *
  * */
 
-exports.timestamp = String(Date.now()) + "000000"
+async function octTask() {
+    let actions = await queryOctActions()
+    let accountIdList = []
+    let appchainIdList = []
+    for (action in actions) {
+        appchainIdList.push(action.appchain_id)
+        accountIdList.push(actions.signer_id)
+    }
 
-exports.timedTask = async () => {
+    let users = await getUserFieldList({
+        near_wallet_id: {
+            $in: accountIdList
+        },
+        key: 'oct',
+        value: {
+            $in: appchainIdList
+        }
+    })
+
+    for (user in users) {
+        let octRole = await getOctAppchainRole(user.value, user.near_wallet_id)
+        let roles = await getRulesByField('oct', user.value)
+        let guild_ids = []
+        roles.map(item => {
+            guild_ids.push(item.guild_id)
+        })
+
+        let users = await getAllUser({
+            guild_id: {
+                $in: guild_ids
+            },
+            near_wallet_id: userToken.near_wallet_id,
+        })
+
+        for (user in users) {
+            let member = await getMembers(guild_id, user.user_id)
+            let guildRoles = await getRules(user.guild_id)
+
+            let role = [];
+            let delRole = [];
+            for (const {fields, role_id} of guildRoles) {
+                if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
+                    const _role = getRoles(guild_id, role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(role_id) &&  octRole != fields.oct_role){
+                    const _role = getRoles(guild_id, role_id);
+                    _role && delRole.push(_role)
+                }
+            }
+            if(role.length){
+                member.roles.add(role).then(console.log).catch(console.error)
+            }
+            if(delRole.length){
+                member.roles.remove(delRole).then(console.log).catch(console.error)
+            }
+        }
+    }
+    
+}
+
+async function tokenTask() {
     let allTokenList = await getTokenList()
     let actions = await queryActions(allTokenList, this.timestamp)
     let accountIdList = []
@@ -29,24 +80,25 @@ exports.timedTask = async () => {
         tokenList.push(action.token_id)
     }
 
-    let userTokens = await getUserTokenList({
+    let userTokens = await getUserFieldList({
         near_wallet_id: {
             $in: accountIdList
         },
-        token_id: {
+        key: 'token_id',
+        value: {
             $in: tokenList
         }
     })
 
     
     for (userToken in userTokens) {
-        let newAmount = await getBalanceOf(userToken.token_id, userToken.near_wallet_id)
-        await updateUserToken({
-            amount: newAmount,
-            near_wallet_id: userToken.near_wallet_id,
-            token_id: userToken.token_id
-        })
-        let roles = await getRulesByToken(userToken.token_id)
+        let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
+        // await updateUserToken({
+        //     amount: newAmount,
+        //     near_wallet_id: userToken.near_wallet_id,
+        //     token_id: userToken.token_id
+        // })
+        let roles = await getRulesByField('token_id', userToken.value)
         let guild_ids = []
         roles.map(item => {
             guild_ids.push(item.guild_id)
@@ -83,6 +135,13 @@ exports.timedTask = async () => {
 
         
     }
+}
+
+exports.timestamp = String(Date.now()) + "000000"
+
+exports.timedTask = async () => {
+    tokenTask()
+    octTask()
 
     this.timestamp = String(Date.now()) + "000000"
 }
@@ -106,7 +165,7 @@ exports.timedTask = async () => {
 
 
 //                 const memberTokenList = await getMembersTokenList(member?.walletId);
-//                 let userTokenList = await getUserTokenList({user_id: member.user.id});
+//                 let userTokenList = await getUserFieldList({user_id: member.user.id});
 //                 console.log("memberTokenList>>>>", memberTokenList);
 //                 // token
 //                 if(memberTokenList) {
@@ -121,7 +180,7 @@ exports.timedTask = async () => {
 //                             const tokenInfo = await getMemberTokenAmount(token, member.user.id, member.walletId, oauthTime);
 //                             const amount = (+tokenInfo.income) - (+tokenInfo.expenditure);
 //                             // 
-//                             await addUserToken({
+//                             await addUserField({
 //                                 user_id: member.user.id,
 //                                 token_id: token,
 //                                 amount: amount
@@ -139,7 +198,7 @@ exports.timedTask = async () => {
 //                     }
 
 //                     // token 
-//                     userTokenList = await getUserTokenList({user_id: member.user.id});
+//                     userTokenList = await getUserFieldList({user_id: member.user.id});
 
 //                     for (const token of tokenList) {
 //                         // userTokenList

@@ -1,16 +1,16 @@
 const mySqlDB = require('./mysqlDB');
 const { DataTypes } = require('sequelize');
 
-module.exports = mySqlDB.define('user_token',{
+module.exports = mySqlDB.define('user_field',{
     near_wallet_id:{
         type:DataTypes.STRING,
         allowNull:false
     },
-    token_id:{
+    key:{
         type:DataTypes.STRING,
         allowNull: false,
     },
-    amount:{
+    value:{
         type:DataTypes.STRING,
         allowNull: false,
     }

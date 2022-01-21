@@ -1,21 +1,22 @@
-const UserToken = require('../models/userToken');
+const UserField = require('../models/userField');
 
-exports.addUserToken = async (data)=>{
-    const user = await this.queryUserToken({
-        near_wallet_id:data.near_wallet_id,
-        token_id:data.token_id,
+exports.addUserField = async (data)=>{
+    const user = await this.queryUserField({
+        near_wallet_id: data.near_wallet_id,
+        key: data.key,
+        value: data.value,
     });
     console.log("queryUser>>>>>",user)
     if (user.msg){
-        return await this.updateUserToken(data);
+        return await this.updateUserField(data);
     }else{
-        const user = await UserToken.create(data);
+        const user = await UserField.create(data);
         return user.toJSON();
     }
 }
 
-exports.queryUserToken = async (data) =>{
-    let result = await UserToken.findAll({
+exports.queryUserField = async (data) =>{
+    let result = await UserField.findAll({
         where:data
     });
     if(result){
@@ -28,39 +29,41 @@ exports.queryUserToken = async (data) =>{
 
     return {msg:false,code:0}
 };
-exports.getUserToken = async (data) =>{
-    const users = await UserToken.findOne({
+exports.getUserField = async (data) =>{
+    const users = await UserField.findOne({
         where:data
     });
     return JSON.parse(JSON.stringify(users));
 };
-exports.getUserTokenList = async (data) =>{
-    const users = await UserToken.findAll({
+exports.getUserFieldList = async (data) =>{
+    const users = await UserField.findAll({
         where:data
     });
     return JSON.parse(JSON.stringify(users));
 };
-exports.updateUserToken = async (data)=> {
+exports.updateUserField = async (data)=> {
     console.log("data>>>>>>>>",data)
     if(!data.near_wallet_id) return {msg:'Missing parameters near_wallet_id',code:0}
     const params = {
         amount: data?.amount,
     };
-    return  await UserToken.update(params, {
+    return  await UserField.update(params, {
         where: {
             near_wallet_id:data?.near_wallet_id,
-            token_id:data?.token_id
+            key:data?.key,
+            value: data?.value
         },
     });
 };
 
-exports.deleteUserToken = async (data)=> {
-    const user = await this.getUserToken(data);
+exports.deleteUserField = async (data)=> {
+    const user = await this.getUserField(data);
     if(user.amount === 0){
-        return  await UserToken.destroy({
+        return  await UserField.destroy({
             where: {
                 near_wallet_id:data?.near_wallet_id,
-                token_id:data?.token_id
+                key:data?.key,
+                value: data?.value
             },
         });
     }else{

@@ -10,13 +10,14 @@ const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers, getMembersTokenList} = require("./api/guild");
-const {getRules, getTokenList, contract} = require("./api/contract");
+const {getRules, getTokenList, contract, getOctAppchainRole} = require("./api/contract");
 const {addRule, deleteRule, updateRule, queryRule} = require("./services/RuleService");
 const commands  = require('../commands/commands')
 const {connect} = require('near-api-js');
 const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
+const {setTokenAmountRoles, setOctRoles} = require('../utils/setRoles')
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
@@ -84,60 +85,39 @@ app.post('/api/set-info', async (req, res) => {
         });
         const account = await contract();
         const member = await getMembers(params.guild_id, params.user_id);
-        let resData = [];
 
-        
-        let tokenList = Array.from(new Set(rules.map(({token_id}) => token_id)));
-        for (const tokenId of tokenList) {
-            //，，
-            const tokenAmount = await account.viewFunction(tokenId, "ft_balance_of", {account_id: params.account_id})
-            console.log("tokenAmount>>>", tokenAmount)
-            const userToken = await addUserToken({
-                near_wallet_id: params.account_id,
-                token_id: tokenId,
-                amount: tokenAmount, //   near.wallet  
-            });
-            const _rules = rules.filter(item => {
-                if (item.token_id === tokenId) {
-                    return item;
-                }
-            })
-            console.log("userTokenList>>>", userToken)
-            if (userToken) {
-                console.log("rules>>>", _rules);
-                let role = [];
-                let delRole = [];
-                for (const {amount, role_id} of _rules) {
-                    if (!member._roles.includes(role_id) && tokenAmount >= amount) {
-                        const _role = getRoles(params.guild_id, role_id);
-                        _role && role.push(_role)
-                    }
-                    if(member._roles.includes(role_id) &&  tokenAmount < amount){
-                        const _role = getRoles(params.guild_id, role_id);
-                        _role && delRole.push(_role)
-                    }
-                }
-                if(role.length){
-                    member.roles.add(role).then(console.log).catch(console.error)
-                }
-                if(delRole.length){
-                    member.roles.remove(delRole).then(console.log).catch(console.error)
-                }
+        let rulesMap = {
+            token: [],
+            oct: []
+        }
+        for (rule in rules) {
+            if (rule.key_field[0] == 'token_id') {
+                ruleMap.token.push(rule)
+            } else if (rule.key_field == 'appchain_id') {
+                rulesMap.oct.push(rule)
             }
+            await addUserField({
+                near_wallet_id: params.account_id,
+                key: rule.key_field[0],
+                value: rule.key_field[1]
+            });
         }
 
 
-        if (resData.includes('1')) {
-            res.json({
-                msg: 'operation failed',
-                success: false,
-            })
-        } else {
-            res.json({
-                msg: resData,
-                success: true,
-            })
+        for (const rule in ruleMap.token) {
+            const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
+            setTokenAmountRoles(member, rule, tokenAmount)
         }
+
+        for (const rule in rulesMap.oct) {
+            let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
+            setOctRoles(member, rule, octRole)
+        }
+
+
+        res.json({
+            success: true,
+        })
     }catch (e) {
         console.error(e)
     }
@@ -244,7 +224,6 @@ app.get('/oauth',async (req,res,next)=>{
 
 /** sync models */
 require('./models/sync')
-const {addUserToken, getUserToken} = require("./services/UserTokenService");
 const path = require("path");
 const axios = require("axios");
 /** init app */

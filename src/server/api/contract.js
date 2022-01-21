@@ -67,12 +67,25 @@ exports.getRules = async (guildId) => {
     // return await queryRule({token_id: tokenId});
 }
 
-exports.getRulesByToken = async (tokenId) => {
+exports.getRulesByField = async (key, value) => {
     const account = await this.contract();
-    return await account.viewFunction(RULE_CONTRACT, 'get_token', {token_id: tokenId})
+    return await account.viewFunction(RULE_CONTRACT, 'get_field', {field_key: key, field_value: value})
 }
 
 exports.getBalanceOf = async (tokenId, accountId) => {
     const account = await this.contract();
     return await account.viewFunction(tokenId, 'ft_balance_of', {account_id: accountId})
+}
+
+exports.getOctAppchainRole = async (appchain_id, account_id) => {
+    const account = await this.contract();
+    const validator = await account.viewFunction(appchain_id, 'get_validator_profile', {validator_id: account_id})
+    const delegator = await account.viewFunction(appchain_id, 'get_delegations_of', {delegator_id: account_id})
+    if (validator) {
+        return 'validator'
+    } else if (delegator) {
+        return 'delegator'
+    } else {
+        return
+    }
 }

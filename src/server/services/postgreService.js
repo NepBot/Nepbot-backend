@@ -26,3 +26,23 @@ exports.queryActions  = async (tokenIds, time)=>{
     `,[token_ids_arg, time])
     return res.rows
 }
+
+exports.queryOctActions = async (time) => {
+    let res = await pool.query(`
+    SELECT
+        args -> 'args_json' ->> 'appchain_id' as appchain_id,
+        signer_account_id as signer_id
+    FROM
+        action_receipt_actions
+    RIGHT JOIN action_receipts ON action_receipt_actions.receipt_id = action_receipts.receipt_id
+    WHERE
+        receipt_receiver_account_id = 'octopus-registry.near'
+        AND action_kind = 'FUNCTION_CALL' 
+        AND args ->> 'args_json' IS NOT NULL 
+        AND args ->> 'method_name' = 'sync_state_of'
+        AND receipt_included_in_block_timestamp >= $1
+    ORDER BY
+        receipt_included_in_block_timestamp DESC 
+    `,[time])
+    return res.rows
+}
