@@ -1,4 +1,5 @@
 const { Pool } = require('pg')
+const { config } = require('../../utils/config.js')
 
 const testnet_url = "postgres://public_readonly:nearprotocol@35.184.214.98/testnet_explorer";
 const pool = new Pool({connectionString: testnet_url})
@@ -36,13 +37,13 @@ exports.queryOctActions = async (time) => {
         action_receipt_actions
     RIGHT JOIN action_receipts ON action_receipt_actions.receipt_id = action_receipts.receipt_id
     WHERE
-        receipt_receiver_account_id = 'octopus-registry.near'
+        receipt_receiver_account_id = $1
         AND action_kind = 'FUNCTION_CALL' 
         AND args ->> 'args_json' IS NOT NULL 
         AND args ->> 'method_name' = 'sync_state_of'
-        AND receipt_included_in_block_timestamp >= $1
+        AND receipt_included_in_block_timestamp >= $2
     ORDER BY
         receipt_included_in_block_timestamp DESC 
-    `,[time])
+    `,[config.OCT_CONTRACT, time])
     return res.rows
 }

@@ -12,6 +12,7 @@ exports.config = {
     // CLIENT_SECRET: "WtEWzu82jb0l_HzDnRMKZyE3rKOf9coX",
     APPLICATION_ID: '928559137179172874',
     RULE_CONTRACT:'v2-discord-roles.bhc8521.testnet',
+    OCT_CONTRACT: 'registry.test_oct.testnet',
     // MYSQL: {
     //     host: '127.0.0.1',
     //     user: 'root',

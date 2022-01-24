@@ -161,6 +161,12 @@ app.post('/api/sign/:guildId', async (req, res) => {
 
 })
 
+app.get('/api/getOctAppchainIds', async (req, res) => {
+    const account = await contract();
+    const appchainIds = account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
+    res.json(appchainIds)
+})
+
 
 // app.post('/api/role/add', async (req, res) => {
 //     const data = req.body;
