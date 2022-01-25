@@ -151,7 +151,7 @@ app.post('/api/sign/:guildId', async (req, res) => {
     const {getSign} = require('../auth/sign_api');
     let sign = ''
     if (params.hasOwnProperty('signType')) {
-        sign = await getSign(params.role_id);
+        sign = await getSign(params.role_ids);
     }
     else {
         sign = await getSign(params)
@@ -159,12 +159,6 @@ app.post('/api/sign/:guildId', async (req, res) => {
 
     res.json(sign)
 
-})
-
-app.get('/api/getOctAppchainIds', async (req, res) => {
-    const account = await contract();
-    const appchainIds = account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
-    res.json(appchainIds)
 })
 
 
