@@ -174,15 +174,15 @@ app.post('/api/sign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    const user = await userService.queryUser({
+    const users = await userService.getAllUser({
         near_wallet_id: payload.account_id,
         guild_id: params.guild_id
     });
-    if (!user.msg){
+    if (users.length == 0){
         return
     }
     const { ownerId } = client.guilds.cache.get(params.guild_id);
-    if (ownerId != user.user_id) {
+    if (ownerId != users[0].user_id) {
         return
     }
 
