@@ -12,7 +12,7 @@ async function octTask() {
     let actions = await queryOctActions()
     let accountIdList = []
     let appchainIdList = []
-    for (action in actions) {
+    for (action of actions) {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(actions.signer_id)
     }
@@ -27,7 +27,7 @@ async function octTask() {
         }
     })
 
-    for (user in users) {
+    for (user of users) {
         let octRole = await getOctAppchainRole(user.value, user.near_wallet_id)
         let roles = await getRulesByField('oct', user.value)
         let guild_ids = []
@@ -42,7 +42,7 @@ async function octTask() {
             near_wallet_id: userToken.near_wallet_id,
         })
 
-        for (user in users) {
+        for (user of users) {
             let member = await getMembers(guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
@@ -74,7 +74,7 @@ async function tokenTask() {
     let actions = await queryActions(allTokenList, this.timestamp)
     let accountIdList = []
     let tokenList = []
-    for (action in actions) {
+    for (action of actions) {
         accountIdList.push(action.sender_id)
         accountIdList.push(action.receiver_id)
         tokenList.push(action.token_id)
@@ -91,7 +91,7 @@ async function tokenTask() {
     })
 
     
-    for (userToken in userTokens) {
+    for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
         // await updateUserToken({
         //     amount: newAmount,
@@ -109,7 +109,7 @@ async function tokenTask() {
             },
             near_wallet_id: userToken.near_wallet_id,
         })
-        for (user in users) {
+        for (user of users) {
             let member = await getMembers(guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 

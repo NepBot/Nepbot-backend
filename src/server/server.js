@@ -70,7 +70,7 @@ app.post('/api/set-info', async (req, res) => {
             guild_id:params.guild_id,
             near_wallet_id:params.account_id
         })
-        for (user in doc) {
+        for (user of doc) {
             if (user.user_id != params.user_id) {
                 let member = await getMembers(params.guild_id, user.user_id)
                 if (member.roles) {
@@ -91,7 +91,7 @@ app.post('/api/set-info', async (req, res) => {
             token: [],
             oct: []
         }
-        for (rule in rules) {
+        for (rule of rules) {
             if (rule.key_field[0] == 'token_id') {
                 ruleMap.token.push(rule)
             } else if (rule.key_field[0] == 'appchain_id') {
@@ -105,12 +105,12 @@ app.post('/api/set-info', async (req, res) => {
         }
 
 
-        for (const rule in ruleMap.token) {
+        for (const rule of ruleMap.token) {
             const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
             setTokenAmountRoles(member, rule, tokenAmount)
         }
 
-        for (const rule in rulesMap.oct) {
+        for (const rule of rulesMap.oct) {
             let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
             setOctRoles(member, rule, octRole)
         }
