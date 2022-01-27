@@ -12,7 +12,6 @@ let timestamp = String("1643287814000") + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
-    console.log("actions-------------", actions)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
@@ -20,7 +19,7 @@ async function octTask() {
         accountIdList.push(action.signer_id)
     }
 
-    let users = await getUserFieldList({
+    let userFields = await getUserFieldList({
         near_wallet_id: {
             $in: accountIdList
         },
@@ -29,16 +28,10 @@ async function octTask() {
             $in: appchainIdList
         }
     })
-    let test = await getUserFieldList({
-        near_wallet_id: {
-            $in: accountIdList
-        },
-    })
-    console.log(test)
 
-    for (user of users) {
-        let octRole = await getOctAppchainRole(user.value, user.near_wallet_id)
-        let roles = await getRulesByField('appchain_id', user.value)
+    for (userField of userFields) {
+        let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
+        let roles = await getRulesByField('appchain_id', userField.value)
         let guild_ids = []
         roles.map(item => {
             guild_ids.push(item.guild_id)
@@ -48,7 +41,7 @@ async function octTask() {
             guild_id: {
                 $in: guild_ids
             },
-            near_wallet_id: userToken.near_wallet_id,
+            near_wallet_id: userField.near_wallet_id,
         })
 
         for (user of users) {
