@@ -51,7 +51,10 @@ async function octTask() {
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id} of guildRoles) {
+            for (const {fields, role_id, key_field} of guildRoles) {
+                if (key_field[0] != 'appchain_id') {
+                    continue
+                }
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
@@ -122,7 +125,10 @@ async function tokenTask() {
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id} of guildRoles) {
+            for (const {fields, role_id, key_field} of guildRoles) {
+                if (key_field[0] != 'token_id') {
+                    continue
+                }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
