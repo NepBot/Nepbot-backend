@@ -8,7 +8,7 @@ const BN = require('bn.js')
  * member member
  *
  * */
-let timestamp = String("1643278874000") + "000000"
+let timestamp = String(Date.now()) + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -122,7 +122,6 @@ async function tokenTask() {
             let role = [];
             let delRole = [];
             for (const {fields, role_id} of guildRoles) {
-                console.log(fields, role_id)
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
