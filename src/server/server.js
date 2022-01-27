@@ -93,7 +93,7 @@ app.post('/api/set-info', async (req, res) => {
         }
         for (rule of rules) {
             if (rule.key_field[0] == 'token_id') {
-                ruleMap.token.push(rule)
+                rulesMap.token.push(rule)
             } else if (rule.key_field[0] == 'appchain_id') {
                 rulesMap.oct.push(rule)
             }
@@ -105,7 +105,7 @@ app.post('/api/set-info', async (req, res) => {
         }
 
 
-        for (const rule of ruleMap.token) {
+        for (const rule of rulesMap.token) {
             const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
             setTokenAmountRoles(member, rule, tokenAmount)
         }
