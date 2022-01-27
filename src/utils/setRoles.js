@@ -1,4 +1,5 @@
 exports.setTokenAmountRoles = async (member, rule, tokenAmount) => {
+    console.log(rule, tokenAmount)
     if (!member._roles.includes(rule.role_id) && tokenAmount >= rule.fields.amount) {
         const _role = getRoles(rule.guild_id, rule.role_id);
         _role && member.roles.add([_role]).then(console.log).catch(console.error)
