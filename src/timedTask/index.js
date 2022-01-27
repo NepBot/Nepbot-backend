@@ -143,8 +143,8 @@ async function tokenTask() {
 }
 
 exports.timedTask = async () => {
-    tokenTask()
-    octTask()
+    await tokenTask()
+    await octTask()
 
     timestamp = String(Date.now()) + "000000"
 }
