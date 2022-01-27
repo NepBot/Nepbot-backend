@@ -157,7 +157,7 @@ async function updateGuildTask() {
             updatingGuildList[guild_id] = null
             return
         }
-        let rules = await getRules(user.guild_id)
+        let rules = await getRules(guild_id)
         let userList = await getAllUser({
             guild_id: guild_id
         })
