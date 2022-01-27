@@ -32,10 +32,6 @@ async function octTask() {
         near_wallet_id: {
             $in: accountIdList
         },
-        key: 'appchain_id',
-        value: {
-            $in: appchainIdList
-        }
     })
     console.log(test)
 
