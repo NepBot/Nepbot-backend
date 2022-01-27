@@ -80,7 +80,7 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
     const delegator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_delegations_of', {delegator_id: account_id})
     if (validator) {
         return 'validator'
-    } else if (delegator) {
+    } else if (delegator && delegator.length > 0) {
         return 'delegator'
     } else {
         return
