@@ -103,15 +103,40 @@ app.post('/api/set-info', async (req, res) => {
             });
         }
 
-
+        let role = [];
+        let delRole = [];
         for (const rule of rulesMap.token) {
             const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
-            setTokenAmountRoles(member, rule, tokenAmount)
+            
+            if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
+            }
         }
 
         for (const rule of rulesMap.oct) {
             let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
-            setOctRoles(member, rule, octRole)
+
+            if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
+            }
+        }
+
+
+        if(role.length){
+            member.roles.add(role).then(console.log).catch(console.error)
+        }
+        if(delRole.length){
+            member.roles.remove(delRole).then(console.log).catch(console.error)
         }
 
 
