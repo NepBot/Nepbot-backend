@@ -17,7 +17,6 @@ const {connect} = require('near-api-js');
 const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
-const {setTokenAmountRoles, setOctRoles} = require('../utils/setRoles')
 const BN = require('bn.js')
 app.use(cookieParser());
 app.use(express.json());
