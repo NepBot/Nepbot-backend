@@ -18,7 +18,7 @@ const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
 const BN = require('bn.js')
-const updateGuild = require('../timedTask/index')
+const {updateGuild} = require('../timedTask/index')
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
