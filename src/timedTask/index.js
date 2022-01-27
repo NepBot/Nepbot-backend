@@ -45,18 +45,18 @@ async function octTask() {
         })
 
         for (user of users) {
-            let member = await getMembers(guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {fields, role_id} of guildRoles) {
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
-                    const _role = getRoles(guild_id, role_id);
+                    const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
                 }
                 if(member._roles.includes(role_id) &&  octRole != fields.oct_role){
-                    const _role = getRoles(guild_id, role_id);
+                    const _role = getRoles(user.guild_id, role_id);
                     _role && delRole.push(_role)
                 }
             }
