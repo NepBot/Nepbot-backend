@@ -10,7 +10,6 @@ const BN = require('bn.js')
  * */
 let timestamp = String(Date.now()) + "000000"
 let updatingGuildList = []
-updatingGuildList['923197936068861953'] = 10
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
