@@ -9,7 +9,7 @@ const {getUserFieldList} = require("../server/services/UserFieldService");
  * */
 
 async function octTask() {
-    let actions = await queryOctActions()
+    let actions = await queryOctActions(this.timestamp)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {

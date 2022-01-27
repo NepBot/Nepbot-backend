@@ -6,6 +6,7 @@ const pool = new Pool({connectionString: testnet_url})
 
 exports.queryActions  = async (tokenIds, time)=>{
     let token_ids_arg = "{" + tokenIds.join(",") + "}"
+    console.log("------------------------", token_ids_arg)
     let res = await pool.query(`
 
     SELECT
