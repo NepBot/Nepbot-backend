@@ -64,6 +64,7 @@ app.post('/api/set-info', async (req, res) => {
         }
 
         const rules = await getRules(params.guild_id);
+        console.log("-----------------", rules)
         let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
         let doc = await userService.getAllUser({
             guild_id:params.guild_id,
@@ -93,7 +94,7 @@ app.post('/api/set-info', async (req, res) => {
         for (rule in rules) {
             if (rule.key_field[0] == 'token_id') {
                 ruleMap.token.push(rule)
-            } else if (rule.key_field == 'appchain_id') {
+            } else if (rule.key_field[0] == 'appchain_id') {
                 rulesMap.oct.push(rule)
             }
             await addUserField({
