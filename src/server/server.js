@@ -12,6 +12,7 @@ const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers, getMembersTokenList} = require("./api/guild");
 const {getRules, getTokenList, contract, getOctAppchainRole} = require("./api/contract");
 const {addRule, deleteRule, updateRule, queryRule} = require("./services/RuleService");
+const {addUserField} = require("./services/UserFieldService")
 const commands  = require('../commands/commands')
 const {connect} = require('near-api-js');
 const {nearWallet} = config;
