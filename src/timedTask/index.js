@@ -151,6 +151,7 @@ async function tokenTask() {
 }
 
 async function updateGuildTask() {
+    console.log(updatingGuildList)
     for (guild_id in updatingGuildList) {
         count = updatingGuildList[guild_id]
         if (count <= 0) {
