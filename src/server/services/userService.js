@@ -38,7 +38,7 @@ exports.updateUser = async (data)=> {
     console.log("data>>>>>>>>",data)
     if(!data.user_id) return {msg:'Missing parameters user_id',code:0}
     const params = {
-        near_wallet_id: data?.account_id,
+        near_wallet_id: data?.near_wallet_id,
         user_id:data?.user_id,
         guild_id:data?.guild_id
     };
