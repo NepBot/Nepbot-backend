@@ -174,23 +174,24 @@ app.post('/api/sign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    console.log(payload)
-    // const users = await userService.getAllUser({
-    //     near_wallet_id: payload.account_id,
-    //     guild_id: params.guild_id
-    // });
-    // if (users.length == 0){
-    //     return
-    // }
-    // const { ownerId } = client.guilds.cache.get(params.guild_id);
-    // if (ownerId != users[0].user_id) {
-    //     return
-    // }
+    for (arg of args) {
+        const users = await userService.getAllUser({
+            near_wallet_id: payload.account_id,
+            guild_id: params.guild_id
+        });
+        if (users.length == 0){
+            return
+        }
+        const { ownerId } = client.guilds.cache.get(params.guild_id);
+        if (ownerId != users[0].user_id) {
+            return
+        }
+    }
 
-    // const {getSign} = require('../auth/sign_api');
-    // let sign = await getSign(params)
+    const {getSign} = require('../auth/sign_api');
+    let sign = await getSign(params)
 
-    // res.json(sign)
+    res.json(sign)
 
 })
 
