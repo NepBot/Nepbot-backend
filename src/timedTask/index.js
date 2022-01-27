@@ -95,8 +95,6 @@ async function tokenTask() {
         }
     })
 
-    console.log(userTokens, accountIdList, tokenList)
-
     
     for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
@@ -116,6 +114,7 @@ async function tokenTask() {
             },
             near_wallet_id: userToken.near_wallet_id,
         })
+        console.log(users, roles, guild_ids)
         for (user of users) {
             let member = await getMembers(guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
