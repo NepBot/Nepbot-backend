@@ -114,7 +114,12 @@ async function tokenTask() {
             },
             near_wallet_id: userToken.near_wallet_id,
         })
-        console.log(users, roles, guild_ids, userToken)
+        let test = await getAllUser({
+            guild_id: {
+                $in: guild_ids
+            },
+        })
+        console.log(test)
         for (user of users) {
             let member = await getMembers(guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
