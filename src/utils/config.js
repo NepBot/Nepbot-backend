@@ -26,6 +26,6 @@ exports.config = {
         networkId: "testnet",
         keyStore: new keyStores.UnencryptedFileSystemKeyStore(credentialsPath),
     },
-    walletAuthUrl:'http://13.251.124.186'
+    walletAuthUrl:'http://nepbot.org'
     // walletAuthUrl:'http://47.241.253.161'
 }
