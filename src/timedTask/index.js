@@ -213,7 +213,7 @@ async function updateGuildTask() {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && role.push(_role)
                 }
-                if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+                if(member._roles.includes(rule.role_id) && octRole != fields.oct_role){
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
