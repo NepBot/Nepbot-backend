@@ -1,4 +1,4 @@
-const {getMemberTokenAmount, getRules, getFieldList, getBalanceOf, getRulesByField} = require('../server/api/contract');
+const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
 const {queryActions, queryOctActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
