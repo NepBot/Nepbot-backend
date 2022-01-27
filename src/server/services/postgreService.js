@@ -6,7 +6,6 @@ const pool = new Pool({connectionString: testnet_url})
 
 exports.queryActions  = async (tokenIds, time)=>{
     let token_ids_arg = "{" + tokenIds.join(",") + "}"
-    console.log("--------------------------------", token_ids_arg, time)
     let res = await pool.query(`
 
     SELECT
@@ -26,7 +25,6 @@ exports.queryActions  = async (tokenIds, time)=>{
         receipt_included_in_block_timestamp DESC 
 
     `,[token_ids_arg, time])
-    console.log(res.rows)
     return res.rows
 }
 
@@ -47,6 +45,5 @@ exports.queryOctActions = async (time) => {
     ORDER BY
         receipt_included_in_block_timestamp DESC 
     `,[config.OCT_CONTRACT, time])
-    console.log(res.rows)
     return res.rows
 }

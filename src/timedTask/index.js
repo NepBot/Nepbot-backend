@@ -95,6 +95,8 @@ async function tokenTask() {
         }
     })
 
+    console.log(userTokens, accountIdList, tokenList)
+
     
     for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
