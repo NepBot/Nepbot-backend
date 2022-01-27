@@ -114,25 +114,19 @@ async function tokenTask() {
             },
             near_wallet_id: userToken.near_wallet_id,
         })
-        let test = await getAllUser({
-            guild_id: {
-                $in: guild_ids
-            },
-        })
-        console.log(test)
         for (user of users) {
-            let member = await getMembers(guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {amount, role_id} of guildRoles) {
                 if (!member._roles.includes(role_id) && newAmount >= amount) {
-                    const _role = getRoles(guild_id, role_id);
+                    const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
                 }
                 if(member._roles.includes(role_id) &&  newAmount < amount){
-                    const _role = getRoles(guild_id, role_id);
+                    const _role = getRoles(user.guild_id, role_id);
                     _role && delRole.push(_role)
                 }
             }
