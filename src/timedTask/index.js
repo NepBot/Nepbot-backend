@@ -7,9 +7,10 @@ const {getUserFieldList} = require("../server/services/UserFieldService");
  * member member
  *
  * */
+let timestamp = String("1643278874000") + "000000"
 
 async function octTask() {
-    let actions = await queryOctActions(this.timestamp)
+    let actions = await queryOctActions(timestamp)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
@@ -75,7 +76,7 @@ async function tokenTask() {
     for (field of allFieldList) {
         allTokenList.push(field[1])
     }
-    let actions = await queryActions(allTokenList, this.timestamp)
+    let actions = await queryActions(allTokenList, timestamp)
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
@@ -141,13 +142,11 @@ async function tokenTask() {
     }
 }
 
-exports.timestamp = String("1643278874000") + "000000"
-
 exports.timedTask = async () => {
     tokenTask()
     octTask()
 
-    this.timestamp = String(Date.now()) + "000000"
+    timestamp = String(Date.now()) + "000000"
 }
 
 // exports.timedTask = async () => {
