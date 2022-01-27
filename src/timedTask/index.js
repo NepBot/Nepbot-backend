@@ -180,7 +180,7 @@ async function updateGuildTask() {
             let role = [];
             let delRole = [];
             console.log(user)
-            const member = await getMembers(guild_id, user.user_id);
+            //const member = await getMembers(guild_id, user.user_id);
             // for (const rule of rulesMap.token) {
             //     await addUserField({
             //         near_wallet_id: user.near_wallet_id,
