@@ -8,7 +8,7 @@ const BN = require('bn.js')
  * member member
  *
  * */
-let timestamp = String("1643287814000") + "000000"
+let timestamp = String(Date.now()) + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -31,7 +31,6 @@ async function octTask() {
 
     for (userField of userFields) {
         let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
-        console.log(octRole)
         let roles = await getRulesByField('appchain_id', userField.value)
         let guild_ids = []
         roles.map(item => {
