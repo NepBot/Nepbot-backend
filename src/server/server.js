@@ -109,11 +109,11 @@ app.post('/api/set-info', async (req, res) => {
         for (const rule of rulesMap.token) {
             const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
             
-            if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
+            if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && role.push(_role)
             }
-            if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
+            if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && delRole.push(_role)
             }

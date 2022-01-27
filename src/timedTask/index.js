@@ -189,13 +189,12 @@ async function updateGuildTask() {
                     value: rule.key_field[1]
                 });
                 const tokenAmount = await getBalanceOf(rule.key_field[1], user.near_wallet_id) 
-                console.log(tokenAmount, rule.fields.amount)
                 
-                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
+                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && role.push(_role)
                 }
-                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
+                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
