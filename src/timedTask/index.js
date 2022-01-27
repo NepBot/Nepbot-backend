@@ -12,12 +12,15 @@ let timestamp = String("1643287814000") + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
+    console.log("actions-------------", actions)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(actions.signer_id)
     }
+
+    console.log("--------------------", accountIdList, accountIdList)
 
     let users = await getUserFieldList({
         near_wallet_id: {
