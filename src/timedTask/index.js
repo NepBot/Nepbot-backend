@@ -187,7 +187,7 @@ async function updateGuildTask() {
                     key: rule.key_field[0],
                     value: rule.key_field[1]
                 });
-                const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: user.near_wallet_id})
+                const tokenAmount = await getBalanceOf(rule.key_field[1], user.near_wallet_id) 
                 
                 if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
