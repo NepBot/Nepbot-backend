@@ -31,6 +31,7 @@ async function octTask() {
 
     for (userField of userFields) {
         let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
+        console.log(octRole)
         let roles = await getRulesByField('appchain_id', userField.value)
         let guild_ids = []
         roles.map(item => {
