@@ -174,7 +174,7 @@ app.post('/api/sign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    for (arg of args) {
+    for (arg of params) {
         const users = await userService.getAllUser({
             near_wallet_id: payload.account_id,
             guild_id: params.guild_id
