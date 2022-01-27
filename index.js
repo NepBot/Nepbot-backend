@@ -7,6 +7,7 @@ const {secret} = require("./src/utils/secret")
 const {TOKEN} = secret;
 client.login(TOKEN).then(async () => {
     console.log('Success login ');
+    await timedTask()
     setInterval(async ()=>{
         console.log('start')
         await timedTask()
