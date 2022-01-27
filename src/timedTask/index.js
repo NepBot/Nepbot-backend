@@ -174,46 +174,47 @@ async function updateGuildTask() {
                 rulesMap.oct.push(rule)
             }
         }
+        const member = await getMembers(guild_id, user.user_id);
+
         for (user in userList) {
             let role = [];
             let delRole = [];
-            const member = await getMembers(guild_id, user.user_id);
-
-            for (const rule of rulesMap.token) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
-                const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: user.near_wallet_id})
+            console.log(user)
+            // for (const rule of rulesMap.token) {
+            //     await addUserField({
+            //         near_wallet_id: user.near_wallet_id,
+            //         key: rule.key_field[0],
+            //         value: rule.key_field[1]
+            //     });
+            //     const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: user.near_wallet_id})
                 
-                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && role.push(_role)
-                }
-                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && delRole.push(_role)
-                }
-            }
+            //     if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
+            //         const _role = getRoles(rule.guild_id, rule.role_id);
+            //         _role && role.push(_role)
+            //     }
+            //     if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
+            //         const _role = getRoles(rule.guild_id, rule.role_id);
+            //         _role && delRole.push(_role)
+            //     }
+            // }
 
-            for (const rule of rulesMap.oct) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
-                let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
+            // for (const rule of rulesMap.oct) {
+            //     await addUserField({
+            //         near_wallet_id: user.near_wallet_id,
+            //         key: rule.key_field[0],
+            //         value: rule.key_field[1]
+            //     });
+            //     let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
 
-                if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && role.push(_role)
-                }
-                if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && delRole.push(_role)
-                }
-            }
+            //     if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
+            //         const _role = getRoles(rule.guild_id, rule.role_id);
+            //         _role && role.push(_role)
+            //     }
+            //     if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+            //         const _role = getRoles(rule.guild_id, rule.role_id);
+            //         _role && delRole.push(_role)
+            //     }
+            // }
 
 
             if(role.length){
