@@ -6,7 +6,6 @@ const pool = new Pool({connectionString: testnet_url})
 
 exports.queryActions  = async (tokenIds, time)=>{
     let token_ids_arg = "{" + tokenIds.join(",") + "}"
-    console.log("------------------------", token_ids_arg)
     let res = await pool.query(`
 
     SELECT
@@ -17,7 +16,7 @@ exports.queryActions  = async (tokenIds, time)=>{
     FROM
         action_receipt_actions 
     WHERE
-        receipt_receiver_account_id = $1
+        receipt_receiver_account_id = any ($1)
         AND action_kind = 'FUNCTION_CALL' 
         AND args ->> 'args_json' IS NOT NULL 
         AND args ->> 'method_name' IN ( 'ft_transfer', 'ft_transfer_call', 'ft_mint' ) 
