@@ -18,6 +18,7 @@ const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
 const BN = require('bn.js')
+const updateGuild = require('../timedTask/index')
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
@@ -186,11 +187,12 @@ app.post('/api/sign', async (req, res) => {
         if (ownerId != users[0].user_id) {
             return
         }
+        updateGuild(args.guild_id)
     }
 
     const {getSign} = require('../auth/sign_api');
     let sign = await getSign(params)
-
+    
     res.json(sign)
 
 })

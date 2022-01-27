@@ -9,6 +9,7 @@ const BN = require('bn.js')
  *
  * */
 let timestamp = String(Date.now()) + "000000"
+let updatingGuildList = []
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -149,11 +150,93 @@ async function tokenTask() {
     }
 }
 
+async function updateGuildTask() {
+    for (guild_id in updatingGuildList) {
+        count = updatingGuildList[guild_id]
+        if (count <= 0) {
+            updatingGuildList[guild_id] = null
+            return
+        }
+        let rules = await getRules(user.guild_id)
+        let userList = await getAllUser({
+            guild_id: guild_id
+        })
+        
+        
+        let rulesMap = {
+            token: [],
+            oct: []
+        }
+        for (rule of rules) {
+            if (rule.key_field[0] == 'token_id') {
+                rulesMap.token.push(rule)
+            } else if (rule.key_field[0] == 'appchain_id') {
+                rulesMap.oct.push(rule)
+            }
+        }
+        for (user in userList) {
+            let role = [];
+            let delRole = [];
+            const member = await getMembers(guild_id, user.user_id);
+
+            for (const rule of rulesMap.token) {
+                await addUserField({
+                    near_wallet_id: user.near_wallet_id,
+                    key: rule.key_field[0],
+                    value: rule.key_field[1]
+                });
+                const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: user.near_wallet_id})
+                
+                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && delRole.push(_role)
+                }
+            }
+
+            for (const rule of rulesMap.oct) {
+                await addUserField({
+                    near_wallet_id: user.near_wallet_id,
+                    key: rule.key_field[0],
+                    value: rule.key_field[1]
+                });
+                let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
+
+                if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && delRole.push(_role)
+                }
+            }
+
+
+            if(role.length){
+                member.roles.add(role).then(console.log).catch(console.error)
+            }
+            if(delRole.length){
+                member.roles.remove(delRole).then(console.log).catch(console.error)
+            }
+        }
+        updatingGuildList[guild_id] -= 1
+    }
+}
+
 exports.timedTask = async () => {
     await tokenTask()
     await octTask()
+    await updateGuildTask()
 
     timestamp = String(Date.now()) + "000000"
+}
+
+exports.updateGuild = (guild_id) => {
+    updatingGuildList[guild_id] = 10
 }
 
 // exports.timedTask = async () => {
