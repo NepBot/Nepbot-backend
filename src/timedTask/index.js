@@ -3,6 +3,7 @@ const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild
 const {queryActions, queryOctActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList} = require("../server/services/UserFieldService");
+const BN = require('bn.js')
 /**
  * member member
  *
@@ -120,13 +121,13 @@ async function tokenTask() {
 
             let role = [];
             let delRole = [];
-            console.log(member, guildRoles)
-            for (const {amount, role_id} of guildRoles) {
-                if (!member._roles.includes(role_id) && newAmount >= amount) {
+            for (const {fields, role_id} of guildRoles) {
+                console.log(fields, role_id)
+                if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
                 }
-                if(member._roles.includes(role_id) &&  newAmount < amount){
+                if(member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1){
                     const _role = getRoles(user.guild_id, role_id);
                     _role && delRole.push(_role)
                 }
