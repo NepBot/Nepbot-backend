@@ -123,6 +123,7 @@ app.post('/api/set-info', async (req, res) => {
 
             if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
+                console.log(octRole)
                 _role && role.push(_role)
             }
             if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
