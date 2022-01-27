@@ -224,6 +224,7 @@ async function updateGuildTask() {
             if(delRole.length){
                 member.roles.remove(delRole).then(console.log).catch(console.error)
             }
+            console.log(role, delRole)
         }
         updatingGuildList[guild_id] -= 1
     }
