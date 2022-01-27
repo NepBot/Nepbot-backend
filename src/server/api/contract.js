@@ -7,12 +7,9 @@ const contract = async () => {
     return await near.account('nepbot.testnet');
 }
 exports.contract = contract;
-exports.getTokenList = async () => {
+exports.getFieldList = async () => {
     const account = await this.contract();
     return await account.viewFunction(RULE_CONTRACT, 'get_token_list', {})
-    // const _provider = await contract()
-    // return await _provider.viewFunction('discord-roles.bhc8521.testnet', 'get_token_list');
-    // return await getTokenList(guild_id)
 }
 
 exports.getMemberTokenAmount = async (token_id, user_id, walletId, time) => {

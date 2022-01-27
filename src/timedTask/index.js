@@ -1,4 +1,4 @@
-const {getMemberTokenAmount, getRules, getTokenList, getBalanceOf, getRulesByField} = require('../server/api/contract');
+const {getMemberTokenAmount, getRules, getFieldList, getBalanceOf, getRulesByField} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
 const {queryActions, queryOctActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
@@ -70,7 +70,11 @@ async function octTask() {
 }
 
 async function tokenTask() {
-    let allTokenList = await getTokenList()
+    let allFieldList = await getFieldList()
+    let allTokenList = []
+    for (field of allFieldList) {
+        allTokenList.push(field[1])
+    }
     let actions = await queryActions(allTokenList, this.timestamp)
     let accountIdList = []
     let tokenList = []
@@ -137,7 +141,7 @@ async function tokenTask() {
     }
 }
 
-exports.timestamp = String(Date.now()) + "000000"
+exports.timestamp = String("1643278874000") + "000000"
 
 exports.timedTask = async () => {
     tokenTask()
