@@ -120,6 +120,7 @@ async function tokenTask() {
 
             let role = [];
             let delRole = [];
+            console.log(member, guildRoles)
             for (const {amount, role_id} of guildRoles) {
                 if (!member._roles.includes(role_id) && newAmount >= amount) {
                     const _role = getRoles(user.guild_id, role_id);
