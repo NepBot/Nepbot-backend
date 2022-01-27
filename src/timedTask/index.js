@@ -163,76 +163,25 @@ async function updateGuildTask() {
             guild_id: guild_id
         })
         
-        
-        let rulesMap = {
-            token: [],
-            oct: []
-        }
+    
         for (rule of rules) {
-            if (rule.key_field[0] == 'token_id') {
-                rulesMap.token.push(rule)
-            } else if (rule.key_field[0] == 'appchain_id') {
-                rulesMap.oct.push(rule)
+            for (user of userList) {
+                await addUserField({
+                    near_wallet_id: user.near_wallet_id,
+                    key: rule.key_field[0],
+                    value: rule.key_field[1]
+                });
             }
         }
         
-
-        for (user of userList) {
-            let role = [];
-            let delRole = [];
-            const member = await getMembers(guild_id, user.user_id);
-            for (const rule of rulesMap.token) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
-                const tokenAmount = await getBalanceOf(rule.key_field[1], user.near_wallet_id) 
-                
-                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) != -1 ) {
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && role.push(_role)
-                }
-                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.amount)) == -1){
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && delRole.push(_role)
-                }
-            }
-
-            for (const rule of rulesMap.oct) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
-                let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
-
-                if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && role.push(_role)
-                }
-                if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
-                    const _role = getRoles(rule.guild_id, rule.role_id);
-                    _role && delRole.push(_role)
-                }
-            }
-
-
-            if(role.length){
-                member.roles.add(role).then(console.log).catch(console.error)
-            }
-            if(delRole.length){
-                member.roles.remove(delRole).then(console.log).catch(console.error)
-            }
-        }
         updatingGuildList[guild_id] -= 1
     }
 }
 
 exports.timedTask = async () => {
+    await updateGuildTask()
     await tokenTask()
     await octTask()
-    await updateGuildTask()
 
     timestamp = String(Date.now()) + "000000"
 }
