@@ -169,12 +169,10 @@ async function updateGuildTask() {
             oct: []
         }
         for (rule of rules) {
-            for (user of userList) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
+            if (rule.key_field[0] == 'token_id') {
+                rulesMap.token.push(rule)
+            } else if (rule.key_field[0] == 'appchain_id') {
+                rulesMap.oct.push(rule)
             }
         }
         
