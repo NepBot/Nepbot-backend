@@ -6,7 +6,6 @@ exports.addUserField = async (data)=>{
         key: data.key,
         value: data.value,
     });
-    console.log("queryUser>>>>>",user)
     if (user.msg){
         return await this.updateUserField(data);
     }else{
@@ -21,7 +20,6 @@ exports.queryUserField = async (data) =>{
     });
     if(result){
         result = JSON.parse(JSON.stringify(result));
-        console.log("result>>>",result)
         if(result.length>0){
             return {msg:true,code:1}
         }
@@ -42,7 +40,6 @@ exports.getUserFieldList = async (data) =>{
     return JSON.parse(JSON.stringify(users));
 };
 exports.updateUserField = async (data)=> {
-    console.log("data>>>>>>>>",data)
     if(!data.near_wallet_id) return {msg:'Missing parameters near_wallet_id',code:0}
     const params = {
         amount: data?.amount,

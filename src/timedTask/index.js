@@ -207,6 +207,7 @@ async function updateGuildTask() {
                     value: rule.key_field[1]
                 });
                 let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
+                console.log(rule)
 
                 if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
