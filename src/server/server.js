@@ -168,20 +168,26 @@ app.get('/api/getServer/:guildId', (req, res) => {
     res.json(serverList);
 })
 
-app.post('/api/sign/:guildId', async (req, res) => {
+app.post('/api/sign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
+    const user = await userService.queryUser({
+        near_wallet_id: payload.account_id,
+        guild_id: params.guild_id
+    });
+    if (!user.msg){
+        return
+    }
+    const { ownerId } = client.guilds.cache.get(params.guild_id);
+    if (ownerId != user.user_id) {
+        return
+    }
+
     const {getSign} = require('../auth/sign_api');
-    let sign = ''
-    if (params.hasOwnProperty('signType')) {
-        sign = await getSign(params.role_ids);
-    }
-    else {
-        sign = await getSign(params)
-    }
+    let sign = await getSign(params)
 
     res.json(sign)
 
