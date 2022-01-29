@@ -156,12 +156,10 @@ async function balanceTask() {
     let accountIds = []
     userFields.forEach(item => accountIds.push(item.near_wallet_id))
     const actions = await queryTransferActions(accountIds, timestamp)
-    console.log(actions)
     accountIds = []
-    for (action in actions) {
+    for (action of actions) {
         accountIds.push(action.account_id)
     }
-    console.log(accountIds)
 
     const roles = await getRulesByField('near', 'balance')
     let guild_ids = []
