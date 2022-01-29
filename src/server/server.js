@@ -138,7 +138,6 @@ app.post('/api/set-info', async (req, res) => {
         for (const rule of rulesMap.balance) {
             
             const balance = await getNearBalanceOf(params.account_id)
-            console.log(rule, balance, rule.fields.balance)
             
             if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
