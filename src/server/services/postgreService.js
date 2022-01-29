@@ -73,7 +73,7 @@ exports.queryTransferActions = async (accountIds, time) => {
     let account_ids_arg = "{" + accountIds.join(",") + "}"
     let res = await pool.query(
     `
-    SELECT
+    SELECT distinct
         receipt_predecessor_account_id as account_id,
         receipt_receiver_account_id as account_id
     FROM
