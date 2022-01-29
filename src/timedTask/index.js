@@ -213,7 +213,8 @@ async function updateGuildTask() {
     let delRoleList = []
     let guildIds = []
     for (action of actions) {
-        const args = JSON.parse(action.args)
+        const args_str = JSON.parse(action.args)
+        const args = JSON.parse(args_str)
         console.log(args)
         if (action.method_name == 'set_roles') {
             addRoleList = addRoleList.concat(args.args)
