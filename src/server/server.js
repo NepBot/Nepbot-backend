@@ -196,10 +196,12 @@ app.post('/api/sign', async (req, res) => {
             guild_id: args.guild_id
         });
         if (users.length == 0){
+            res.json('no user found')
             return
         }
         const { ownerId } = client.guilds.cache.get(args.guild_id);
         if (ownerId != users[0].user_id) {
+            res.json('no authorization')
             return
         }
     }
