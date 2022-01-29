@@ -78,6 +78,7 @@ exports.getNearBalanceOf = async (accountId) => {
     const near = await connect(nearWallet);
     const account = await near.account(accountId);
     const balance = await account.getAccountBalance()
+    console.log(balance)
     return balance.availableBalance
 }
 
