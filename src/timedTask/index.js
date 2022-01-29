@@ -154,7 +154,7 @@ async function balanceTask() {
         key: 'near'
     })
     let accountIds = []
-    userFields.forEach(item => account_ids.push(item.near_wallet_id))
+    userFields.forEach(item => accountIds.push(item.near_wallet_id))
     const actions = queryTransferActions(accountIds, timestamp)
     accountIds = []
     for (action in actions) {

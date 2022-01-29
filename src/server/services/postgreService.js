@@ -79,8 +79,7 @@ exports.queryTransferActions = async (accountIds, time) => {
     FROM
         action_receipt_actions
     WHERE
-        receipt_predecessor_account_id = any ($1)
-        AND receipt_receiver_account_id = any ($1)
+        (receipt_predecessor_account_id = any ($1) OR receipt_receiver_account_id = any ($1))
         AND action_kind = 'TRANSFER' 
         AND receipt_included_in_block_timestamp >= $2
     ORDER BY
