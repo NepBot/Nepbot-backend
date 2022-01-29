@@ -211,16 +211,21 @@ async function updateGuildTask() {
     const actions = await queryRoleActions(timestamp)
     let addRoleList = []
     let delRoleList = []
+    let guildIds = []
     for (action of actions) {
+        const args = JSON.parse(action.args)
         if (action.method_name == 'set_roles') {
-            addRoleList.push(JSON.parse(action.args))
+            addRoleList.push(args)
         } else if (action.method_name == 'del_role') {
-            delRoleList.push(JSON.parse(actions.args))
+            delRoleList.push(args)
         }
+        guildIds.push(args.guild_id)
     }
 
     let userList = await getAllUser({
-        guild_id: guild_id
+        guild_id: {
+            $in: guildIds
+        }
     })
 
     for (user of userList) {
