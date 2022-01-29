@@ -1,6 +1,6 @@
-const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField} = require('../server/api/contract');
+const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {queryActions, queryOctActions} = require('../server/services/postgreService')
+const {queryActions, queryOctActions, queryRoleActions, queryTransferActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
@@ -9,7 +9,6 @@ const BN = require('bn.js')
  *
  * */
 let timestamp = String(Date.now()) + "000000"
-let updatingGuildList = []
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -150,45 +149,93 @@ async function tokenTask() {
     }
 }
 
-async function updateGuildTask() {
-    console.log(updatingGuildList)
-    for (guild_id in updatingGuildList) {
-        count = updatingGuildList[guild_id]
-        if (count <= 0) {
-            updatingGuildList[guild_id] = null
-            return
+async function balanceTask() {
+    const userFields = await getUserFieldList({
+        key: 'near'
+    })
+    let accountIds = []
+    userFields.forEach(item => account_ids.push(item.near_wallet_id))
+    const actions = queryTransferActions(accountIds, time)
+    accountIds = []
+    for (action in actions) {
+        accountIds.push(action.account_id)
+    }
+
+    const roles = await getRulesByField('near', 'balance')
+    let guild_ids = []
+    let guildMap = {}
+    roles.map(item => {
+        guild_ids.push(item.guild_id)
+        if (!guildMap[item.guild_id]) {
+            guildMap[item.guild_id] = []
         }
-        let rules = await getRules(guild_id)
-        let userList = await getAllUser({
-            guild_id: guild_id
-        })
-        
-        
-        let rulesMap = {
-            token: [],
-            oct: []
-        }
-        for (rule of rules) {
-            if (rule.key_field[0] == 'token_id') {
-                rulesMap.token.push(rule)
-            } else if (rule.key_field[0] == 'appchain_id') {
-                rulesMap.oct.push(rule)
+        guildMap[item.guild_id].push(item)
+    })
+
+    let users = await getAllUser({
+        guild_id: {
+            $in: guild_ids
+        },
+        near_wallet_id: {
+            $in: accountIds
+        } 
+    })
+
+    for (user of users) {
+        const member = await getMembers(user.guild_id, user.user_id);
+        let role = [];
+        let delRole = [];
+        for (rule of guildMap[user.guild_id]) {
+            const balance = await getNearBalanceOf(rule.key_field[1], user.near_wallet_id) 
+            if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1 ) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
             }
         }
         
+        if(role.length){
+            member.roles.add(role).then(console.log).catch(console.error)
+        }
+        if(delRole.length){
+            member.roles.remove(delRole).then(console.log).catch(console.error)
+        }
+    }
+}
 
-        for (user of userList) {
-            let role = [];
-            let delRole = [];
-            const member = await getMembers(guild_id, user.user_id);
-            for (const rule of rulesMap.token) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
+async function updateGuildTask() {
+
+    const actions = queryRoleActions(time)
+    let addRoleList = []
+    let delRoleList = []
+    for (action of actions) {
+        if (action.method_name == 'set_roles') {
+            addRoleList.push(JSON.parse(action.args))
+        } else if (action.method_name == 'del_role') {
+            delRoleList.push(JSON.parse(actions.args))
+        }
+    }
+
+    let userList = await getAllUser({
+        guild_id: guild_id
+    })
+
+    for (user of userList) {
+        const member = await getMembers(user.guild_id, user.user_id);
+        let role = [];
+        let delRole = [];
+        for (rule in addRoleList) {
+            await addUserField({
+                near_wallet_id: user.near_wallet_id,
+                key: rule.key_field[0],
+                value: rule.key_field[1]
+            });
+
+            if (rule.key_field[0] == 'token_id') {
                 const tokenAmount = await getBalanceOf(rule.key_field[1], user.near_wallet_id) 
-                
                 if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && role.push(_role)
@@ -197,16 +244,8 @@ async function updateGuildTask() {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
-            }
-
-            for (const rule of rulesMap.oct) {
-                await addUserField({
-                    near_wallet_id: user.near_wallet_id,
-                    key: rule.key_field[0],
-                    value: rule.key_field[1]
-                });
+            } else if (rule.key_field[0] == 'appchain_id') {
                 let octRole = await getOctAppchainRole(rule.key_field[1], user.near_wallet_id)
-                console.log(rule)
 
                 if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
@@ -217,30 +256,31 @@ async function updateGuildTask() {
                     _role && delRole.push(_role)
                 }
             }
-
-
-            if(role.length){
-                member.roles.add(role).then(console.log).catch(console.error)
-            }
-            if(delRole.length){
-                member.roles.remove(delRole).then(console.log).catch(console.error)
-            }
-            console.log(role, delRole)
         }
-        updatingGuildList[guild_id] -= 1
+
+        for (rule in delRoleList) {
+            await deleteUserField({
+                near_wallet_id: user.near_wallet_id,
+                key: rule.key_field[0],
+                value: rule.key_field[1]
+            });
+        }
+
+        if(role.length){
+            member.roles.add(role).then(console.log).catch(console.error)
+        }
+        if(delRole.length){
+            member.roles.remove(delRole).then(console.log).catch(console.error)
+        }
     }
 }
 
 exports.timedTask = async () => {
-    await tokenTask()
-    await octTask()
     await updateGuildTask()
-
+    await tokenTask()
+    await balanceTask()
+    await octTask()
     timestamp = String(Date.now()) + "000000"
-}
-
-exports.updateGuild = (guild_id) => {
-    updatingGuildList[guild_id] = 10
 }
 
 // exports.timedTask = async () => {

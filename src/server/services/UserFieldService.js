@@ -54,17 +54,11 @@ exports.updateUserField = async (data)=> {
 };
 
 exports.deleteUserField = async (data)=> {
-    const user = await this.getUserField(data);
-    if(user.amount === 0){
-        return  await UserField.destroy({
-            where: {
-                near_wallet_id:data?.near_wallet_id,
-                key:data?.key,
-                value: data?.value
-            },
-        });
-    }else{
-        return JSON.parse(JSON.stringify(user));
-    }
-
+    return  await UserField.destroy({
+        where: {
+            near_wallet_id:data?.near_wallet_id,
+            key:data?.key,
+            value: data?.value
+        },
+    });
 };

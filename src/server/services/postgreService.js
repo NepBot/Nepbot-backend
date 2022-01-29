@@ -47,3 +47,45 @@ exports.queryOctActions = async (time) => {
     `,[config.OCT_CONTRACT, time])
     return res.rows
 }
+
+exports.queryRoleActions = async (time) => {
+    let res = await pool.query(
+    `
+    SELECT
+        args ->> 'args_json' as args,
+        args ->> 'method_name' as method_name
+    FROM 
+        action_receipt_actions
+    WHERE
+        receipt_receiver_account_id = $1
+        AND action_kind = 'FUNCTION_CALL' 
+        AND args ->> 'args_json' IS NOT NULL 
+        AND args ->> 'method_name' IN ( 'set_roles', 'del_role' ) 
+        AND receipt_included_in_block_timestamp >= $2
+    ORDER BY
+        receipt_included_in_block_timestamp DESC  
+    `
+    , [config.RULE_CONTRACT, time])
+    return res.rows
+}
+
+exports.queryTransferActions = async (accountIds, time) => {
+    let account_ids_arg = "{" + accountIds.join(",") + "}"
+    let res = await pool.query(
+    `
+    SELECT
+        receipt_predecessor_account_id as account_id,
+        receipt_receiver_account_id as account_id
+    FROM
+        action_receipt_actions
+    WHERE
+        receipt_predecessor_account_id = any ($1)
+        AND receipt_receiver_account_id = any ($1)
+        AND action_kind = 'TRANSFER' 
+        AND receipt_included_in_block_timestamp >= $2
+    ORDER BY
+        receipt_included_in_block_timestamp DESC  
+    `
+    , [account_ids_arg, time])
+    return res.rows
+}

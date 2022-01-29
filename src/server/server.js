@@ -9,7 +9,7 @@ const {rest} = require('../commands/index')
 const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
-const {getRoles, getMembers, getMembersTokenList} = require("./api/guild");
+const {getRoles, getMembers, getMembersTokenList, getBalanceOf, getRulesByField, getNearBalanceOf} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const commands  = require('../commands/commands')
@@ -18,7 +18,6 @@ const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
 const BN = require('bn.js')
-const {updateGuild} = require('../timedTask/index')
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
@@ -89,13 +88,16 @@ app.post('/api/set-info', async (req, res) => {
 
         let rulesMap = {
             token: [],
-            oct: []
+            oct: [],
+            balance: []
         }
         for (rule of rules) {
             if (rule.key_field[0] == 'token_id') {
                 rulesMap.token.push(rule)
             } else if (rule.key_field[0] == 'appchain_id') {
                 rulesMap.oct.push(rule)
+            } else if (rule.key_field[0] == 'near') {
+                rulesMap.balance.push(rule)
             }
             await addUserField({
                 near_wallet_id: params.account_id,
@@ -107,7 +109,7 @@ app.post('/api/set-info', async (req, res) => {
         let role = [];
         let delRole = [];
         for (const rule of rulesMap.token) {
-            const tokenAmount = await account.viewFunction(rule.key_field[1], "ft_balance_of", {account_id: params.account_id})
+            const tokenAmount = await getBalanceOf(rule.key_field[1], params.account_id)
             
             if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
@@ -128,6 +130,19 @@ app.post('/api/set-info', async (req, res) => {
                 _role && role.push(_role)
             }
             if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
+            }
+        }
+
+        for (const rule of rulesMap.balance) {
+            const balance = await getNearBalanceOf(params.account_id)
+            
+            if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1 ) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1){
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && delRole.push(_role)
             }
@@ -187,7 +202,6 @@ app.post('/api/sign', async (req, res) => {
         if (ownerId != users[0].user_id) {
             return
         }
-        updateGuild(args.guild_id)
     }
 
     const {getSign} = require('../auth/sign_api');

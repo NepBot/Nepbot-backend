@@ -74,6 +74,13 @@ exports.getBalanceOf = async (tokenId, accountId) => {
     return await account.viewFunction(tokenId, 'ft_balance_of', {account_id: accountId})
 }
 
+exports.getNearBalanceOf = async (accountId) => {
+    const near = await connect(nearWallet);
+    const account = await near.account(accountId);
+    const balance = await account.getBalanceOf()
+    return balance.availableBalance
+}
+
 exports.getOctAppchainRole = async (appchain_id, account_id) => {
     const account = await this.contract();
     const validator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_validator_profile', {validator_id: account_id})
