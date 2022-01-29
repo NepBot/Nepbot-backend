@@ -208,7 +208,7 @@ async function balanceTask() {
 
 async function updateGuildTask() {
 
-    const actions = queryRoleActions(timestamp)
+    const actions = await queryRoleActions(timestamp)
     let addRoleList = []
     let delRoleList = []
     for (action of actions) {
