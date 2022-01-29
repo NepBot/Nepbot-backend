@@ -52,7 +52,7 @@ exports.queryRoleActions = async (time) => {
     let res = await pool.query(
     `
     SELECT
-        args ->> 'args_json' as args,
+        args -> 'args_json' ->> 'args' as args,
         args ->> 'method_name' as method_name
     FROM 
         action_receipt_actions
