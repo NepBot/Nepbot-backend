@@ -186,7 +186,7 @@ async function balanceTask() {
         let role = [];
         let delRole = [];
         for (rule of guildMap[user.guild_id]) {
-            const balance = await getNearBalanceOf(rule.key_field[1], user.near_wallet_id) 
+            const balance = await getNearBalanceOf(user.near_wallet_id) 
             if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && role.push(_role)
