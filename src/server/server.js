@@ -186,7 +186,7 @@ app.get('/api/getServer/:guildId', (req, res) => {
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = getMembers(req.params.guildId, req.params.userId)
+    const member = await getMembers(req.params.guildId, req.params.userId)
     res.json(member)
 })
 
