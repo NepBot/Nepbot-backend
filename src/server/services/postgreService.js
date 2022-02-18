@@ -66,7 +66,10 @@ exports.queryRoleActions = async (time) => {
         receipt_included_in_block_timestamp DESC  
     `
     , [config.RULE_CONTRACT, time])
-    const ret = JSON.parse(JSON.parse(res.rows[0].args).args.replace(/\\/g, ''))
+    let ret = []
+    for (row of res.rows) {
+        ret.push(JSON.parse(JSON.parse(row.args).args.replace(/\\/g, '')))
+    }
     return ret
 }
 
