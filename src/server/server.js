@@ -185,6 +185,13 @@ app.get('/api/getServer/:guildId', (req, res) => {
     res.json(serverList);
 })
 
+app.get('/api/getUser/:guildId/:userId', (req, res) => {
+    const member = await rest.get(`${Routes.guildMember(guildId,userId)}`,{
+        auth:true,
+    });
+    return new GuildMember(client,member,this.getGuild(guildId))
+})
+
 app.post('/api/sign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);

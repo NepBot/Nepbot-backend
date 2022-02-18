@@ -31,7 +31,7 @@ const msgFunc = async (msg,client)=> {
                     const content = new MessageEmbed().setDescription('Click the button below to enter the setting rules page').setColor('BLUE');
                     const button = new MessageActionRow()
                         .addComponents(new MessageButton()
-                            .setURL(`${walletAuthUrl}/setrule/?user_id=${msg.author.id}&guild_id=${msg.guildId}&guild_name=${encodeURI(msg.guild.name)}`)
+                            .setURL(`${walletAuthUrl}/setrule/?user_id=${msg.author.id}&guild_id=${msg.guildId}}`)
                             .setStyle('LINK').setLabel('Set Rule'))
                     // msg.reply('111')
                   user.send({
