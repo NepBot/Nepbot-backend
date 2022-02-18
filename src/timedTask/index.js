@@ -212,7 +212,6 @@ async function updateGuildTask() {
     let delRoleList = []
     let guildIds = []
     for (action of actions) {
-        console.log(action)
         if (action.method_name == 'set_roles') {
             addRoleList = addRoleList.concat(action.args)
         } else if (action.method_name == 'del_role') {
@@ -222,14 +221,12 @@ async function updateGuildTask() {
             guildIds.push(action.guild_id)
         }
     }
-    console.log(guildIds)
 
     let userList = await getAllUser({
         guild_id: {
             $in: guildIds
         }
     })
-    console.log(userList)
 
     for (user of userList) {
         const member = await getMembers(user.guild_id, user.user_id);
