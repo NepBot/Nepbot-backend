@@ -70,7 +70,6 @@ exports.queryRoleActions = async (time) => {
     for (row of res.rows) {
         ret.push(JSON.parse(JSON.parse(row.args).args.replace(/\\/g, '')))
     }
-    console.log(ret[0], "---------------------------------------------")
     return ret
 }
 
