@@ -284,7 +284,7 @@ async function updateGuildTask() {
 }
 
 exports.timedTask = async () => {
-    //await updateGuildTask()
+    await updateGuildTask()
     await tokenTask()
     await balanceTask()
     await octTask()
