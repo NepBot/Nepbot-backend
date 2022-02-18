@@ -189,7 +189,7 @@ app.get('/api/getUser/:guildId/:userId', async (req, res) => {
     const member = await rest.get(`${Routes.guildMember(guildId,userId)}`,{
         auth:true,
     });
-    return new GuildMember(client,member,this.getGuild(guildId))
+    res.json(new GuildMember(client,member,this.getGuild(guildId)))
 })
 
 app.post('/api/sign', async (req, res) => {
