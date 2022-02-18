@@ -185,7 +185,7 @@ app.get('/api/getServer/:guildId', (req, res) => {
     res.json(serverList);
 })
 
-app.get('/api/getUser/:guildId/:userId', (req, res) => {
+app.get('/api/getUser/:guildId/:userId', async (req, res) => {
     const member = await rest.get(`${Routes.guildMember(guildId,userId)}`,{
         auth:true,
     });
