@@ -17,7 +17,7 @@ const msgFunc = async (msg,client)=> {
                     .setTitle('Near Wallet Authorization')
                     .setDescription('Click the button below to complete the near wallet authorization operation');
 
-                temp.setURL(`${walletAuthUrl}/?user_id=${msg.author.id}&guild_id=${msg.guildId}`)
+                temp.setURL(`${walletAuthUrl}/oauth/?user_id=${msg.author.id}&guild_id=${msg.guildId}`)
 
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
