@@ -208,6 +208,7 @@ async function balanceTask() {
 
 async function updateGuildTask() {
     const actions = await queryRoleActions(timestamp)
+    console.log(actions)
     let addRoleList = []
     let delRoleList = []
     let guildIds = []
@@ -257,6 +258,16 @@ async function updateGuildTask() {
                     _role && role.push(_role)
                 }
                 if(member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role){
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && delRole.push(_role)
+                }
+            } else if (rule.key_field[0] == 'near') {
+                const balance = await getNearBalanceOf(user.near_wallet_id) 
+                if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1 ) {
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1){
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
