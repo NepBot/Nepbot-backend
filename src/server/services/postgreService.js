@@ -15,12 +15,14 @@ exports.queryActions  = async (tokenIds, time)=>{
         receipt_included_in_block_timestamp as timestamp
     FROM
         action_receipt_actions 
+    LEFT JOIN execution_outcomes ON action_receipt_actions.receipt_id = execution_outcomes.receipt_id
     WHERE
         receipt_receiver_account_id = any ($1)
         AND action_kind = 'FUNCTION_CALL' 
         AND args ->> 'args_json' IS NOT NULL 
         AND args ->> 'method_name' IN ( 'ft_transfer', 'ft_transfer_call', 'ft_mint' ) 
         AND receipt_included_in_block_timestamp >= $2
+        AND status != 'FAILURE'
     ORDER BY
         receipt_included_in_block_timestamp DESC 
 
@@ -36,12 +38,14 @@ exports.queryOctActions = async (time) => {
     FROM
         action_receipt_actions
     RIGHT JOIN action_receipts ON action_receipt_actions.receipt_id = action_receipts.receipt_id
+    LEFT JOIN execution_outcomes ON action_receipt_actions.receipt_id = execution_outcomes.receipt_id
     WHERE
         receipt_receiver_account_id = $1
         AND action_kind = 'FUNCTION_CALL' 
         AND args ->> 'args_json' IS NOT NULL 
         AND args ->> 'method_name' = 'sync_state_of'
         AND receipt_included_in_block_timestamp >= $2
+        AND status != 'FAILURE'
     ORDER BY
         receipt_included_in_block_timestamp DESC 
     `,[config.OCT_CONTRACT, time])
@@ -56,12 +60,14 @@ exports.queryRoleActions = async (time) => {
         args ->> 'method_name' as method_name
     FROM 
         action_receipt_actions
+    LEFT JOIN execution_outcomes ON action_receipt_actions.receipt_id = execution_outcomes.receipt_id
     WHERE
         receipt_receiver_account_id = $1
         AND action_kind = 'FUNCTION_CALL' 
         AND args ->> 'args_json' IS NOT NULL 
         AND args ->> 'method_name' IN ( 'set_roles', 'del_role' ) 
         AND receipt_included_in_block_timestamp >= $2
+        AND status != 'FAILURE'
     ORDER BY
         receipt_included_in_block_timestamp DESC  
     `
