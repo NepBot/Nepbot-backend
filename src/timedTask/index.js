@@ -8,7 +8,7 @@ const BN = require('bn.js')
  * member member
  *
  * */
-let timestamp = String(1646137608000) + "000000"
+let timestamp = String(Date.now()) + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -20,9 +20,9 @@ async function octTask() {
     }
 
     let userFields = await getUserFieldList({
-        // near_wallet_id: {
-        //     $in: accountIdList
-        // },
+        near_wallet_id: {
+            $in: accountIdList
+        },
         key: 'appchain_id',
         value: {
             $in: appchainIdList
@@ -57,10 +57,6 @@ async function octTask() {
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
-                }
-
-                if (member._roles.includes(role_id) && octRole == "validator") {
-                    console.log("found")
                 }
 
                 if(member._roles.includes(role_id) &&  octRole != fields.oct_role){
