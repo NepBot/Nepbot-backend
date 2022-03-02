@@ -8,7 +8,7 @@ const BN = require('bn.js')
  * member member
  *
  * */
-let timestamp = String(Date.now()) + "000000"
+let timestamp = String(1646137608000) + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -223,6 +223,7 @@ async function updateGuildTask() {
             guildIds.push(action.guild_id)
         }
     }
+    console.log(addRoleList)
 
     let userList = await getAllUser({
         guild_id: {
