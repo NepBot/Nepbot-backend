@@ -219,8 +219,9 @@ async function updateGuildTask() {
         } else if (action.method_name == 'del_role') {
             delRoleList = delRoleList.concat(action.args)
         }
-        if (action.guild_id) {
-            guildIds.push(action.guild_id)
+        let args = JSON.parse(action.args)
+        if (args.guild_id) {
+            guildIds.push(args.guild_id)
         }
     }
     console.log(addRoleList)
