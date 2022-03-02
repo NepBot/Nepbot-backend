@@ -18,7 +18,6 @@ async function octTask() {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
-    console.log(accountIdList)
 
     let userFields = await getUserFieldList({
         near_wallet_id: {
