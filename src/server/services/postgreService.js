@@ -74,7 +74,10 @@ exports.queryRoleActions = async (time) => {
     , [config.RULE_CONTRACT, time])
     let ret = []
     for (row of res.rows) {
-        ret.push(JSON.parse(JSON.parse(row.args).args.replace(/\\/g, '')))
+        ret.push({
+            args: JSON.parse(JSON.parse(row.args).args.replace(/\\/g, '')),
+            method_name: row.method_name
+        })
     }
     return ret
 }
