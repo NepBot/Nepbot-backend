@@ -18,11 +18,12 @@ async function octTask() {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
+    console.log(accountIdList)
 
     let userFields = await getUserFieldList({
-        // near_wallet_id: {
-        //     $in: accountIdList
-        // },
+        near_wallet_id: {
+            $in: accountIdList
+        },
         key: 'appchain_id',
         value: {
             $in: appchainIdList
@@ -53,9 +54,6 @@ async function octTask() {
             for (const {fields, role_id, key_field} of guildRoles) {
                 if (key_field[0] != 'appchain_id') {
                     continue
-                }
-                if (octRole == fields.oct_role) {
-                    test.push(0)
                 }
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
