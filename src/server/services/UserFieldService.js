@@ -42,7 +42,9 @@ exports.getUserFieldList = async (data) =>{
 exports.updateUserField = async (data)=> {
     if(!data.near_wallet_id) return {msg:'Missing parameters near_wallet_id',code:0}
     const params = {
-        amount: data?.amount,
+        near_wallet_id:data?.near_wallet_id,
+        key:data?.key,
+        value: data?.value
     };
     return  await UserField.update(params, {
         where: {
