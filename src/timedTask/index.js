@@ -224,9 +224,7 @@ async function updateGuildTask() {
                 guildIds.push(arg.guild_id)
             }
         }
-        
     }
-    console.log(guildIds)
     let userList = await getAllUser({
         guild_id: {
             $in: guildIds
@@ -238,6 +236,7 @@ async function updateGuildTask() {
         let role = [];
         let delRole = [];
         for (rule in addRoleList) {
+            console.log(rule)
             await addUserField({
                 near_wallet_id: user.near_wallet_id,
                 key: rule.key_field[0],
