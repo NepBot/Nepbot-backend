@@ -20,9 +20,9 @@ async function octTask() {
     }
 
     let userFields = await getUserFieldList({
-        near_wallet_id: {
-            $in: accountIdList
-        },
+        // near_wallet_id: {
+        //     $in: accountIdList
+        // },
         key: 'appchain_id',
         value: {
             $in: appchainIdList
