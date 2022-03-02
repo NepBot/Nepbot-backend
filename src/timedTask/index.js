@@ -2,7 +2,7 @@ const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
 const {queryActions, queryOctActions, queryRoleActions, queryTransferActions} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
-const {getUserFieldList, addUserField} = require("../server/services/UserFieldService");
+const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
 /**
  * member member
@@ -236,7 +236,6 @@ async function updateGuildTask() {
         let role = [];
         let delRole = [];
         for (rule of addRoleList) {
-            console.log(rule)
             await addUserField({
                 near_wallet_id: user.near_wallet_id,
                 key: rule.key_field[0],
