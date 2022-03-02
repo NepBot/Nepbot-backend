@@ -18,7 +18,6 @@ async function octTask() {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
-    console.log(actions)
 
     let userFields = await getUserFieldList({
         near_wallet_id: {
@@ -29,6 +28,8 @@ async function octTask() {
             $in: appchainIdList
         }
     })
+
+    console.log(userFields)
 
     for (userField of userFields) {
         let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
