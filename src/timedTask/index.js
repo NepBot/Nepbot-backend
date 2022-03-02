@@ -49,11 +49,14 @@ async function octTask() {
 
             let role = [];
             let delRole = [];
+            let test = []
             for (const {fields, role_id, key_field} of guildRoles) {
                 if (key_field[0] != 'appchain_id') {
                     continue
                 }
-                console.log(octRole, fields.oct_role)
+                if (octRole == fields.oct_role) {
+                    test.push(0)
+                }
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
@@ -63,6 +66,7 @@ async function octTask() {
                     _role && delRole.push(_role)
                 }
             }
+            console.log(test)
             if(role.length){
                 member.roles.add(role).then(console.log).catch(console.error)
             }
