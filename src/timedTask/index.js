@@ -224,7 +224,6 @@ async function updateGuildTask() {
             guildIds.push(args.guild_id)
         }
     }
-    console.log(addRoleList)
 
     let userList = await getAllUser({
         guild_id: {
