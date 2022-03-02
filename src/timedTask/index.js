@@ -18,6 +18,7 @@ async function octTask() {
         appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
+    console.log(actions)
 
     let userFields = await getUserFieldList({
         near_wallet_id: {
@@ -208,7 +209,6 @@ async function balanceTask() {
 
 async function updateGuildTask() {
     const actions = await queryRoleActions(timestamp)
-    console.log(actions)
     let addRoleList = []
     let delRoleList = []
     let guildIds = []
