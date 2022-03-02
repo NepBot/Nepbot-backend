@@ -235,7 +235,7 @@ async function updateGuildTask() {
         const member = await getMembers(user.guild_id, user.user_id);
         let role = [];
         let delRole = [];
-        for (rule in addRoleList) {
+        for (rule of addRoleList) {
             console.log(rule)
             await addUserField({
                 near_wallet_id: user.near_wallet_id,
@@ -277,7 +277,7 @@ async function updateGuildTask() {
             }
         }
 
-        for (rule in delRoleList) {
+        for (rule of delRoleList) {
             await deleteUserField({
                 near_wallet_id: user.near_wallet_id,
                 key: rule.key_field[0],
