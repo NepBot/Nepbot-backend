@@ -224,7 +224,7 @@ async function updateGuildTask() {
             guildIds.push(args.guild_id)
         }
     }
-
+    console.log(guildIds)
     let userList = await getAllUser({
         guild_id: {
             $in: guildIds
