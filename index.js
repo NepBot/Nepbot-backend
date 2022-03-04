@@ -11,5 +11,5 @@ client.login(TOKEN).then(async () => {
     setInterval(async ()=>{
         console.log('start')
         await timedTask()
-    },60000)
+    },1000)
 });
