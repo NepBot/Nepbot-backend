@@ -1,4 +1,4 @@
-const {connect, WalletConnection} = require('near-api-js');
+const {connect, WalletConnection, providers} = require('near-api-js');
 const {config} = require('../../utils/config');
 const {nearWallet,RULE_CONTRACT} = config;
 const contract = async () => {
@@ -6,7 +6,7 @@ const contract = async () => {
     const near = await connect(nearWallet);
     return await near.account('nepbot.testnet');
 }
-const provider = new nearAPI.providers.JsonRpcProvider(nearWallet.nodeUrl);
+const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 exports.contract = contract;
 exports.getFieldList = async () => {
     const account = await this.contract();
