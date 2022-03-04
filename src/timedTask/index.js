@@ -70,7 +70,7 @@ async function octTask() {
             }
         }
     }
-    
+    return actions.length
 }
 
 async function tokenTask() {
@@ -146,6 +146,7 @@ async function tokenTask() {
 
         
     }
+    return actions.length
 }
 
 async function balanceTask() {
@@ -203,6 +204,7 @@ async function balanceTask() {
             member.roles.remove(delRole).then(console.log).catch(console.error)
         }
     }
+    return actions.length
 }
 
 async function updateGuildTask() {
@@ -288,19 +290,20 @@ async function updateGuildTask() {
             member.roles.remove(delRole).then(console.log).catch(console.error)
         }
     }
+    return actions.length
 }
 
 exports.timedTask = async () => {
     const block = await getkNewBlock(block_height)
-    await checkIndexerSyncComplete(block.header.hash)
+    let actionCount = await checkIndexerSyncComplete(block.header.hash)
 
-    await updateGuildTask()
-    await tokenTask()
-    await balanceTask()
-    await octTask()
+    actionCount += await updateGuildTask()
+    actionCount += await tokenTask()
+    actionCount += await balanceTask()
+    actionCount += await octTask()
 
     block_height = block.header.height
-    if (actions.length > 0) {
+    if (actionCount > 0) {
         block_timestamp = block.header.timestamp_nanosec
     }
     
