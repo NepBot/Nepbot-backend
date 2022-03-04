@@ -5,11 +5,13 @@ const {client} =  require('./src/Bot');
 //const {config} = require("./src/utils/config");
 const {secret} = require("./src/utils/secret")
 const {TOKEN} = secret;
+
+async function sleep(ms) {
+    return new Promise(resolve=>setTimeout(resolve, ms))
+}
+
 client.login(TOKEN).then(async () => {
     console.log('Success login ');
     await timedTask()
-    setInterval(async ()=>{
-        console.log('start')
-        await timedTask()
-    },1000)
+    await sleep(1000)
 });
