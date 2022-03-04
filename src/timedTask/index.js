@@ -301,7 +301,6 @@ exports.timedTask = async () => {
     actionCount += await tokenTask()
     actionCount += await balanceTask()
     actionCount += await octTask()
-
     block_height = block.header.height
     if (actionCount > 0) {
         block_timestamp = block.header.timestamp_nanosec
