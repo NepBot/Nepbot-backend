@@ -8,7 +8,7 @@ const BN = require('bn.js')
  * member member
  *
  * */
-let timestamp = String(1646207482000) + "000000"
+let timestamp = String(1646332222000) + "000000"
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
