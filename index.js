@@ -12,6 +12,9 @@ async function sleep(ms) {
 
 client.login(TOKEN).then(async () => {
     console.log('Success login ');
-    await timedTask()
-    await sleep(1000)
+    while (true) {
+        await timedTask()
+        await sleep(1000)
+    }
+    
 });
