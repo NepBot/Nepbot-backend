@@ -1,14 +1,14 @@
-const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf} = require('../server/api/contract');
+const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getkNewBlock} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {queryActions, queryOctActions, queryRoleActions, queryTransferActions} = require('../server/services/postgreService')
+const {queryActions, queryOctActions, queryRoleActions, queryTransferActions, checkIndexerSyncComplete} = require('../server/services/postgreService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
-/**
- * member member
- *
- * */
+const {config} = require('../../utils/config');
+
+const provider = new nearAPI.providers.JsonRpcProvider(config.nearWallet.nodeUrl);
 let timestamp = String(Date.now()) + "000000"
+let block_height = 0
 
 async function octTask() {
     let actions = await queryOctActions(timestamp)
@@ -292,11 +292,19 @@ async function updateGuildTask() {
 }
 
 exports.timedTask = async () => {
+    const block = await getkNewBlock(block_height)
+    await checkIndexerSyncComplete(block.header.hash)
+
     await updateGuildTask()
     await tokenTask()
     await balanceTask()
     await octTask()
-    timestamp = String(Date.now()) + "000000"
+
+    block_height = block.header.height
+    if (actions.length > 0) {
+        block_timestamp = block.header.timestamp_nanosec
+    }
+    
 }
 
 // exports.timedTask = async () => {

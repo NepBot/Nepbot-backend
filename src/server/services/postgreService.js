@@ -101,3 +101,22 @@ exports.queryTransferActions = async (accountIds, time) => {
     , [account_ids_arg, time])
     return res.rows
 }
+
+exports.checkIndexerSyncComplete = async (blockHash) => {
+    console.log("waiting for indexer to sync")
+    while (true) {
+        const res = await pool.query(
+        `
+        select
+            block_hash
+        from blocks
+        where block_hash = $1
+        `
+        , [blockHash])
+        for (row of res.rows) {
+            if (row.block_hash == blockHash) {
+                return
+            }
+        }
+    }
+}

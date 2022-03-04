@@ -93,3 +93,13 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
         return
     }
 }
+
+exports.getkNewBlock = async (block_height) => {
+    console.log(`fetched block height: ${block_height}`)
+    while (true) {
+        block = await provider.block({ finality: 'final' });
+        if (block.header.height != block_height) {
+            return block
+        }
+    }
+}
