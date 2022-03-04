@@ -4,9 +4,8 @@ const {queryActions, queryOctActions, queryRoleActions, queryTransferActions, ch
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
-const {config} = require('../../utils/config');
 
-const provider = new nearAPI.providers.JsonRpcProvider(config.nearWallet.nodeUrl);
+
 let timestamp = String(Date.now()) + "000000"
 let block_height = 0
 

@@ -6,6 +6,7 @@ const contract = async () => {
     const near = await connect(nearWallet);
     return await near.account('nepbot.testnet');
 }
+const provider = new nearAPI.providers.JsonRpcProvider(nearWallet.nodeUrl);
 exports.contract = contract;
 exports.getFieldList = async () => {
     const account = await this.contract();
