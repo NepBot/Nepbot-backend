@@ -1,24 +1,27 @@
-const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getkNewBlock} = require('../server/api/contract');
+const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {queryActions, queryOctActions, queryRoleActions, queryTransferActions, checkIndexerSyncComplete} = require('../server/services/postgreService')
+const {queryTokenActions, queryOctActions, queryRoleActions, queryTransferActions} = require('../server/services/blockService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
 const {config} = require('../utils/config');
-const {nearWallet,RULE_CONTRACT} = config;
-const {connect, WalletConnection, providers} = require('near-api-js');
+const {nearWallet} = config;
+const {providers} = require('near-api-js');
+
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
 let timestamp = String(Date.now()) + "000000"
 let block_height = 0
+let final_block_height = 0
 
-async function octTask() {
-    let actions = await queryOctActions(timestamp)
+async function octTask(receipts) {
+    let actions = queryOctActions(receipts)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
-        appchainIdList.push(action.appchain_id)
+        let args = action.Action.actions[0].FunctionCall.args
+        appchainIdList.push()
         accountIdList.push(action.signer_id)
     }
 
@@ -74,7 +77,6 @@ async function octTask() {
             }
         }
     }
-    return actions.length
 }
 
 async function tokenTask() {
@@ -83,7 +85,7 @@ async function tokenTask() {
     for (field of allFieldList) {
         allTokenList.push(field[1])
     }
-    let actions = await queryActions(allTokenList, timestamp)
+    let actions = await queryTokenActions(allTokenList, timestamp)
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
@@ -150,7 +152,6 @@ async function tokenTask() {
 
         
     }
-    return actions.length
 }
 
 async function balanceTask() {
@@ -208,7 +209,6 @@ async function balanceTask() {
             member.roles.remove(delRole).then(console.log).catch(console.error)
         }
     }
-    return actions.length
 }
 
 async function updateGuildTask() {
@@ -294,13 +294,12 @@ async function updateGuildTask() {
             member.roles.remove(delRole).then(console.log).catch(console.error)
         }
     }
-    return actions.length
 }
 
 const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
     let newestBlock = await provider.block({ finality: 'final' });
-    let final_block_height = newestBlock.header.height
+    final_block_height = newestBlock.header.height
     if (block_height == 0) {
         block_height = final_block_height - 1
     }
@@ -314,13 +313,15 @@ const resolveNewBlock = async () => {
             } catch (e) {
                 continue
             }
-            let actionCount = 0
-            actionCount += await updateGuildTask()
-            actionCount += await tokenTask()
-            actionCount += await balanceTask()
-            actionCount += await octTask()
+
+            for (let chunk of block.chunks) {
+                const chunkData = await provider.chunk(chunk.chunk_hash)
+                await updateGuildTask(chunkData.receipts)
+                await tokenTask(chunkData.receipts)
+                await balanceTask(chunkData.receipts)
+                await octTask(chunkData.receipts)
+            }
             block_height = block.header.height
-            block_timestamp = block.header.timestamp_nanosec
         } else {
             return
         }
