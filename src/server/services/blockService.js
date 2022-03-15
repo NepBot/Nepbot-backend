@@ -7,7 +7,7 @@ const pool = new Pool({connectionString: testnet_url})
 
 exports.queryTokenActions  = (tokenIds, receipts)=>{
     let ret = []
-    receipts = receipts.filter(item => tokenIds.findIndex(tokenId => tokenId == item.receipt.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
+    receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receipt.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
     for (receipt of receipts) {
         let obj = {}
         obj.sender_id = receipt.receipt.predecessor_id
@@ -22,7 +22,7 @@ exports.queryTokenActions  = (tokenIds, receipts)=>{
 
 exports.queryOctActions = (receipts) => {
     let ret = []
-    receipts = receipts.filter(item => item.receipt.receiver_id == config.OCT_CONTRACT && item.receipt.Action.actions[0].FunctionCall.method_name == "sync_state_of")
+    receipts = receipts.filter(item => item.receipt.Action && item.receipt.receiver_id == config.OCT_CONTRACT && item.receipt.Action.actions[0].FunctionCall.method_name == "sync_state_of")
     for (receipt of receipts) {
         let obj = {}
         let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args))
@@ -34,10 +34,9 @@ exports.queryOctActions = (receipts) => {
 }
 
 exports.queryRoleActions = (receipts) => {
-    console.log(receipts)
     let ret = []
     receipts = receipts.filter(item => 
-        item.receipt.receiver_id == config.RULE_CONTRACT && 
+        item.receipt.Action && item.receipt.receiver_id == config.RULE_CONTRACT && 
         (item.receipt.Action.actions[0].FunctionCall.method_name == "set_roles" ||
         item.receipt.Action.actions[0].FunctionCall.method_name == "del_roles")
     )
@@ -86,7 +85,7 @@ exports.queryRoleActions = (receipts) => {
 exports.queryTransferActions = (accountIds, receipts) => {
     let ret = []
     receipts.forEach(item => {
-        if (item.receipt.Action.actions[0].Transfer) {
+        if (item.receipt.Action && item.receipt.Action.actions[0].Transfer) {
             if (accountIds.findIndex(accountId => accountId == item.receipt.receiver_id) > -1) {
                 ret.push({account_id: item.receipt.receiver_id})
             }
