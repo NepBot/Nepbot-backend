@@ -11,7 +11,6 @@ const {providers} = require('near-api-js');
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
-let timestamp = String(Date.now()) + "000000"
 let block_height = 0
 let final_block_height = 0
 
@@ -78,13 +77,13 @@ async function octTask(receipts) {
     }
 }
 
-async function tokenTask() {
+async function tokenTask(receipts) {
     let allFieldList = await getFieldList()
     let allTokenList = []
     for (field of allFieldList) {
         allTokenList.push(field[1])
     }
-    let actions = await queryTokenActions(allTokenList, timestamp)
+    let actions = await queryTokenActions(allTokenList, receipts)
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
@@ -153,13 +152,13 @@ async function tokenTask() {
     }
 }
 
-async function balanceTask() {
+async function balanceTask(receipts) {
     const userFields = await getUserFieldList({
         key: 'near'
     })
     let accountIds = []
     userFields.forEach(item => accountIds.push(item.near_wallet_id))
-    const actions = await queryTransferActions(accountIds, timestamp)
+    const actions = await queryTransferActions(accountIds, receipts)
     accountIds = []
     for (action of actions) {
         accountIds.push(action.account_id)
@@ -210,8 +209,8 @@ async function balanceTask() {
     }
 }
 
-async function updateGuildTask() {
-    const actions = await queryRoleActions(timestamp)
+async function updateGuildTask(receipts) {
+    const actions = await queryRoleActions(receipts)
     let addRoleList = []
     let delRoleList = []
     let guildIds = []
