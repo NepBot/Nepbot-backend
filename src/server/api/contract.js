@@ -100,6 +100,9 @@ exports.getkNewBlock = async (block_height) => {
     while (true) {
         let newestBlock = await provider.block({ finality: 'final' });
         let final_block_height = newestBlock.header.height
+        if (block_height == 0) {
+            block_height = final_block_height - 1
+        }
         if (final_block_height != block_height) {
             block_height += 1
             try {
