@@ -297,7 +297,7 @@ async function updateGuildTask() {
     return actions.length
 }
 
-const resolveNewBlock = async (block_height) => {
+const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
     let newestBlock = await provider.block({ finality: 'final' });
     let final_block_height = newestBlock.header.height
@@ -328,7 +328,7 @@ const resolveNewBlock = async (block_height) => {
 }
 
 exports.timedTask = async () => {
-    await resolveNewBlock(block_height)
+    await resolveNewBlock()
 }
 
 // exports.timedTask = async () => {
