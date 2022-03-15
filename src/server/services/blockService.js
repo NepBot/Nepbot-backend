@@ -34,6 +34,7 @@ exports.queryOctActions = async (receipts) => {
 }
 
 exports.queryRoleActions = async (receipts) => {
+    console.log(receipts)
     let ret = []
     receipts = receipts.filter(item => 
         item.receiver_id == config.RULE_CONTRACT && 
