@@ -20,7 +20,6 @@ async function octTask(receipts) {
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
-        let args = action.Action.actions[0].FunctionCall.args
         appchainIdList.push()
         accountIdList.push(action.signer_id)
     }
