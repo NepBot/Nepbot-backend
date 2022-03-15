@@ -7,12 +7,12 @@ const pool = new Pool({connectionString: testnet_url})
 
 exports.queryTokenActions  = (tokenIds, receipts)=>{
     let ret = []
-    receipts = receipts.filter(item => tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && receipts.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
+    receipts = receipts.filter(item => tokenIds.findIndex(tokenId => tokenId == item.receipt.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
     for (receipt of receipts) {
         let obj = {}
-        obj.sender_id = receipt.predecessor_id
-        obj.token_id = receipt.receiver_id
-        let args = JSON.parse(bs64.decode(receipt.Action.actions[0].FunctionCall.args))
+        obj.sender_id = receipt.receipt.predecessor_id
+        obj.token_id = receipt.receipt.receiver_id
+        let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args))
         obj.receiver_id = args.receiver_id
         ret.push(obj)
     }
@@ -22,12 +22,12 @@ exports.queryTokenActions  = (tokenIds, receipts)=>{
 
 exports.queryOctActions = (receipts) => {
     let ret = []
-    receipts = receipts.filter(item => item.receiver_id == config.OCT_CONTRACT && receipts.Action.actions[0].FunctionCall.method_name == "sync_state_of")
+    receipts = receipts.filter(item => item.receipt.receiver_id == config.OCT_CONTRACT && item.receipt.Action.actions[0].FunctionCall.method_name == "sync_state_of")
     for (receipt of receipts) {
         let obj = {}
-        let args = JSON.parse(bs64.decode(receipt.Action.actions[0].FunctionCall.args))
+        let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args))
         obj.appchain_id = args.appchain_id
-        obj.signer_id = receipt.Action.signer_id
+        obj.signer_id = receipt.receipt.Action.signer_id
         ret.push(obj)
     }
     return ret
@@ -37,14 +37,14 @@ exports.queryRoleActions = (receipts) => {
     console.log(receipts)
     let ret = []
     receipts = receipts.filter(item => 
-        item.receiver_id == config.RULE_CONTRACT && 
-        (receipts.Action.actions[0].FunctionCall.method_name == "set_roles" ||
-        receipts.Action.actions[0].FunctionCall.method_name == "del_roles")
+        item.receipt.receiver_id == config.RULE_CONTRACT && 
+        (item.receipt.Action.actions[0].FunctionCall.method_name == "set_roles" ||
+        item.receipt.Action.actions[0].FunctionCall.method_name == "del_roles")
     )
     for (receipt of receipts) {
         let obj = {}
-        obj.method_name = receipt.Action.actions[0].FunctionCall.method_name
-        let args_raw = bs64.decode(receipt.Action.actions[0].FunctionCall.args)
+        obj.method_name = receipt.receipt.Action.actions[0].FunctionCall.method_name
+        let args_raw = bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args)
         obj.args = JSON.parse(JSON.parse(args_raw).args.replace(/\\/g, ''))
         ret.push(obj)
     }
@@ -86,12 +86,12 @@ exports.queryRoleActions = (receipts) => {
 exports.queryTransferActions = (accountIds, receipts) => {
     let ret = []
     receipts.forEach(item => {
-        if (receipts.Action.actions[0].Transfer) {
-            if (accountIds.findIndex(accountId => accountId == item.receiver_id) > -1) {
-                ret.push({account_id: item.receiver_id})
+        if (item.receipt.Action.actions[0].Transfer) {
+            if (accountIds.findIndex(accountId => accountId == item.receipt.receiver_id) > -1) {
+                ret.push({account_id: item.receipt.receiver_id})
             }
-            if (accountIds.findIndex(accountId => accountId == item.predecessor_id) > -1) {
-                ret.push({account_id: item.predecessor_id})
+            if (accountIds.findIndex(accountId => accountId == item.receipt.predecessor_id) > -1) {
+                ret.push({account_id: item.receipt.predecessor_id})
             }
         }
        
