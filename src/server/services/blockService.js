@@ -5,7 +5,7 @@ const bs64 = require('bs64')
 const testnet_url = "postgres://public_readonly:nearprotocol@35.184.214.98/testnet_explorer";
 const pool = new Pool({connectionString: testnet_url})
 
-exports.queryTokenActions  = async (tokenIds, receipts)=>{
+exports.queryTokenActions  = (tokenIds, receipts)=>{
     let ret = []
     receipts = receipts.filter(item => tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && receipts.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
     for (receipt of receipts) {
@@ -20,7 +20,7 @@ exports.queryTokenActions  = async (tokenIds, receipts)=>{
     return ret
 }
 
-exports.queryOctActions = async (receipts) => {
+exports.queryOctActions = (receipts) => {
     let ret = []
     receipts = receipts.filter(item => item.receiver_id == config.OCT_CONTRACT && receipts.Action.actions[0].FunctionCall.method_name == "sync_state_of")
     for (receipt of receipts) {
@@ -33,7 +33,7 @@ exports.queryOctActions = async (receipts) => {
     return ret
 }
 
-exports.queryRoleActions = async (receipts) => {
+exports.queryRoleActions = (receipts) => {
     console.log(receipts)
     let ret = []
     receipts = receipts.filter(item => 
@@ -83,7 +83,7 @@ exports.queryRoleActions = async (receipts) => {
     // return ret
 }
 
-exports.queryTransferActions = async (accountIds, receipts) => {
+exports.queryTransferActions = (accountIds, receipts) => {
     let ret = []
     receipts.forEach(item => {
         if (receipts.Action.actions[0].Transfer) {
