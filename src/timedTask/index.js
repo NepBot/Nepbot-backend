@@ -293,18 +293,40 @@ async function updateGuildTask() {
     return actions.length
 }
 
+const resolveNewBlock = async (block_height) => {
+    console.log(`fetched block height: ${block_height}`)
+    let newestBlock = await provider.block({ finality: 'final' });
+    let final_block_height = newestBlock.header.height
+    if (block_height == 0) {
+        block_height = final_block_height - 1
+    }
+    while (true) {
+        
+        if (final_block_height > block_height) {
+            block_height += 1
+            let block = {}
+            try {
+                block = await provider.block({ blockId: block_height})
+            } catch (e) {
+                console.log(e)
+            }
+            actionCount += await updateGuildTask()
+            actionCount += await tokenTask()
+            actionCount += await balanceTask()
+            actionCount += await octTask()
+            block_height = block.header.height
+            block_timestamp = block.header.timestamp_nanosec
+        } else {
+            return
+        }
+    }
+}
+
 exports.timedTask = async () => {
-    const block = await getkNewBlock(block_height)
+    const block = await resolveNewBlock(block_height)
     let actionCount = await checkIndexerSyncComplete(block.header.hash)
 
-    actionCount += await updateGuildTask()
-    actionCount += await tokenTask()
-    actionCount += await balanceTask()
-    actionCount += await octTask()
-    block_height = block.header.height
-    if (actionCount > 0) {
-        block_timestamp = block.header.timestamp_nanosec
-    }
+    
     
 }
 
