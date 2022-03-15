@@ -312,7 +312,7 @@ const resolveNewBlock = async (block_height) => {
             try {
                 block = await provider.block({ blockId: block_height})
             } catch (e) {
-                console.log(e)
+                continue
             }
             let actionCount = 0
             actionCount += await updateGuildTask()
