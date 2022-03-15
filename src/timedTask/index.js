@@ -4,7 +4,7 @@ const {queryActions, queryOctActions, queryRoleActions, queryTransferActions, ch
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
-const {config} = require('../../utils/config');
+const {config} = require('../utils/config');
 const {nearWallet,RULE_CONTRACT} = config;
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
