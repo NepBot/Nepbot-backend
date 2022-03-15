@@ -314,6 +314,7 @@ const resolveNewBlock = async (block_height) => {
             } catch (e) {
                 console.log(e)
             }
+            let actionCount = 0
             actionCount += await updateGuildTask()
             actionCount += await tokenTask()
             actionCount += await balanceTask()
