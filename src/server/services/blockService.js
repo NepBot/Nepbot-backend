@@ -33,7 +33,7 @@ exports.queryOctActions = async (receipts) => {
     return ret
 }
 
-exports.queryRoleActions = async (time) => {
+exports.queryRoleActions = async (receipts) => {
     let ret = []
     receipts = receipts.filter(item => 
         item.receiver_id == config.RULE_CONTRACT && 
