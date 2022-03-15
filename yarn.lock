@@ -177,6 +177,13 @@
   dependencies:
     "base-x" "^3.0.2"
 
+"bs64@^0.1.0":
+  "integrity" "sha512-0rK20fzECR6FFR2VRhvDOUTlPmWFS8PddRtk9KNqsfj9S8++WHSDKzf0f9S/89sthwBg+bEgFitRLEC6COTi8Q=="
+  "resolved" "https://registry.npmmirror.com/bs64/-/bs64-0.1.0.tgz"
+  "version" "0.1.0"
+  dependencies:
+    "convert-string" "~0.1.0"
+
 "buffer-writer@2.0.0":
   "integrity" "sha1-zn64Gjj3gp2wnIc/L7t5LAyY7AQ="
   "resolved" "https://registry.npm.taobao.org/buffer-writer/download/buffer-writer-2.0.0.tgz"
@@ -215,6 +222,11 @@
   "integrity" "sha1-4TjMdeBAxyexlm/l5fjJruJW/js="
   "resolved" "https://registry.npm.taobao.org/content-type/download/content-type-1.0.4.tgz"
   "version" "1.0.4"
+
+"convert-string@~0.1.0":
+  "integrity" "sha512-1KX9ESmtl8xpT2LN2tFnKSbV4NiarbVi8DVb39ZriijvtTklyrT+4dT1wsGMHKD3CJUjXgvJzstm9qL9ICojGA=="
+  "resolved" "https://registry.npmmirror.com/convert-string/-/convert-string-0.1.0.tgz"
+  "version" "0.1.0"
 
 "cookie-parser@^1.4.6":
   "integrity" "sha512-z3IzaNjdwUC2olLIB5/ITd0/setiaFMLYiZJle7xg5Fe9KWAceil7xszYfHHBtDFYLSgJduS2Ty0P1uJdPDJeA=="
