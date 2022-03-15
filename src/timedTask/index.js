@@ -6,6 +6,7 @@ const {getUserFieldList, addUserField, deleteUserField} = require("../server/ser
 const BN = require('bn.js')
 const {config} = require('../utils/config');
 const {nearWallet,RULE_CONTRACT} = config;
+const {connect, WalletConnection, providers} = require('near-api-js');
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
