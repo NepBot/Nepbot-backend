@@ -328,11 +328,7 @@ const resolveNewBlock = async (block_height) => {
 }
 
 exports.timedTask = async () => {
-    const block = await resolveNewBlock(block_height)
-    let actionCount = await checkIndexerSyncComplete(block.header.hash)
-
-    
-    
+    await resolveNewBlock(block_height)
 }
 
 // exports.timedTask = async () => {
