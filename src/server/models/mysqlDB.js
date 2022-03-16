@@ -14,7 +14,8 @@ const mySqlPool = new Sequelize(MYSQL.database,MYSQL.user,MYSQL.password,{
     host:MYSQL.host,
     dialect: 'mysql',
     timezone: '+00:00',
-    operatorsAliases
+    operatorsAliases,
+    logging: false
 })
 
 
