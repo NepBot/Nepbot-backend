@@ -277,6 +277,33 @@ async function updateGuildTask(receipts) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
+            } else if (rule.key_field[0] == 'nft_contract_id') {
+                let tokenAmount = await getNftCountOf(rule.key_field[1], user.near_wallet_id)
+                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && delRole.push(_role)
+                }
+            } else if (rule.key_field[0] == 'x.paras.near') {
+                let tokenAmount = await new Promise((resolve, reject) => {
+                    request(`https://api-v2-mainnet.paras.id/token?collection_id=${rule.key_field[1]}&owner_id=${user.near_wallet_id}`, function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            resolve(body.data.results.length)
+                        }
+                        reject(error)
+                    })
+                })
+                if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
+                    const _role = getRoles(rule.guild_id, rule.role_id);
+                    _role && delRole.push(_role)
+                }
             }
         }
 
