@@ -1,12 +1,13 @@
-const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf} = require('../server/api/contract');
+const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {queryTokenActions, queryOctActions, queryRoleActions, queryTransferActions} = require('../server/services/blockService')
+const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions} = require('../server/services/blockService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
 const {config} = require('../utils/config');
 const {nearWallet} = config;
 const {providers} = require('near-api-js');
+const request = require("request");
 
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
@@ -15,7 +16,7 @@ let block_height = 0
 let final_block_height = 0
 
 async function octTask(receipts) {
-    let actions = queryOctActions(receipts)
+    let actions = filterOctActions(receipts)
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
@@ -81,9 +82,11 @@ async function tokenTask(receipts) {
     let allFieldList = await getFieldList()
     let allTokenList = []
     for (field of allFieldList) {
-        allTokenList.push(field[1])
+        if (field[0] == "token_id") {
+            allTokenList.push(field[1])
+        }
     }
-    let actions = await queryTokenActions(allTokenList, receipts)
+    let actions = await filterTokenActions(allTokenList, receipts)
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
@@ -158,7 +161,7 @@ async function balanceTask(receipts) {
     })
     let accountIds = []
     userFields.forEach(item => accountIds.push(item.near_wallet_id))
-    const actions = await queryTransferActions(accountIds, receipts)
+    const actions = await filterTransferActions(accountIds, receipts)
     accountIds = []
     for (action of actions) {
         accountIds.push(action.account_id)
@@ -210,7 +213,7 @@ async function balanceTask(receipts) {
 }
 
 async function updateGuildTask(receipts) {
-    const actions = await queryRoleActions(receipts)
+    const actions = await filterRoleActions(receipts)
     let addRoleList = []
     let delRoleList = []
     let guildIds = []
@@ -294,6 +297,165 @@ async function updateGuildTask(receipts) {
     }
 }
 
+async function nftTask(receipts) {
+    let allFieldList = await getFieldList()
+    let allContractList = []
+    for (field of allFieldList) {
+        if (field[0] == "nft_contract_id") {
+            allContractList.push(field[1])
+        }
+    }
+    let actions = await filterNftActions(allContractList, receipts)
+    let accountIdList = []
+    let contractList = []
+    for (action of actions) {
+        accountIdList.push(action.sender_id)
+        accountIdList.push(action.receiver_id)
+        contractList.push(action.contract_id)
+    }
+
+    let userTokens = await getUserFieldList({
+        near_wallet_id: {
+            $in: accountIdList
+        },
+        key: 'nft_contract_id',
+        value: {
+            $in: contractList
+        }
+    })
+
+    
+    for (userToken of userTokens) {
+        let roles = await getRulesByField('nft_contract_id', userToken.value)
+        let guild_ids = []
+        roles.map(item => {
+            guild_ids.push(item.guild_id)
+        })
+        let users = await getAllUser({
+            guild_id: {
+                $in: guild_ids
+            },
+            near_wallet_id: userToken.near_wallet_id,
+        })
+        let newAmount = await getNftCountOf(userToken.value, userToken.near_wallet_id)
+        
+
+        for (user of users) {
+            let member = await getMembers(user.guild_id, user.user_id)
+            let guildRoles = await getRules(user.guild_id)
+
+            let role = [];
+            let delRole = [];
+            for (const {fields, role_id, key_field} of guildRoles) {
+                if (key_field[0] != 'nft_contract_id') {
+                    continue
+                }
+                if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+                    const _role = getRoles(user.guild_id, role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1){
+                    const _role = getRoles(user.guild_id, role_id);
+                    _role && delRole.push(_role)
+                }
+            }
+            if(role.length){
+                member.roles.add(role).then(console.log).catch(console.error)
+            }
+            if(delRole.length){
+                member.roles.remove(delRole).then(console.log).catch(console.error)
+            }
+        }
+
+        
+    }
+}
+
+async function parasTask(receipts) {
+    let actions = await filterParasActions(receipts)
+    let accountIdList = []
+    let collectionList = []
+    for (action of actions) {
+        accountIdList.push(action.sender_id)
+        accountIdList.push(action.receiver_id)
+        const fractions = action.token_id.split(":")
+        let res = await new Promise((resolve, reject) => {
+            request(`https://api-v2-mainnet.paras.id/token?token_series_id=${fractions[0]}&contract_id=x.paras.near&__limit=1`, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    resolve(body)
+                }
+                reject(error)
+            })
+        })
+        if (res.data.results) {
+            collectionList.push(res.data.results[0].metadata.collection_id)
+        }
+    }
+
+    let userTokens = await getUserFieldList({
+        near_wallet_id: {
+            $in: accountIdList
+        },
+        key: 'x.paras.near',
+        value: {
+            $in: collectionList
+        }
+    })
+
+    
+    for (userToken of userTokens) {
+        let roles = await getRulesByField('x.paras.near', userToken.value)
+        let guild_ids = []
+        roles.map(item => {
+            guild_ids.push(item.guild_id)
+        })
+        let users = await getAllUser({
+            guild_id: {
+                $in: guild_ids
+            },
+            near_wallet_id: userToken.near_wallet_id,
+        })
+        let newAmount = await new Promise((resolve, reject) => {
+            request(`https://api-v2-mainnet.paras.id/token?collection_id=${userToken.value}&owner_id=${userToken.near_wallet_id}`, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    resolve(body.data.results.length)
+                }
+                reject(error)
+            })
+        })
+        
+
+        for (user of users) {
+            let member = await getMembers(user.guild_id, user.user_id)
+            let guildRoles = await getRules(user.guild_id)
+
+            let role = [];
+            let delRole = [];
+            for (const {fields, role_id, key_field} of guildRoles) {
+                if (key_field[0] != 'x.paras.near') {
+                    continue
+                }
+                if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+                    const _role = getRoles(user.guild_id, role_id);
+                    _role && role.push(_role)
+                }
+                if(member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1){
+                    const _role = getRoles(user.guild_id, role_id);
+                    _role && delRole.push(_role)
+                }
+            }
+            if(role.length){
+                member.roles.add(role).then(console.log).catch(console.error)
+            }
+            if(delRole.length){
+                member.roles.remove(delRole).then(console.log).catch(console.error)
+            }
+        }
+
+        
+    }
+}
+
 const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
     let newestBlock = await provider.block({ finality: 'final' });
@@ -318,6 +480,8 @@ const resolveNewBlock = async () => {
                 await tokenTask(chunkData.receipts)
                 await balanceTask(chunkData.receipts)
                 await octTask(chunkData.receipts)
+                await nftTask(chunkData.receipts)
+                await parasTask(chunkData.receipts)
             }
             block_height = block.header.height
         } else {

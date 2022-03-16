@@ -3,9 +3,9 @@ const { config } = require('../../utils/config.js')
 const bs64 = require('bs64') 
 
 const testnet_url = "postgres://public_readonly:nearprotocol@35.184.214.98/testnet_explorer";
-const pool = new Pool({connectionString: testnet_url})
+//const pool = new Pool({connectionString: testnet_url})
 
-exports.queryTokenActions  = (tokenIds, receipts)=>{
+exports.filterTokenActions  = (tokenIds, receipts)=>{
     let ret = []
     receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receipt.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
     for (receipt of receipts) {
@@ -20,7 +20,7 @@ exports.queryTokenActions  = (tokenIds, receipts)=>{
     return ret
 }
 
-exports.queryOctActions = (receipts) => {
+exports.filterOctActions = (receipts) => {
     let ret = []
     receipts = receipts.filter(item => item.receipt.Action && item.receipt.receiver_id == config.OCT_CONTRACT && item.receipt.Action.actions[0].FunctionCall.method_name == "sync_state_of")
     for (receipt of receipts) {
@@ -33,7 +33,7 @@ exports.queryOctActions = (receipts) => {
     return ret
 }
 
-exports.queryRoleActions = (receipts) => {
+exports.filterRoleActions = (receipts) => {
     let ret = []
     receipts = receipts.filter(item => 
         item.receipt.Action && item.receipt.receiver_id == config.RULE_CONTRACT && 
@@ -82,7 +82,7 @@ exports.queryRoleActions = (receipts) => {
     // return ret
 }
 
-exports.queryTransferActions = (accountIds, receipts) => {
+exports.filterTransferActions = (accountIds, receipts) => {
     let ret = []
     receipts.forEach(item => {
         if (item.receipt.Action && item.receipt.Action.actions[0].Transfer) {
@@ -95,5 +95,33 @@ exports.queryTransferActions = (accountIds, receipts) => {
         }
        
     })
+    return ret
+}
+
+exports.filterNftActions = (contractIds, receipts) => {
+    let ret = []
+    receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receipt.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("nft_transfer") > -1)
+    for (receipt of receipts) {
+        let obj = {}
+        obj.sender_id = receipt.receipt.predecessor_id
+        obj.contract_id = receipt.receipt.receiver_id
+        let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args))
+        obj.receiver_id = args.receiver_id
+        ret.push(obj)
+    }
+    return ret
+}
+
+exports.filterParasActions = (receipts) => {
+    let ret = []
+    receipts = receipts.filter(item => item.receipt.Action && item.receipt.receiver_id == "x.paras.near" && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("nft_transfer") > -1)
+    for (receipt of receipts) {
+        let obj = {}
+        obj.sender_id = receipt.receipt.predecessor_id
+        let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args))
+        obj.receiver_id = args.receiver_id
+        obj.token_id = args.token_id
+        ret.push(obj)
+    }
     return ret
 }
