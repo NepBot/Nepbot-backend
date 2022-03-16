@@ -100,7 +100,6 @@ exports.filterTransferActions = (accountIds, receipts) => {
 
 exports.filterNftActions = (contractIds, receipts) => {
     let ret = []
-    console.log(receipts[0])
     receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("nft_transfer") > -1)
     for (receipt of receipts) {
         let obj = {}
