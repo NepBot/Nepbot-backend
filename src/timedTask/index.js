@@ -12,7 +12,7 @@ const request = require("request");
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
-let block_height = 0
+let block_height = 85142730
 let final_block_height = 0
 
 async function octTask(receipts) {
