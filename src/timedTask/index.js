@@ -306,7 +306,6 @@ async function nftTask(receipts) {
         }
     }
     let actions = await filterNftActions(allContractList, receipts)
-    console.log(allFieldList, receipts)
     let accountIdList = []
     let contractList = []
     for (action of actions) {
