@@ -1,6 +1,6 @@
 const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require('../server/api/contract');
 const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
-const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions} = require('../server/services/blockService')
+const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions, filterNftActions, filterParasActions} = require('../server/services/blockService')
 const {updateUser, getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const BN = require('bn.js')
