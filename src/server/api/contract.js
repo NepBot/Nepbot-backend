@@ -75,6 +75,17 @@ exports.getBalanceOf = async (tokenId, accountId) => {
     return await account.viewFunction(tokenId, 'ft_balance_of', {account_id: accountId})
 }
 
+exports.getNftCountOf = async (contractId, accountId) => {
+    const account = await this.contract()
+    return await account.viewFunction(contractId, "nft_supply_for_owner", {account_id: accountId})
+}
+
+exports.getParasNftCountOf = async (accountId, tokenId) => {
+    const account = await this.contract()
+    
+    return await account.viewFunction(contractId, "nft_supply_for_owner", {account_id: accountId})
+}
+
 exports.getNearBalanceOf = async (accountId) => {
     const near = await connect(nearWallet);
     const account = await near.account(accountId);

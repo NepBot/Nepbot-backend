@@ -4,7 +4,7 @@ const {Routes} = require("discord-api-types/v9");
 const {config} = require("../../utils/config");
 const {client} = require("../../Bot");
 const {getAllUser} = require("../services/userService");
-const {axios} = require("./request");
+
 
 console.log("client>>>>",client)
 exports.getMembers = async (guildId,memberId = 0)=>{

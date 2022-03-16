@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers} = require("./api/guild");
-const {getRules, contract, getOctAppchainRole, getBalanceOf, getRulesByField, getNearBalanceOf} = require("./api/contract");
+const {getRules, contract, getOctAppchainRole, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const commands  = require('../commands/commands')
 const {connect} = require('near-api-js');
@@ -89,7 +89,9 @@ app.post('/api/set-info', async (req, res) => {
         let rulesMap = {
             token: [],
             oct: [],
-            balance: []
+            balance: [],
+            nft: [],
+            paras: []
         }
         for (rule of rules) {
             if (rule.key_field[0] == 'token_id') {
@@ -98,6 +100,10 @@ app.post('/api/set-info', async (req, res) => {
                 rulesMap.oct.push(rule)
             } else if (rule.key_field[0] == 'near') {
                 rulesMap.balance.push(rule)
+            } else if (rule.key_field[0] == 'nft_contract_id') {
+                rulesMap.nft.push(rule)
+            } else if (rule.key_field[0] == 'x.paras.near') {
+                rulesMap.paras.push(rule)
             }
             await addUserField({
                 near_wallet_id: params.account_id,
@@ -143,6 +149,39 @@ app.post('/api/set-info', async (req, res) => {
                 _role && role.push(_role)
             }
             if(member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
+            }
+        }
+
+        for (const rule of rulesMap.paras) {
+            let tokenAmount = await getNftCountOf(rule.key_field[1], params.account_id)
+
+            if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && delRole.push(_role)
+            }
+        }
+
+        for (const rule of rulesMap.paras) {
+            const tokenAmount = await new Promise((resolve, reject) => {
+                request(`https://api-v2-mainnet.paras.id/token?collection_id=${rule.key_field[1]}&owner_id=${params.account_id}`, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        resolve(body.data.results.length)
+                    }
+                    reject(error)
+                })
+            })
+
+            if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
+                const _role = getRoles(rule.guild_id, rule.role_id);
+                _role && role.push(_role)
+            }
+            if(member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1){
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && delRole.push(_role)
             }
