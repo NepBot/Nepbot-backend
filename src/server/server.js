@@ -154,7 +154,7 @@ app.post('/api/set-info', async (req, res) => {
             }
         }
 
-        for (const rule of rulesMap.paras) {
+        for (const rule of rulesMap.nft) {
             let tokenAmount = await getNftCountOf(rule.key_field[1], params.account_id)
 
             if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
