@@ -475,29 +475,23 @@ const resolveNewBlock = async () => {
     if (block_height == 0) {
         block_height = final_block_height - 1
     }
-    while (true) {
-        
-        if (final_block_height > block_height) {
-            block_height += 1
-            let block = {}
-            try {
-                block = await provider.block({ blockId: block_height})
-            } catch (e) {
-                continue
-            }
+    while (final_block_height > block_height) {
+        block_height += 1
+        let block = {}
+        try {
+            block = await provider.block({ blockId: block_height})
+        } catch (e) {
+            continue
+        }
 
-            for (let chunk of block.chunks) {
-                const chunkData = await provider.chunk(chunk.chunk_hash)
-                await updateGuildTask(chunkData.receipts)
-                await tokenTask(chunkData.receipts)
-                await balanceTask(chunkData.receipts)
-                await octTask(chunkData.receipts)
-                await nftTask(chunkData.receipts)
-                await parasTask(chunkData.receipts)
-            }
-            block_height = block.header.height
-        } else {
-            return
+        for (let chunk of block.chunks) {
+            const chunkData = await provider.chunk(chunk.chunk_hash)
+            await updateGuildTask(chunkData.receipts)
+            await tokenTask(chunkData.receipts)
+            await balanceTask(chunkData.receipts)
+            await octTask(chunkData.receipts)
+            await nftTask(chunkData.receipts)
+            await parasTask(chunkData.receipts)
         }
     }
 }
