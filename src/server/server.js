@@ -169,14 +169,7 @@ app.post('/api/set-info', async (req, res) => {
         }
 
         for (const rule of rulesMap.paras) {
-            const tokenAmount = await new Promise((resolve, reject) => {
-                request(`https://api-v2-mainnet.paras.id/token?collection_id=${rule.key_field[1]}&owner_id=${params.account_id}`, function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        resolve(body.data.results.length)
-                    }
-                    reject(error)
-                })
-            })
+            const tokenAmount = await getTokenPerOwnerCount(rule.key_field[1], params.account_id)
 
             if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
@@ -323,6 +316,7 @@ app.get('/oauth',async (req,res,next)=>{
 require('./models/sync')
 const path = require("path");
 const axios = require("axios");
+const { getTokenPerOwnerCount } = require('./api/paras');
 /** init app */
 app.listen(port, () => {
     console.log(`Example app listening at http://127.0.0.1:${port}/api`)

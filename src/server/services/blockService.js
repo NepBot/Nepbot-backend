@@ -105,7 +105,7 @@ exports.filterNftActions = (contractIds, receipts) => {
         let obj = {}
         obj.sender_id = receipt.predecessor_id
         obj.contract_id = receipt.receiver_id
-        let args = JSON.parse(new Buffer(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id
         ret.push(obj)
     }
@@ -118,7 +118,7 @@ exports.filterParasActions = (receipts) => {
     for (receipt of receipts) {
         let obj = {}
         obj.sender_id = receipt.predecessor_id
-        let args = JSON.parse(new Buffer(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id
         obj.token_id = args.token_id
         ret.push(obj)
