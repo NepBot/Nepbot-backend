@@ -1,17 +1,16 @@
 const express = require('express');
-const {Routes} = require("discord-api-types/v9");
 const userService = require('./services/userService');
 const app = express();
 const port = 5000;
 const {config} = require('../utils/config');
 const {secret} = require('../utils/secret');
-const {rest} = require('../commands/index')
 const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers} = require("./api/guild");
-const {getRules, contract, getOctAppchainRole, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require("./api/contract");
+const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
+const { getTokenPerOwnerCount } = require('./api/paras');
 const commands  = require('../commands/commands')
 const {connect} = require('near-api-js');
 const {nearWallet} = config;
@@ -316,7 +315,6 @@ app.get('/oauth',async (req,res,next)=>{
 require('./models/sync')
 const path = require("path");
 const axios = require("axios");
-const { getTokenPerOwnerCount } = require('./api/paras');
 /** init app */
 app.listen(port, () => {
     console.log(`Example app listening at http://127.0.0.1:${port}/api`)

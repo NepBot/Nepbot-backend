@@ -278,6 +278,7 @@ async function updateGuildTask(receipts) {
                     _role && delRole.push(_role)
                 }
             } else if (rule.key_field[0] == 'nft_contract_id') {
+                console.log(rule)
                 let tokenAmount = await getNftCountOf(rule.key_field[1], user.near_wallet_id)
                 if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
