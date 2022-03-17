@@ -1,17 +1,16 @@
 const express = require('express');
-const {Routes} = require("discord-api-types/v9");
 const userService = require('./services/userService');
 const app = express();
 const port = 5000;
 const {config} = require('../utils/config');
 const {secret} = require('../utils/secret');
-const {rest} = require('../commands/index')
 const cookieParser = require('cookie-parser');
 const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers} = require("./api/guild");
-const {getRules, contract, getOctAppchainRole, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require("./api/contract");
+const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
+const { getTokenPerOwnerCount } = require('./api/paras');
 const commands  = require('../commands/commands')
 const {connect} = require('near-api-js');
 const {nearWallet} = config;
@@ -169,14 +168,7 @@ app.post('/api/set-info', async (req, res) => {
         }
 
         for (const rule of rulesMap.paras) {
-            const tokenAmount = await new Promise((resolve, reject) => {
-                request(`https://api-v2-mainnet.paras.id/token?collection_id=${rule.key_field[1]}&owner_id=${params.account_id}`, function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        resolve(body.data.results.length)
-                    }
-                    reject(error)
-                })
-            })
+            const tokenAmount = await getTokenPerOwnerCount(rule.key_field[1], params.account_id)
 
             if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                 const _role = getRoles(rule.guild_id, rule.role_id);

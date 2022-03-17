@@ -12,7 +12,7 @@ exports.filterTokenActions  = (tokenIds, receipts)=>{
         let obj = {}
         obj.sender_id = receipt.receipt.predecessor_id
         obj.token_id = receipt.receiver_id
-        let args = JSON.parse(bs64.decode(receipt.receipt.Action.actions[0].FunctionCall.args).toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id
         ret.push(obj)
     }
@@ -25,7 +25,7 @@ exports.filterOctActions = (receipts) => {
     receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.OCT_CONTRACT && item.receipt.Action.actions[0].FunctionCall.method_name == "sync_state_of")
     for (receipt of receipts) {
         let obj = {}
-        let args = JSON.parse(new Buffer(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.appchain_id = args.appchain_id
         obj.signer_id = receipt.receipt.Action.signer_id
         ret.push(obj)
@@ -105,7 +105,7 @@ exports.filterNftActions = (contractIds, receipts) => {
         let obj = {}
         obj.sender_id = receipt.predecessor_id
         obj.contract_id = receipt.receiver_id
-        let args = JSON.parse(new Buffer(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id
         ret.push(obj)
     }
@@ -118,7 +118,7 @@ exports.filterParasActions = (receipts) => {
     for (receipt of receipts) {
         let obj = {}
         obj.sender_id = receipt.predecessor_id
-        let args = JSON.parse(new Buffer(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
+        let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id
         obj.token_id = args.token_id
         ret.push(obj)

@@ -1,18 +1,18 @@
 const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require('../server/api/contract');
-const {getMembers, getRoles, getMembersTokenList} = require("../server/api/guild");
+const {getMembers, getRoles} = require("../server/api/guild");
 const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions, filterNftActions, filterParasActions} = require('../server/services/blockService')
-const {updateUser, getAllUser} = require("../server/services/userService");
+const {getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
+const {getTokenSeries, getTokenPerOwnerCount} = require("../server/api/paras")
 const BN = require('bn.js')
 const {config} = require('../utils/config');
 const {nearWallet} = config;
 const {providers} = require('near-api-js');
-const request = require("request");
 
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
-let block_height = 0
+let block_height = 85144616
 let final_block_height = 0
 
 async function octTask(receipts) {
@@ -278,6 +278,7 @@ async function updateGuildTask(receipts) {
                     _role && delRole.push(_role)
                 }
             } else if (rule.key_field[0] == 'nft_contract_id') {
+                console.log(rule)
                 let tokenAmount = await getNftCountOf(rule.key_field[1], user.near_wallet_id)
                 if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
@@ -287,15 +288,8 @@ async function updateGuildTask(receipts) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && delRole.push(_role)
                 }
-            } else if (rule.key_field[0] == 'x.paras.near') {
-                let tokenAmount = await new Promise((resolve, reject) => {
-                    request(`https://api-v2-mainnet.paras.id/token?collection_id=${rule.key_field[1]}&owner_id=${user.near_wallet_id}`, function (error, response, body) {
-                        if (!error && response.statusCode == 200) {
-                            resolve(body.data.results.length)
-                        }
-                        reject(error)
-                    })
-                })
+            } else if (rule.key_field[0] == 'x.paras.near') {  
+                let tokenAmount = await getTokenPerOwnerCount(rule.key_field[1], user.near_wallet_id)
                 if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1 ) {
                     const _role = getRoles(rule.guild_id, rule.role_id);
                     _role && role.push(_role)
@@ -406,16 +400,9 @@ async function parasTask(receipts) {
         accountIdList.push(action.sender_id)
         accountIdList.push(action.receiver_id)
         const fractions = action.token_id.split(":")
-        let res = await new Promise((resolve, reject) => {
-            request(`https://api-v2-mainnet.paras.id/token?token_series_id=${fractions[0]}&contract_id=x.paras.near&__limit=1`, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    resolve(body)
-                }
-                reject(error)
-            })
-        })
-        if (res.data.results) {
-            collectionList.push(res.data.results[0].metadata.collection_id)
+        let tokenSeries = await getTokenSeries(fractions[0])
+        if (tokenSeries.metadata.collection_id) {
+            collectionList.push(tokenSeries.metadata.collection_id)
         }
     }
 
@@ -442,14 +429,13 @@ async function parasTask(receipts) {
             },
             near_wallet_id: userToken.near_wallet_id,
         })
-        let newAmount = await new Promise((resolve, reject) => {
-            request(`https://api-v2-mainnet.paras.id/token?collection_id=${userToken.value}&owner_id=${userToken.near_wallet_id}`, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    resolve(body.data.results.length)
-                }
-                reject(error)
-            })
-        })
+        let newAmount = 0
+        if (!userToken.value || userToken.value == "") {
+            newAmount = await getNftCountOf(userToken.value, userToken.near_wallet_id)
+        } else {
+            newAmount = await getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id)
+        }
+        
         
 
         for (user of users) {
@@ -485,7 +471,7 @@ async function parasTask(receipts) {
 
 const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
-    let newestBlock = await provider.block({ finality: 'final' });
+    let newestBlock = await provider.block({ finality: 'optimistic' });
     final_block_height = newestBlock.header.height
     if (block_height == 0) {
         block_height = final_block_height - 1
