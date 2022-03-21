@@ -10,7 +10,7 @@ exports.filterTokenActions  = (tokenIds, receipts)=>{
     receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf("ft_transfer") > -1)
     for (receipt of receipts) {
         let obj = {}
-        obj.sender_id = receipt.receipt.predecessor_id
+        obj.sender_id = receipt.predecessor_id
         obj.token_id = receipt.receiver_id
         let args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args , 'base64').toString())
         obj.receiver_id = args.receiver_id

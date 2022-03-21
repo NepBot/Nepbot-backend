@@ -97,11 +97,6 @@ async function tokenTask(receipts) {
         tokenList.push(action.token_id)
     }
 
-    if (actions.length > 0) {
-        console.log(accountIdList)
-        console.log(tokenList)
-    }
-
     let userTokens = await getUserFieldList({
         near_wallet_id: {
             $in: accountIdList
@@ -111,10 +106,6 @@ async function tokenTask(receipts) {
             $in: tokenList
         }
     })
-
-    if (userTokens.length > 0) {
-        console.log(userTokens)
-    }
 
     
     for (userToken of userTokens) {
