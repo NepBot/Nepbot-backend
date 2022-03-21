@@ -87,9 +87,7 @@ async function tokenTask(receipts) {
         }
     }
     let actions = await filterTokenActions(allTokenList, receipts)
-    if (actions.length > 0) {
-        console.log(actions)
-    }
+    
     
     let accountIdList = []
     let tokenList = []
@@ -108,6 +106,10 @@ async function tokenTask(receipts) {
             $in: tokenList
         }
     })
+
+    if (userTokens.length > 0) {
+        console.log(userTokens)
+    }
 
     
     for (userToken of userTokens) {
