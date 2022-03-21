@@ -87,7 +87,10 @@ async function tokenTask(receipts) {
         }
     }
     let actions = await filterTokenActions(allTokenList, receipts)
-    console.log(actions)
+    if (actions.length > 0) {
+        console.log(actions)
+    }
+    
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
