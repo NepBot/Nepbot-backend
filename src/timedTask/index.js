@@ -12,7 +12,7 @@ const {providers} = require('near-api-js');
 const provider = new providers.JsonRpcProvider(nearWallet.nodeUrl);
 
 
-let block_height = 0
+let block_height = 85529520
 let final_block_height = 0
 
 async function octTask(receipts) {
@@ -87,6 +87,7 @@ async function tokenTask(receipts) {
         }
     }
     let actions = await filterTokenActions(allTokenList, receipts)
+    console.log(actions)
     let accountIdList = []
     let tokenList = []
     for (action of actions) {
