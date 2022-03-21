@@ -85,7 +85,7 @@ exports.filterRoleActions = (receipts) => {
 exports.filterTransferActions = (accountIds, receipts) => {
     let ret = []
     receipts.forEach(item => {
-        if (item.receipt.Action && item.receipt.Action.actions[0].Transfer) {
+        if (item.receipt.Action && item.receipt.Action.actions[0] && item.receipt.Action.actions[0].Transfer) {
             if (accountIds.findIndex(accountId => accountId == item.receiver_id) > -1) {
                 ret.push({account_id: item.receiver_id})
             }
