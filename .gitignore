@@ -1,3 +1,5 @@
 src/utils/secret.js
 node_modules
 2.js
+
+src/utils/env.js
