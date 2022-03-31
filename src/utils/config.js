@@ -20,7 +20,7 @@ function getConfig() {
                 },
                 port: 5000,
                 RULE_CONTRACT: 'app.nepbot.near',
-                OCT_CONTRACT: 'registry.test_oct.testnet',
+                OCT_CONTRACT: 'octopus-registry.near',
                 ACCOUNT_ID: 'sign.nepbot.near',
                 APPLICATION_ID: '958997413803196476',
                 POSTGRESQL: "postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer",
