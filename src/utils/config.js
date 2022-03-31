@@ -6,7 +6,7 @@ const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const env = require("./env.js").env
 const key = new keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
 
-export function getConfig() {
+function getConfig() {
     switch (env) {
         case 'production':
         case 'mainnet':
@@ -81,4 +81,8 @@ export function getConfig() {
         default:
             throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`)
     }
+}
+
+module.exports = {
+    getConfig
 }
