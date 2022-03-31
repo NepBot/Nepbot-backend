@@ -1,7 +1,6 @@
 const {GuildMember} = require('discord.js')
 const {rest} = require('../../commands/index');
 const {Routes} = require("discord-api-types/v9");
-const {config} = require("../../utils/config");
 const {client} = require("../../Bot");
 const {getAllUser} = require("../services/userService");
 

@@ -1,5 +1,5 @@
 const request = require("request");
-const {config} = require("../../utils/config.js")
+const config = require("../../utils/config.js").getConfig()
 exports.getTokenSeries = async (tokenSeriesId) => {
     let res = await new Promise((resolve, reject) => {
         request(`${config.PARAS_API}/token?token_series_id=${tokenSeriesId}&contract_id=x.paras.near&__limit=1`, function (error, response, body) {
