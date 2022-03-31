@@ -4,7 +4,7 @@ const {nearWallet,RULE_CONTRACT} = config;
 const contract = async () => {
     // connect to NEAR
     const near = await connect(nearWallet);
-    return await near.account('nepbot.testnet');
+    return await near.account();
 }
 
 exports.contract = contract;
