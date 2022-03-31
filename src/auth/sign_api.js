@@ -1,6 +1,6 @@
 
 const bs58 = require('bs58');
-const {config} = require("../utils/config");
+const config = require("../utils/config").getConfig();
 
 exports.getSign =  async (args)=> {
     let keyStore = config.nearWallet.keyStore;

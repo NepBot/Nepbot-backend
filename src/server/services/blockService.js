@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const { config } = require('../../utils/config.js')
+const config = require('../../utils/config.js').getConfig()
 const bs64 = require('bs64') 
 
 const testnet_url = "postgres://public_readonly:nearprotocol@35.184.214.98/testnet_explorer";
