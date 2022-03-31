@@ -1,5 +1,5 @@
 const {Sequelize} = require('sequelize');
-const {MYSQL} = require('../../utils/secret.js').secret;
+const {MYSQL} = require('../../utils/secret.js').getSecret();
 const Op = Sequelize.Op;
 const operatorsAliases = {
   $eq: Op.eq,
