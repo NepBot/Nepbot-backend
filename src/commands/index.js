@@ -29,9 +29,7 @@ const events = async interaction => {
 
             const string = interaction.options.getString('nearwalletid');
             if(string && (string.includes('.testnet') ||
-                string.includes('.mainnet') ||
-                string.includes('.betanet') ||
-                string.includes('.guildnet'))) {
+                string.includes('.near'))) {
                 temp.setURL(`${walletAuthUrl}/?near_wallet=${string}&user_id=${interaction.user.id}&guild_id=${interaction.guild.id}`)
             }else{
                 temp.setURL(`${walletAuthUrl}/?&user_id=${interaction.user.id}&guild_id=${interaction.guild.id}`)
