@@ -4,7 +4,7 @@ const Util = require("discord.js/src/util/Util");
 const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
-    
+    const guild = client.guilds.cache.get(msg.guildId);
     const userId = msg.author.id;
     let user;
     if(msg.content.startsWith('!')){
@@ -22,7 +22,7 @@ const msgFunc = async (msg,client)=> {
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
                 //user = client.users.cache.get(userId);
-                const guild = client.guilds.cache.get(msg.guildId);
+
                 guild.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
                 break;
             case '!setrule':
@@ -61,7 +61,7 @@ const msgFunc = async (msg,client)=> {
                 //     .catch(console.error);
                 //
                 // console.log(role[0].position)
-                const guild = client.guilds.cache.get(msg.guildId);
+                //const guild = client.guilds.cache.get(msg.guildId);
                 const roles = client.guilds.cache.get(msg.guildId).roles.cache;
                 /*const roles = client.guilds.cache.get(msg.guildId).roles.cache;
                 let rolePosition = roles.map(item=>({position:item.position,name:item.name,id:item.id}))
