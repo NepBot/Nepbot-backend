@@ -1,10 +1,10 @@
 const {MessageEmbed, MessageButton, MessageActionRow} = require("discord.js");
 const config = require("../utils/config").getConfig();
 const Util = require("discord.js/src/util/Util");
-const {TOKEN, CLIENT_ID, GUILD ,walletAuthUrl} = config;
+const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
-    const { ownerId } = client.guilds.cache.get(msg.guildId);
+    const guild = client.guilds.cache.get(msg.guildId);
     const userId = msg.author.id;
     let user;
     if(msg.content.startsWith('!')){
@@ -21,13 +21,13 @@ const msgFunc = async (msg,client)=> {
 
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
-                user = client.users.cache.get(userId);
+                //user = client.users.cache.get(userId);
 
-                user.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
+                guild.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
                 break;
             case '!setrule':
                 user = client.users.cache.get(userId);
-                if(userId === ownerId) {
+                if(userId === guild.ownerId) {
                     const content = new MessageEmbed().setDescription('Click the button below to enter the setting rules page').setColor('BLUE');
                     const button = new MessageActionRow()
                         .addComponents(new MessageButton()
