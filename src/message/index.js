@@ -26,7 +26,7 @@ const msgFunc = async (msg,client)=> {
                 //user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
-                let channel = guild.cache.get(msg.channelId)
+                let channel = guild.channels.cache.get(msg.channelId)
 
                 channel.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
                 break;
