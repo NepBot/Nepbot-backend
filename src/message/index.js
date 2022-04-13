@@ -1,6 +1,7 @@
 const {MessageEmbed, MessageButton, MessageActionRow} = require("discord.js");
 const config = require("../utils/config").getConfig();
 const Util = require("discord.js/src/util/Util");
+const {getMembers} = require("../server/api/guild");
 const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
@@ -8,6 +9,7 @@ const msgFunc = async (msg,client)=> {
     const userId = msg.author.id;
     let user;
     if(msg.content.startsWith('!')){
+        console.log(msg)
         switch (msg.content) {
             case '!oauth':
                 let temp = new MessageButton().setLabel('Connect Near Wallet').setStyle('LINK')
@@ -22,8 +24,10 @@ const msgFunc = async (msg,client)=> {
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
                 //user = client.users.cache.get(userId);
+                let guildMember = getMembers(msg.guildId, userId)
+                console.log(guildMember)
 
-                guild.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
+                guildMember.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
                 break;
             case '!setrule':
                 user = client.users.cache.get(userId);
