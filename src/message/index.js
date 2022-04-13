@@ -24,7 +24,7 @@ const msgFunc = async (msg,client)=> {
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
                 //user = client.users.cache.get(userId);
-                let guildMember = getMembers(msg.guildId, userId)
+                let guildMember = await getMembers(msg.guildId, userId)
                 console.log(guildMember)
 
                 guildMember.send({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
