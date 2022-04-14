@@ -48,10 +48,10 @@ const msgFunc = async (msg,client)=> {
                     // } 
                 })
 
-                let res = await channel.send(messagePayload);
+                //let res = await channel.send(messagePayload);
                 
 
-                //let res = await msg.reply(messagePayload)
+                let res = await msg.reply(messagePayload)
                 console.log(res)
                 break;
             case '!setrule':
