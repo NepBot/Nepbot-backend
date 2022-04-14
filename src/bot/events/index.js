@@ -14,7 +14,6 @@ const { addUser, queryUser} = require('../../server/services/userService');
 
 /** commands response*/
 const events = async interaction => {
-    console.log(interaction)
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
     const { ownerId } = interaction.guild;
@@ -61,6 +60,7 @@ const events = async interaction => {
                     ephemeral:true
                 })
             }
+            break;
     }
 
 }
