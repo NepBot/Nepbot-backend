@@ -9,6 +9,7 @@ client.on('ready',async (data)=>{
  * Listen for interaction
  * */
 client.on('interactionCreate', async (interaction) => {
+    console.log("events")
     await events(interaction);
 })
 
