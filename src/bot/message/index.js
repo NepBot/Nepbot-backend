@@ -29,7 +29,7 @@ const msgFunc = async (msg,client)=> {
                 let channel = guild.channels.cache.get(msg.channelId)
 
 
-                let messagePayload = MessagePayload.create(user, { 
+                let messagePayload = MessagePayload.create(msg, { 
                     content: '\n', 
                     ephemeral: true, 
                     embeds:[embed], 
