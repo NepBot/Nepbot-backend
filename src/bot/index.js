@@ -23,12 +23,13 @@ client.on('messageCreate', async (msg) => {
 });
 
 const regeistryCommands = async () => {
-    await client.application.commands.create({
+    client.application.commands.create({
         name: "oauth",
         type: "CHAT_INPUT",
         description: "Replies with user walletAuthorization"
-    })
-    await client.application.commands.create({
+    }).then(console.log)
+    .catch(console.error);
+    client.application.commands.create({
         name: "setrule",
         type: "CHAT_INPUT",
         description: "Replies with user walletAuthorization"
