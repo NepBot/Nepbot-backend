@@ -26,7 +26,7 @@ const msgFunc = async (msg,client)=> {
                 user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
-                //let channel = guild.channels.cache.get(msg.channelId)
+                let channel = guild.channels.cache.get(msg.channelId)
 
 
                 let messagePayload = MessagePayload.create(user, { 
