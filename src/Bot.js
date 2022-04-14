@@ -4,6 +4,7 @@ const { events } = require('./commands/index')
 const {msgFunc} = require("./message");
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
+    console.log(client)
 });
 /**
  * Listen for interaction
