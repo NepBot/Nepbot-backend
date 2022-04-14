@@ -10,7 +10,6 @@ const {getRoles, getMembers, getGuild} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const { getTokenPerOwnerCount } = require('./api/paras');
-const commands  = require('../bot/events/commands')
 const {connect} = require('near-api-js');
 const {nearWallet, port} = config;
 const tweetnacl = require("tweetnacl");
