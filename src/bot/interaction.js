@@ -27,13 +27,8 @@ const events = async interaction => {
                 .setTitle('Near Wallet Authorization')
                 .setDescription('Click the button below to complete the near wallet authorization operation');
 
-            const string = interaction.options.getString('nearwalletid');
-            if(string && (string.includes('.testnet') ||
-                string.includes('.near'))) {
-                temp.setURL(`${walletAuthUrl}/?near_wallet=${string}&user_id=${interaction.user.id}&guild_id=${interaction.guild.id}`)
-            }else{
-                temp.setURL(`${walletAuthUrl}/?&user_id=${interaction.user.id}&guild_id=${interaction.guild.id}`)
-            }
+            temp.setURL(`${walletAuthUrl}/oauth/?user_id=${msg.author.id}&guild_id=${msg.guildId}`)
+            
             let button = new MessageActionRow()
                 .addComponents(temp)   //Connect Near Wallet
             await interaction.reply({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
