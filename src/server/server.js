@@ -4,7 +4,7 @@ const app = express();
 const config = require('../utils/config').getConfig();
 const secret = require('../utils/secret').getSecret();
 const cookieParser = require('cookie-parser');
-const {client} = require("../Bot");
+//const {client} = require("../Bot");
 const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
@@ -205,13 +205,12 @@ app.post('/api/set-info', async (req, res) => {
 // })
 
 app.get('/api/getRole/:guildId', async (req, res) => {
-    //console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
-    const roles = client.guilds.cache.get(req.params.guildId).roles.cache;
+    const roles = getRoles(req.params.guildId)
     res.json(roles);
 })
 
 app.get('/api/getServer/:guildId', (req, res) => {
-    const serverList = client.guilds.cache.get(req.params.guildId);
+    const serverList = getGuild(req.params.guildId);
     res.json(serverList);
 })
 
@@ -235,7 +234,7 @@ app.post('/api/sign', async (req, res) => {
             res.json('no user found')
             return
         }
-        const { ownerId } = client.guilds.cache.get(args.guild_id);
+        const { ownerId } = getGuild(args.guild_id);
         if (ownerId != users[0].user_id) {
             res.json('no authorization')
             return
