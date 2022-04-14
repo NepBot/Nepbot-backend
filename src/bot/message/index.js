@@ -38,7 +38,7 @@ const msgFunc = async (msg,client)=> {
                         messageReference: msg
                     },
                     allowedMentions: {
-                        users: [userId]
+                        repliedUser: true
                     }
 
                     // reference: {
