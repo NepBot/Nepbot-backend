@@ -28,7 +28,15 @@ const msgFunc = async (msg,client)=> {
                 // console.log(guildMember)
                 let channel = guild.channels.cache.get(msg.channelId)
 
-                channel.send({ content: '\n', ephemeral:false, embeds:[embed], components: [button] });
+                channel.send({ 
+                    content: '\n', 
+                    ephemeral:false, 
+                    embeds:[embed], 
+                    components: [button],
+                    reference: {
+                        messageId: msg.id
+                    } 
+                });
                 break;
             case '!setrule':
                 user = client.users.cache.get(userId);
