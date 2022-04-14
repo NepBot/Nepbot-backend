@@ -193,13 +193,6 @@ app.post('/api/set-info', async (req, res) => {
     }
 
 })
-// /**  */
-// app.get('/api/getMemberList/:guildId', async (req, res) => {
-//     const rs = await rest.get(`${Routes.guildMembers(req.params.guildId)}?limit=5&after=1`, {
-//         auth: true,
-//     })
-//     res.json(rs)
-// })
 
 app.get('/api/getRole/:guildId', async (req, res) => {
     const roles = getRoles(req.params.guildId)

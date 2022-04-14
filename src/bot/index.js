@@ -12,13 +12,13 @@ client.on('ready',async (data)=>{
 
 client.on('guildCreate', async (interaction) => {
     console.log('guildCreate')
-    await events(interaction);
+    await onGuildAdd(interaction);
 })
 
-client.on('guildDelete', async (interaction) => {
-    console.log('guildDelete')
-    await events(interaction);
-})
+// client.on('guildDelete', async (interaction) => {
+//     console.log('guildDelete')
+//     await events(interaction);
+// })
 
 client.on('interactionCreate', async (interaction) => {
     await events(interaction);
@@ -30,16 +30,7 @@ client.on('messageCreate', async (msg) => {
 });
 
 const regeistryCommands = async () => {
-    client.application.commands.create({
-        name: "oauth",
-        type: "CHAT_INPUT",
-        description: "Replies with user walletAuthorization"
-    }) //, "940255224256409611")
-    client.application.commands.create({
-        name: "setrule",
-        type: "CHAT_INPUT",
-        description: "Replies with user walletAuthorization"
-    })
+    
 
 
 
