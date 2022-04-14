@@ -14,7 +14,7 @@ const { addUser, queryUser} = require('../../server/services/userService');
 
 /** commands response*/
 const events = async interaction => {
-    if (!interaction.isCommand()) return;
+    //if (!interaction.isButton()) return;
     const { commandName } = interaction;
     const { ownerId } = interaction.guild;
     const userId = interaction.user.id;
