@@ -6,7 +6,6 @@ const {getAllUser} = require("../services/userService");
 
 
 exports.getMembers = async (guildId,memberId = 0)=>{
-    console.log("client>>>>",client)
     if (memberId){
         const member = await rest.get(`${Routes.guildMember(guildId,memberId)}`,{
             auth:true,
