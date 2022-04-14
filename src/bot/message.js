@@ -1,7 +1,7 @@
 const {MessageEmbed, MessageButton, MessageActionRow, MessagePayload} = require("discord.js");
-const config = require("../../utils/config").getConfig();
+const config = require("../utils/config").getConfig();
 const Util = require("discord.js/src/util/Util");
-const {getMembers} = require("../../server/api/guild");
+const {getMembers} = require("../server/api/guild");
 const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
