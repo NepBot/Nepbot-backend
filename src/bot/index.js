@@ -9,14 +9,21 @@ client.on('ready',async (data)=>{
 /**
  * Listen for interaction
  * */
-client.on('interactionCreate', async (interaction) => {
-    console.log("events")
+
+client.on('guildMemberAdd', async (interaction) => {
+    console.log('guildMemberAdd')
     await events(interaction);
 })
 
-/**
- * Listen for messages
- * */
+client.on('inviteCreate', async (interaction) => {
+    console.log('inviteCreate')
+    await events(interaction);
+})
+
+client.on('interactionCreate', async (interaction) => {
+    await events(interaction);
+})
+
 client.on('messageCreate', async (msg) => {
 
     await msgFunc(msg,client)
