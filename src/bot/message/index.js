@@ -29,14 +29,14 @@ const msgFunc = async (msg,client)=> {
                 let channel = guild.channels.cache.get(msg.channelId)
 
 
-                let messagePayload = MessagePayload.create(user, { 
+                let messagePayload = MessagePayload.create(msg, { 
                     content: '\n', 
                     ephemeral:false, 
                     embeds:[embed], 
                     components: [button],
-                    // reply: {
-                    //     messageReference: msg
-                    // },
+                    reply: {
+                        messageReference: msg
+                    },
                     allowedMentions: {
                         users: [userId]
                     }
