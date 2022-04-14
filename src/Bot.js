@@ -20,8 +20,6 @@ client.on('messageCreate', async (msg) => {
     await msgFunc(msg,client)
 });
 
-const 
-
 module.exports = {client: () => {
     return client
 }}
