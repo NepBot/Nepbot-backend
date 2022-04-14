@@ -44,9 +44,9 @@ const msgFunc = async (msg,client)=> {
                     ephemeral:false, 
                     embeds:[embed], 
                     components: [button],
-                    // reply: {
-                    //     messageReference: msg
-                    // }
+                    reply: {
+                        messageReference: msg
+                    },
                     allowedMentions: {
                         repliedUser: true
                     }
