@@ -4,7 +4,6 @@ const { events } = require('./commands/index')
 const {msgFunc} = require("./message");
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
-    console.log(client)
 });
 /**
  * Listen for interaction
@@ -21,6 +20,8 @@ client.on('messageCreate', async (msg) => {
     await msgFunc(msg,client)
 });
 
+const 
 
-
-module.exports = {client};
+module.exports = {client: () => {
+    return client
+}}
