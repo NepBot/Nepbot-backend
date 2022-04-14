@@ -34,7 +34,9 @@ const msgFunc = async (msg,client)=> {
                     embeds:[embed], 
                     components: [button],
                     reference: {
-                        messageId: msg.id
+                        channelId: msg.channelId,
+                        messageId: msg.id,
+                        guildId: msg.guildId
                     } 
                 });
                 console.log(res)
