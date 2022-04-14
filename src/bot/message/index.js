@@ -13,6 +13,7 @@ const msgFunc = async (msg,client)=> {
         switch (msg.content) {
             case '!oauth':
                 let temp = new MessageButton().setLabel('Connect Near Wallet').setStyle('LINK')
+                let testButton = new MessageButton().setLabel('Connect Near Wallet').setStyle('PRIMARY').setCustomId("oauth")
 
                 const embed = new MessageEmbed()
                     .setColor('#0099ff')
@@ -22,7 +23,7 @@ const msgFunc = async (msg,client)=> {
                 temp.setURL(`${walletAuthUrl}/oauth/?user_id=${msg.author.id}&guild_id=${msg.guildId}`)
 
                 let button = new MessageActionRow()
-                    .addComponents(temp)   //Connect Near Wallet
+                    .addComponents(temp, testButton)
                 user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
