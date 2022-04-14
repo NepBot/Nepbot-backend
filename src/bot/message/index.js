@@ -26,19 +26,9 @@ const msgFunc = async (msg,client)=> {
                 user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
-                //let channel = guild.channels.cache.get(msg.channelId)
+                let channel = guild.channels.cache.get(msg.channelId)
 
-                // let res = await channel.send({ 
-                //     content: '\n', 
-                //     ephemeral:false, 
-                //     embeds:[embed], 
-                //     components: [button],
-                //     reference: {
-                //         channelId: msg.channelId,
-                //         messageId: msg.id,
-                //         guildId: msg.guildId
-                //     } 
-                // });
+
                 let messagePayload = MessagePayload.create(user, { 
                     content: '\n', 
                     ephemeral:false, 
@@ -58,7 +48,10 @@ const msgFunc = async (msg,client)=> {
                     // } 
                 })
 
-                let res = await msg.reply(messagePayload)
+                let res = await channel.send(messagePayload);
+                
+
+                // let res = await msg.reply(messagePayload)
                 console.log(res)
                 break;
             case '!setrule':
