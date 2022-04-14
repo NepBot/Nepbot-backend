@@ -14,10 +14,12 @@ const { addUser, queryUser} = require('../server/services/userService');
 
 /** commands response*/
 const events = async interaction => {
+    console.log(interaction)
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
     const { ownerId } = interaction.guild;
     const userId = interaction.user.id;
+    
     switch (commandName) {
         case 'oauth':
             let temp = new MessageButton().setLabel('Connect Near Wallet').setStyle('LINK')
