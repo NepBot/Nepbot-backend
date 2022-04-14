@@ -273,7 +273,7 @@ app.post('/api/sign', async (req, res) => {
 
 //     res.json(rule)
 // })
-app.get('/oauth',async (req,res,next)=>{
+app.get('/commands',async (req,res,next)=>{
     // const command = await rest.put(Routes.applicationGuildCommands(CLIENT_ID, req.query.guild_id), {body: commands});
     // res.json(res)
     res.setHeader('Content-type','text/html');

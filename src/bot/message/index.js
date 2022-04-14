@@ -1,4 +1,4 @@
-const {MessageEmbed, MessageButton, MessageActionRow} = require("discord.js");
+const {MessageEmbed, MessageButton, MessageActionRow, MessagePayload} = require("discord.js");
 const config = require("../../utils/config").getConfig();
 const Util = require("discord.js/src/util/Util");
 const {getMembers} = require("../../server/api/guild");
@@ -23,7 +23,7 @@ const msgFunc = async (msg,client)=> {
 
                 let button = new MessageActionRow()
                     .addComponents(temp)   //Connect Near Wallet
-                //user = client.users.cache.get(userId);
+                user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
                 //let channel = guild.channels.cache.get(msg.channelId)
@@ -39,18 +39,26 @@ const msgFunc = async (msg,client)=> {
                 //         guildId: msg.guildId
                 //     } 
                 // });
-
-                let res = await msg.reply({ 
+                let messagePayload = MessagePayload.create(user, { 
                     content: '\n', 
                     ephemeral:false, 
                     embeds:[embed], 
                     components: [button],
-                    reference: {
-                        channelId: msg.channelId,
-                        messageId: msg.id,
-                        guildId: msg.guildId
-                    } 
+                    // reply: {
+                    //     messageReference: msg
+                    // }
+                    allowedMentions: {
+                        repliedUser: true
+                    }
+
+                    // reference: {
+                    //     channelId: msg.channelId,
+                    //     messageId: msg.id,
+                    //     guildId: msg.guildId
+                    // } 
                 })
+
+                let res = await msg.reply(messagePayload)
                 console.log(res)
                 break;
             case '!setrule':
