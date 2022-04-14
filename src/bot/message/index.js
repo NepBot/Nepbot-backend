@@ -26,7 +26,7 @@ const msgFunc = async (msg,client)=> {
                 user = client.users.cache.get(userId);
                 // let guildMember = await getMembers(msg.guildId, userId)
                 // console.log(guildMember)
-                let channel = guild.channels.cache.get(msg.channelId)
+                //let channel = guild.channels.cache.get(msg.channelId)
 
 
                 let messagePayload = MessagePayload.create(msg, { 
@@ -48,10 +48,10 @@ const msgFunc = async (msg,client)=> {
                     // } 
                 })
 
-                let res = await channel.send(messagePayload);
+                //let res = await channel.send(messagePayload);
                 
 
-                // let res = await msg.reply(messagePayload)
+                let res = await msg.reply(messagePayload)
                 console.log(res)
                 break;
             case '!setrule':
