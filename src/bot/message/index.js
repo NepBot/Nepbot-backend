@@ -77,8 +77,8 @@ const msgFunc = async (msg,client)=> {
                 }
                 break;
             case '!1':
-                console.log("invited")
                 let bot = JSON.parse(process.env.botData);
+                console.log(process.env.botData)
                 //console.log(client.guilds)
                 bot = client.guilds.cache.get(msg.guildId).members.cache.get(bot.user);
                 const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
