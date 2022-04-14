@@ -29,7 +29,7 @@ const msgFunc = async (msg,client)=> {
                 //let channel = guild.channels.cache.get(msg.channelId)
 
 
-                let messagePayload = MessagePayload.create(msg, { 
+                let messagePayload = MessagePayload.create(user, { 
                     content: '\n', 
                     ephemeral:false, 
                     embeds:[embed], 
@@ -38,7 +38,7 @@ const msgFunc = async (msg,client)=> {
                     //     messageReference: msg
                     // },
                     allowedMentions: {
-                        repliedUser: true
+                        users: [userId]
                     }
 
                     // reference: {
@@ -48,10 +48,10 @@ const msgFunc = async (msg,client)=> {
                     // } 
                 })
 
-                //let res = await channel.send(messagePayload);
+                let res = await channel.send(messagePayload);
                 
 
-                let res = await msg.reply(messagePayload)
+                //let res = await msg.reply(messagePayload)
                 console.log(res)
                 break;
             case '!setrule':
