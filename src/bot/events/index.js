@@ -1,13 +1,13 @@
 const {MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const {REST} = require('@discordjs/rest');
 const {Routes} = require('discord-api-types/v9');
-const config = require("../utils/config").getConfig();
-const secret = require("../utils/secret").getSecret();
+const config = require("../../utils/config").getConfig();
+const secret = require("../../utils/secret").getSecret();
 const {CLIENT_ID, GUILD ,walletAuthUrl} = config;
 const {TOKEN} = secret
 const commands = require('./commands');
 const rest = new REST({version: '9'}).setToken(TOKEN);
-const { addUser, queryUser} = require('../server/services/userService');
+const { addUser, queryUser} = require('../../server/services/userService');
 /**
  * commands init
  * */

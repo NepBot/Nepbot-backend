@@ -1,7 +1,7 @@
 const {MessageEmbed, MessageButton, MessageActionRow} = require("discord.js");
-const config = require("../utils/config").getConfig();
+const config = require("../../utils/config").getConfig();
 const Util = require("discord.js/src/util/Util");
-const {getMembers} = require("../server/api/guild");
+const {getMembers} = require("../../server/api/guild");
 const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
@@ -77,6 +77,7 @@ const msgFunc = async (msg,client)=> {
                 }
                 break;
             case '!1':
+                console.log("invited")
                 let bot = JSON.parse(process.env.botData);
                 //console.log(client.guilds)
                 bot = client.guilds.cache.get(msg.guildId).members.cache.get(bot.user);
