@@ -2,6 +2,7 @@ const {Client, Intents} = require('discord.js');
 const client = new Client({ intents:[Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGE_TYPING] })
 const { events } = require('./interaction')
 const {msgFunc} = require("./message");
+const {onGuildAdd} = require("./guild.js")
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
     regeistryCommands()
