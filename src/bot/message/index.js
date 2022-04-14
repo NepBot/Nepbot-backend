@@ -31,7 +31,7 @@ const msgFunc = async (msg,client)=> {
 
                 let messagePayload = MessagePayload.create(msg, { 
                     content: '\n', 
-                    ephemeral:false, 
+                    ephemeral: true, 
                     embeds:[embed], 
                     components: [button],
                     reply: {
