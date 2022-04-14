@@ -11,10 +11,10 @@ client.on('ready',async (data)=>{
  * Listen for interaction
  * */
 
-client.on('guildCreate', async (interaction) => {
-    console.log('guildCreate')
-    await onGuildAdd(interaction);
-})
+// client.on('guildCreate', async (interaction) => {
+//     console.log('guildCreate')
+//     await onGuildAdd(interaction);
+// })
 
 // client.on('guildDelete', async (interaction) => {
 //     console.log('guildDelete')
