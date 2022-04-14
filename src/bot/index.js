@@ -27,8 +27,7 @@ const regeistryCommands = async () => {
         name: "oauth",
         type: "CHAT_INPUT",
         description: "Replies with user walletAuthorization"
-    }).then(console.log)
-    .catch(console.error);
+    }, "940255224256409611")
     client.application.commands.create({
         name: "setrule",
         type: "CHAT_INPUT",
