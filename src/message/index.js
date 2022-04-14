@@ -9,7 +9,7 @@ const msgFunc = async (msg,client)=> {
     const userId = msg.author.id;
     let user;
     if(msg.content.startsWith('!')){
-        console.log(msg)
+        //console.log(msg)
         switch (msg.content) {
             case '!oauth':
                 let temp = new MessageButton().setLabel('Connect Near Wallet').setStyle('LINK')
@@ -28,7 +28,7 @@ const msgFunc = async (msg,client)=> {
                 // console.log(guildMember)
                 let channel = guild.channels.cache.get(msg.channelId)
 
-                channel.send({ 
+                let res = channel.send({ 
                     content: '\n', 
                     ephemeral:false, 
                     embeds:[embed], 
@@ -37,6 +37,7 @@ const msgFunc = async (msg,client)=> {
                         messageId: msg.id
                     } 
                 });
+                console.log(res)
                 break;
             case '!setrule':
                 user = client.users.cache.get(userId);
