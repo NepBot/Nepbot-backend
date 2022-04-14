@@ -29,7 +29,7 @@ const msgFunc = async (msg,client)=> {
                 let channel = guild.channels.cache.get(msg.channelId)
 
 
-                let messagePayload = MessagePayload.create(msg, { 
+                let messagePayload = MessagePayload.create(user, { 
                     content: '\n', 
                     ephemeral: true, 
                     embeds:[embed], 
@@ -37,10 +37,6 @@ const msgFunc = async (msg,client)=> {
                     reply: {
                         messageReference: msg
                     },
-                    allowedMentions: {
-                        repliedUser: true
-                    }
-
                     // reference: {
                     //     channelId: msg.channelId,
                     //     messageId: msg.id,
