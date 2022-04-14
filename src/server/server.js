@@ -206,12 +206,12 @@ app.post('/api/set-info', async (req, res) => {
 
 app.get('/api/getRole/:guildId', async (req, res) => {
     //console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
-    const roles = client().guilds.cache.get(req.params.guildId).roles.cache;
+    const roles = client.guilds.cache.get(req.params.guildId).roles.cache;
     res.json(roles);
 })
 
 app.get('/api/getServer/:guildId', (req, res) => {
-    const serverList = client().guilds.cache.get(req.params.guildId);
+    const serverList = client.guilds.cache.get(req.params.guildId);
     res.json(serverList);
 })
 
@@ -235,7 +235,7 @@ app.post('/api/sign', async (req, res) => {
             res.json('no user found')
             return
         }
-        const { ownerId } = client().guilds.cache.get(args.guild_id);
+        const { ownerId } = client.guilds.cache.get(args.guild_id);
         if (ownerId != users[0].user_id) {
             res.json('no authorization')
             return

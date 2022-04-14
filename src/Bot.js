@@ -20,6 +20,6 @@ client.on('messageCreate', async (msg) => {
     await msgFunc(msg,client)
 });
 
-module.exports = {client: () => {
-    return client
-}}
+
+
+module.exports = {client};

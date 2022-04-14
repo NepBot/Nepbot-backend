@@ -9,7 +9,7 @@ async function sleep(ms) {
     return new Promise(resolve=>setTimeout(resolve, ms))
 }
 
-client().login(TOKEN).then(async () => {
+client.login(TOKEN).then(async () => {
     console.log('Success login ');
     while (true) {
         try {
