@@ -6,12 +6,12 @@ const {getAllUser} = require("../services/userService");
 
 
 exports.getMembers = async (guildId,memberId = 0)=>{
-    console.log("client>>>>",client)
+    console.log("client>>>>",client())
     if (memberId){
         const member = await rest.get(`${Routes.guildMember(guildId,memberId)}`,{
             auth:true,
         });
-        return new GuildMember(client,member,this.getGuild(guildId))
+        return new GuildMember(client(),member,this.getGuild(guildId))
     }else{
         const allMembers = await rest.get(`${Routes.guildMembers(guildId)}?limit=1000&after=1`,{
             auth:true,
@@ -39,15 +39,15 @@ exports.getMembers = async (guildId,memberId = 0)=>{
     }
 }
 exports.getGuild = (guid_id)=>{
-   return client.guilds.cache.get(guid_id)
+   return client().guilds.cache.get(guid_id)
 }
 
 exports.getRoles = (guid_id,role_id)=>{
     console.log("roles>>>>>>",guid_id,role_id)
     if(role_id){
-        return client.guilds.cache.get(guid_id).roles.cache.get(role_id);
+        return client().guilds.cache.get(guid_id).roles.cache.get(role_id);
     }
-    return client.guilds.cache.get(guid_id).roles.cache;
+    return client().guilds.cache.get(guid_id).roles.cache;
 }
 
 // exports.getMembersTokenList = async (walletId)=>{
