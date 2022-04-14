@@ -110,8 +110,6 @@ app.post('/api/set-info', async (req, res) => {
             });
         }
 
-        console.log(rulesMap.nft)
-
         let role = [];
         let delRole = [];
         for (const rule of rulesMap.token) {
