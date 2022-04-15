@@ -176,6 +176,7 @@ app.get('/api/getRole/:guildId', async (req, res) => {
 
 app.get('/api/getServer/:guildId',async (req, res) => {
     const serverList = getGuild(req.params.guildId);
+    console.log(serverList)
     res.json(serverList);
 })
 
@@ -191,7 +192,7 @@ app.post('/api/sign', async (req, res) => {
         return
     }
 
-    if (!verifyOperationSign(payload.account_id, params)) {
+    if (verifyOperationSign(payload.account_id, params) == false) {
         return
     }
 
