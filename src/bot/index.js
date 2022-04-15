@@ -42,7 +42,8 @@ const regeistryCommands = async () => {
         description: "Replies with user walletAuthorization"
     })
     client.application.commands.delete({
-        name: "oauth"
+        name: "oauth",
+        type: "CHAT_INPUT",
     })
 }
 
