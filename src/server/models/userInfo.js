@@ -20,7 +20,7 @@ const userInfo = mysqlPool.define('user_infos',{
         allowNull: false
     },
     nonce: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false
     }
 })
