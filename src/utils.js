@@ -52,7 +52,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
     return nonce
 }
 
-exports.verifyMultisign = async (account_id, args) => {
+exports.verifyOperationSign = async (account_id, args) => {
     let user = await queryUser({
         user_id: args.user_id,
         guild_id: args.guild_id

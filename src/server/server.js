@@ -8,7 +8,7 @@ const {getRoles, getMember, getGuild} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const { getTokenPerOwnerCount } = require('./api/paras');
-const {verifyAccountOwner, getSign, verifyUserId, verifyMultisign} = require('../utils.js')
+const {verifyAccountOwner, getSign, verifyUserId, verifyOperationSign} = require('../utils.js')
 const {port} = config;
 const BN = require('bn.js')
 app.use(cookieParser());
@@ -174,13 +174,13 @@ app.get('/api/getRole/:guildId', async (req, res) => {
     res.json(roles);
 })
 
-app.get('/api/getServer/:guildId', (req, res) => {
+app.get('/api/getServer/:guildId',async (req, res) => {
     const serverList = getGuild(req.params.guildId);
     res.json(serverList);
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = await getMember(req.params.guildId, req.params.userId)
+    const member = getMember(req.params.guildId, req.params.userId)
     res.json(member)
 })
 
@@ -191,7 +191,7 @@ app.post('/api/sign', async (req, res) => {
         return
     }
 
-    if (!verifyMultisign(payload.account_id, params)) {
+    if (!verifyOperationSign(payload.account_id, params)) {
         return
     }
 
@@ -200,7 +200,7 @@ app.post('/api/sign', async (req, res) => {
     res.json({sign})
 })
 
-app.post('/api/multisign', async (req, res) => {
+app.post('/api/operationSign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {

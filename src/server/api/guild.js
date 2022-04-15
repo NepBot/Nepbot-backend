@@ -1,7 +1,7 @@
 
 const {client} = require("../../bot");
 
-exports.getMember = async (guildId,memberId = 0)=>{
+exports.getMember = (guildId,memberId = 0)=>{
     const guild = this.getGuild(guildId)
     return guild.members.cache.get(memberId);
 }
