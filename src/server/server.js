@@ -176,13 +176,12 @@ app.get('/api/getRole/:guildId', async (req, res) => {
 
 app.get('/api/getServer/:guildId',async (req, res) => {
     const serverList = getGuild(req.params.guildId);
-    console.log(serverList)
     res.json(serverList);
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
     const member = getMember(req.params.guildId, req.params.userId)
-    console.log(member)
+    console.log("member", member)
     res.json(member)
 })
 
