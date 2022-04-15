@@ -19,6 +19,10 @@ const userInfo = mysqlPool.define('user_infos',{
         type: DataTypes.DATE,
         allowNull: false
     },
+    nonce: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
 })
 
 module.exports = userInfo;
