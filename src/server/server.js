@@ -1,19 +1,15 @@
 const express = require('express');
-const userService = require('./services/userService');
+const userService = require('./services/UserInfoService');
 const app = express();
 const config = require('../utils/config').getConfig();
-const secret = require('../utils/secret').getSecret();
+const secret = require('../secret').getSecret();
 const cookieParser = require('cookie-parser');
-//const {client} = require("../Bot");
-const {GuildMember, Role} = require("discord.js");
 const {getRoles, getMembers, getGuild} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const { getTokenPerOwnerCount } = require('./api/paras');
-const {connect} = require('near-api-js');
-const {nearWallet, port} = config;
-const tweetnacl = require("tweetnacl");
-const bs58 = require('bs58');
+const {verifyAccountOwner, getSign, verifyUserId, verifyMultisign} = require('../utils.js')
+const {port} = config;
 const BN = require('bn.js')
 app.use(cookieParser());
 app.use(express.json());
@@ -29,25 +25,6 @@ app.use(allowCrossDomain);
 /**  */
 
 
-function verifySignature(data, signature, public_key) {
-    let bf_data = new Uint8Array(Buffer.from(JSON.stringify(data)))
-    let bf_sign = new Uint8Array(bs58.decode(signature))
-    let bf_pk = new Uint8Array(bs58.decode(public_key))
-    let valid = tweetnacl.sign.detached.verify(bf_data, bf_sign, bf_pk);
-    return valid;
-}
-
-async function verifyAccountOwner(account_id, data, signature) {
-    const near = await connect(nearWallet)
-    const account = await near.account(account_id)
-    const accessKeys = await account.getAccessKeys()
-    return accessKeys.some(it => {
-        const publicKey = it.public_key.replace('ed25519:', '');
-        return verifySignature(data, signature, publicKey)
-    });
-};
-
-
 
 app.post('/api/set-info', async (req, res) => {
     
@@ -57,6 +34,10 @@ app.post('/api/set-info', async (req, res) => {
     
     try{
         if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+            return
+        }
+
+        if (!verifyUserId(params, params.sign)) {
             return
         }
 
@@ -78,9 +59,9 @@ app.post('/api/set-info', async (req, res) => {
             user_id: params.user_id,
             guild_id: params.guild_id,
             near_wallet_id: params.account_id,
-            oauth_time: new Date()
+            create_time: new Date(),
+            nonce: 0
         });
-        const account = await contract();
         const member = await getMembers(params.guild_id, params.user_id);
 
         let rulesMap = {
@@ -215,27 +196,28 @@ app.post('/api/sign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    for (args of params) {
-        const users = await userService.getAllUser({
-            near_wallet_id: payload.account_id,
-            guild_id: args.guild_id
-        });
-        if (users.length == 0){
-            res.json('no user found')
-            return
-        }
-        const { ownerId } = getGuild(args.guild_id);
-        if (ownerId != users[0].user_id) {
-            res.json('no authorization')
-            return
-        }
+
+    if (!verifyMultisign(payload.account_id, params)) {
+        return
     }
 
-    const {getSign} = require('../auth/sign_api');
-    let sign = await getSign(params)
+    let sign = await getSign(params.items)
     
     res.json(sign)
+})
 
+app.post('/api/multisign', async (req, res) => {
+    const payload = Object.assign(req.body);
+    const params = Object.assign(req.body.args);
+    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+        return
+    }
+    if (!verifyUserId(params, params.sign)) {
+        return
+    }
+    let sign = await getSign(params.timestamp)
+    
+    res.json(sign)
 })
 
 

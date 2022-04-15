@@ -2,7 +2,7 @@ const {GuildMember} = require('discord.js')
 const {rest} = require('../../bot/interaction');
 const {Routes} = require("discord-api-types/v9");
 const {client} = require("../../bot");
-const {getAllUser} = require("../services/userService");
+const {getAllUser} = require("../services/UserInfoService");
 
 
 exports.getMembers = async (guildId,memberId = 0)=>{
@@ -28,7 +28,7 @@ exports.getMembers = async (guildId,memberId = 0)=>{
                     console.log(_member.updatedAt)
                     member.walletId = _member.near_wallet_id;
                     member.update = _member.updatedAt;
-                    member.oauthTime = _member.oauth_time;
+                    member.createTime = _member.create_time;
                     return member;
                 }
             }else{

@@ -37,7 +37,8 @@ exports.updateUser = async (data)=> {
     const params = {
         near_wallet_id: data?.near_wallet_id,
         user_id:data?.user_id,
-        guild_id:data?.guild_id
+        guild_id:data?.guild_id,
+        nonce: data?.nonce
     };
     return  await UserInfo.update(params, {
         where: {
