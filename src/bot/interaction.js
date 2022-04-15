@@ -1,6 +1,6 @@
 const {MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const config = require("../config").getConfig();
-const secret = require("../secret").getSecret();
+const {getSign} = require("../utils.js");
 const {walletAuthUrl} = config;
 const userService = require("../server/services/UserInfoService.js")
 /**
