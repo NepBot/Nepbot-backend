@@ -6,6 +6,7 @@ exports.getMember = (guildId,memberId = 0)=>{
     return guild.members.cache.get(memberId);
 }
 exports.getGuild = (guid_id)=>{
+    console.log(client.guilds.cache.get(guid_id))
    return client.guilds.cache.get(guid_id)
 }
 
