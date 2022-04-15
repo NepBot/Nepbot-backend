@@ -182,6 +182,7 @@ app.get('/api/getServer/:guildId',async (req, res) => {
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
     const member = getMember(req.params.guildId, req.params.userId)
+    console.log(member)
     res.json(member)
 })
 
