@@ -1,7 +1,7 @@
 const {MessageEmbed, MessageButton, MessageActionRow, MessagePayload} = require("discord.js");
 const config = require("../config").getConfig();
 const Util = require("discord.js/src/util/Util");
-const {getMembers} = require("../server/api/guild");
+const {getMember} = require("../server/api/guild");
 const {walletAuthUrl} = config;
 const specialWords = '!';
 const msgFunc = async (msg,client)=> {
@@ -25,7 +25,7 @@ const msgFunc = async (msg,client)=> {
         //         let button = new MessageActionRow()
         //             .addComponents(temp, testButton)
         //         user = client.users.cache.get(userId);
-        //         // let guildMember = await getMembers(msg.guildId, userId)
+        //         // let guildMember = await getMember(msg.guildId, userId)
         //         // console.log(guildMember)
         //         let channel = guild.channels.cache.get(msg.channelId)
 

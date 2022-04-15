@@ -4,7 +4,7 @@ const app = express();
 const config = require('../config').getConfig();
 const secret = require('../secret').getSecret();
 const cookieParser = require('cookie-parser');
-const {getRoles, getMembers, getGuild} = require("./api/guild");
+const {getRoles, getMember, getGuild} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const { getTokenPerOwnerCount } = require('./api/paras');
@@ -49,14 +49,14 @@ app.post('/api/set-info', async (req, res) => {
         })
         for (user of doc) {
             if (user.user_id != params.user_id) {
-                let member = await getMembers(params.guild_id, user.user_id)
+                let member = await getMember(params.guild_id, user.user_id)
                 if (member.roles) {
                     member.roles.remove(roleList).then(console.log).catch(console.error)
                 }
             }
         }
         
-        const member = await getMembers(params.guild_id, params.user_id);
+        const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
             token: [],
@@ -180,7 +180,7 @@ app.get('/api/getServer/:guildId', (req, res) => {
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = await getMembers(req.params.guildId, req.params.userId)
+    const member = await getMember(req.params.guildId, req.params.userId)
     res.json(member)
 })
 

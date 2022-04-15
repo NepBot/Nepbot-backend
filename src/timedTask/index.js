@@ -1,5 +1,5 @@
 const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require('../server/api/contract');
-const {getMembers, getRoles} = require("../server/api/guild");
+const {getMember, getRoles} = require("../server/api/guild");
 const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions, filterNftActions, filterParasActions} = require('../server/services/blockService')
 const {getAllUser} = require("../server/services/UserInfoService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
@@ -49,7 +49,7 @@ async function octTask(receipts) {
             near_wallet_id: userField.near_wallet_id,
         })
         for (user of users) {
-            let member = await getMembers(user.guild_id, user.user_id)
+            let member = await getMember(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
@@ -127,7 +127,7 @@ async function tokenTask(receipts) {
             near_wallet_id: userToken.near_wallet_id,
         })
         for (user of users) {
-            let member = await getMembers(user.guild_id, user.user_id)
+            let member = await getMember(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
@@ -190,7 +190,7 @@ async function balanceTask(receipts) {
     })
 
     for (user of users) {
-        const member = await getMembers(user.guild_id, user.user_id);
+        const member = await getMember(user.guild_id, user.user_id);
         let role = [];
         let delRole = [];
         for (rule of guildMap[user.guild_id]) {
@@ -238,7 +238,7 @@ async function updateGuildTask(receipts) {
     })
 
     for (user of userList) {
-        const member = await getMembers(user.guild_id, user.user_id);
+        const member = await getMember(user.guild_id, user.user_id);
         let role = [];
         let delRole = [];
         for (rule of addRoleList) {
@@ -363,7 +363,7 @@ async function nftTask(receipts) {
         
 
         for (user of users) {
-            let member = await getMembers(user.guild_id, user.user_id)
+            let member = await getMember(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
@@ -440,7 +440,7 @@ async function parasTask(receipts) {
         
 
         for (user of users) {
-            let member = await getMembers(user.guild_id, user.user_id)
+            let member = await getMember(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
