@@ -27,15 +27,13 @@ const events = async interaction => {
                 .setColor('#0099ff')
                 .setTitle('Near Wallet Authorization')
                 .setDescription('Click the button below to complete the near wallet authorization operation');
-            
-            
-            const button = new MessageButton()
-                .setLabel('Connect Near Wallet')
-                .setStyle('LINK')
-                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`)
+        
             
             let button = new MessageActionRow()
-                .addComponents(button)   //Connect Near Wallet
+                .addComponents(new MessageButton()
+                .setLabel('Connect Near Wallet')
+                .setStyle('LINK')
+                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`))  
 
             await userService.addUser({
                 user_id: interaction.user.id,
