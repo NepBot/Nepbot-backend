@@ -1,7 +1,7 @@
 const express = require('express');
 const userService = require('./services/UserInfoService');
 const app = express();
-const config = require('../utils/config').getConfig();
+const config = require('../config').getConfig();
 const secret = require('../secret').getSecret();
 const cookieParser = require('cookie-parser');
 const {getRoles, getMembers, getGuild} = require("./api/guild");

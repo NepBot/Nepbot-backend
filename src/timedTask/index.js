@@ -5,7 +5,7 @@ const {getAllUser} = require("../server/services/UserInfoService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const {getTokenSeries, getTokenPerOwnerCount} = require("../server/api/paras")
 const BN = require('bn.js')
-const config = require('../utils/config').getConfig();
+const config = require('../config').getConfig();
 const {nearWallet} = config;
 const {providers} = require('near-api-js');
 

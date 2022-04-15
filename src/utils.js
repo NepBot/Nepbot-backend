@@ -1,4 +1,4 @@
-const config = require('../utils/config').getConfig();
+const config = require('./config').getConfig();
 const {connect} = require('near-api-js');
 const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");

@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const config = require('../../utils/config.js').getConfig()
+const config = require('../../config.js').getConfig()
 
 exports.filterTokenActions  = (tokenIds, receipts)=>{
     let ret = []

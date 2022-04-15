@@ -1,5 +1,5 @@
 const {MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const config = require("../utils/config").getConfig();
+const config = require("../config").getConfig();
 const secret = require("../secret").getSecret();
 const {CLIENT_ID, GUILD ,walletAuthUrl} = config;
 const {TOKEN} = secret
