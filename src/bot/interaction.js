@@ -88,6 +88,5 @@ const events = async interaction => {
 
 
 module.exports = {
-    rest,
     events
 }
