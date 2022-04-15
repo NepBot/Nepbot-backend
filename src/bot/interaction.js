@@ -2,6 +2,7 @@ const {MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const config = require("../utils/config").getConfig();
 const secret = require("../secret").getSecret();
 const {walletAuthUrl} = config;
+const userService = require("../server/services/UserInfoService.js")
 /**
  * commands init
  * */
@@ -15,10 +16,10 @@ const events = async interaction => {
     
     switch (commandName) {
         case 'verify':
-            const timestamp = Date.now()
+            const nonce = Date.now()
             const sign = await getSign({
                 guild_id: interaction.guildId,
-                timestamp: timestamp,
+                nonce: nonce,
                 user_id: interaction.author.id,  
             })
 
@@ -31,26 +32,42 @@ const events = async interaction => {
             new MessageButton()
                 .setLabel('Connect Near Wallet')
                 .setStyle('LINK')
-                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.author.id}&guild_id=${interaction.guildId}&timestamp=${timestamp}&sign=${sign}`)
+                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.author.id}&guild_id=${interaction.guildId}&sign=${sign}`)
             
             let button = new MessageActionRow()
                 .addComponents(temp)   //Connect Near Wallet
+
+            await userService.addUser({
+                user_id: interaction.author.id,
+                guild_id: interaction.guildId,
+                near_wallet_id: "unknown",
+                create_time: nonce,
+                nonce: nonce
+            });
+
             await interaction.reply({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
             break;
         case 'setrule':
             if(userId === ownerId) {
-                const timestamp = Date.now()
+                const nonce = Date.now()
                 const sign = await getSign({
                     guild_id: interaction.guildId,
-                    timestamp: timestamp,
+                    nonce: nonce,
                     user_id: interaction.author.id,  
                 })
 
                 const content = new MessageEmbed().setDescription('Click the button below to enter the setting rules page').setColor('BLUE');
                 const button = new MessageActionRow()
                     .addComponents(new MessageButton()
-                        .setURL(`${walletAuthUrl}/setrule/?user_id=${msg.author.id}&guild_id=${msg.guildId}&timestamp=${timestamp}&sign=${sign}`)
+                        .setURL(`${walletAuthUrl}/setrule/?user_id=${msg.author.id}&guild_id=${msg.guildId}&sign=${sign}`)
                         .setStyle('LINK').setLabel('Set Rule'))
+
+                userService.updateUser({
+                    user_id: interaction.author.id,
+                    guild_id: interaction.guildId,
+                    nonce: nonce
+                })
+            
                 interaction.reply({
                     content:'\n',
                     embeds:[content],

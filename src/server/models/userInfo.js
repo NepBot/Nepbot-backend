@@ -13,7 +13,7 @@ const userInfo = mysqlPool.define('user_info',{
     },
     near_wallet_id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     create_time: {
         type: DataTypes.DATE,

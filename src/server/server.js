@@ -55,13 +55,7 @@ app.post('/api/set-info', async (req, res) => {
                 }
             }
         }
-        await userService.addUser({
-            user_id: params.user_id,
-            guild_id: params.guild_id,
-            near_wallet_id: params.account_id,
-            create_time: new Date(),
-            nonce: 0
-        });
+        
         const member = await getMembers(params.guild_id, params.user_id);
 
         let rulesMap = {
@@ -212,10 +206,11 @@ app.post('/api/multisign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    if (!verifyUserId(params, params.sign)) {
+    const nonce = verifyUserId(params, params.sign)
+    if (!nonce) {
         return
     }
-    let sign = await getSign(params.timestamp)
+    let sign = await getSign(nonce)
     
     res.json(sign)
 })

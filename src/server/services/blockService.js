@@ -44,38 +44,6 @@ exports.filterRoleActions = (receipts) => {
         ret.push(obj)
     }
     return ret
-
-
-
-
-
-    // let res = await pool.query(
-    // `
-    // SELECT
-    //     args ->> 'args_json' as args,
-    //     args ->> 'method_name' as method_name
-    // FROM 
-    //     action_receipt_actions
-    // LEFT JOIN execution_outcomes ON action_receipt_actions.receipt_id = execution_outcomes.receipt_id
-    // WHERE
-    //     receipt_receiver_account_id = $1
-    //     AND action_kind = 'FUNCTION_CALL' 
-    //     AND args ->> 'args_json' IS NOT NULL 
-    //     AND args ->> 'method_name' IN ( 'set_roles', 'del_role' ) 
-    //     AND receipt_included_in_block_timestamp >= $2
-    //     AND status != 'FAILURE'
-    // ORDER BY
-    //     receipt_included_in_block_timestamp DESC  
-    // `
-    // , [config.RULE_CONTRACT, time])
-    // let ret = []
-    // for (row of res.rows) {
-    //     ret.push({
-    //         args: JSON.parse(JSON.parse(row.args).args.replace(/\\/g, '')),
-    //         method_name: row.method_name
-    //     })
-    // }
-    // return ret
 }
 
 exports.filterTransferActions = (accountIds, receipts) => {

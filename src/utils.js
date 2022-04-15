@@ -24,28 +24,32 @@ exports.verifyAccountOwner = async (account_id, data, signature) => {
     });
 };
 
-exports.verifyUserId = async (args, sign) => {
+exports.verifyUserId = async (args, sign, expire=true) => {
     let user = await queryUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    if (Date.now() - args.timestamp > 300 || args.timestamp < user.nonce) {
-        return false
+    if (expire && (Date.now() - user.nonce > 300 )) {
+        return
     }
     let keyStore = config.nearWallet.keyStore;
     let account_id = config.ACCOUNT_ID
     const keyPair = await keyStore.getKey(config.nearWallet.networkId, account_id);
     const ret = verifySignature({
         guild_id: args.guild_id,
-        timestamp: args.timestamp,
+        nonce: user.nonce,
         user_id: args.user_id
     }, sign, keyPair.toString())
-    updateUser({
+    if (!ret) {
+        return false
+    }
+    const nonce = Date.now()
+    await updateUser({
         user_id: args.user_id,
         guild_id: args.guild_id,
-        nonce: args.timestamp
+        nonce: nonce
     })
-    return ret
+    return nonce
 }
 
 exports.verifyMultisign = async (account_id, args) => {
@@ -53,7 +57,8 @@ exports.verifyMultisign = async (account_id, args) => {
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    return await verifyAccountOwner(account_id, user.nonce, args.sign)
+    const data = await this.getSign(user.nonce)
+    return await verifyAccountOwner(account_id, data, args.sign)
 }
 
 exports.getSign = async (args)=> {
