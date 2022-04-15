@@ -20,7 +20,7 @@ const events = async interaction => {
             const sign = await getSign({
                 guild_id: interaction.guildId,
                 nonce: nonce,
-                user_id: interaction.author.id,  
+                user_id: interaction.user.id,  
             })
 
             const embed = new MessageEmbed()
@@ -32,13 +32,13 @@ const events = async interaction => {
             new MessageButton()
                 .setLabel('Connect Near Wallet')
                 .setStyle('LINK')
-                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.author.id}&guild_id=${interaction.guildId}&sign=${sign}`)
+                .setURL(`${walletAuthUrl}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`)
             
             let button = new MessageActionRow()
                 .addComponents(temp)   //Connect Near Wallet
 
             await userService.addUser({
-                user_id: interaction.author.id,
+                user_id: interaction.user.id,
                 guild_id: interaction.guildId,
                 near_wallet_id: "unknown",
                 create_time: nonce,
@@ -53,17 +53,17 @@ const events = async interaction => {
                 const sign = await getSign({
                     guild_id: interaction.guildId,
                     nonce: nonce,
-                    user_id: interaction.author.id,  
+                    user_id: interaction.user.id,  
                 })
 
                 const content = new MessageEmbed().setDescription('Click the button below to enter the setting rules page').setColor('BLUE');
                 const button = new MessageActionRow()
                     .addComponents(new MessageButton()
-                        .setURL(`${walletAuthUrl}/setrule/?user_id=${msg.author.id}&guild_id=${msg.guildId}&sign=${sign}`)
+                        .setURL(`${walletAuthUrl}/setrule/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`)
                         .setStyle('LINK').setLabel('Set Rule'))
 
                 userService.updateUser({
-                    user_id: interaction.author.id,
+                    user_id: interaction.user.id,
                     guild_id: interaction.guildId,
                     nonce: nonce
                 })
