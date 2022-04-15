@@ -2,7 +2,7 @@ const mysqlPool = require('./mysqlDB');
 
 const { DataTypes } = require('sequelize');
 
-const userInfo = mysqlPool.define('user_info',{
+const userInfo = mysqlPool.define('user_infos',{
     user_id: {
         type: DataTypes.STRING,
         allowNull: false
@@ -19,10 +19,6 @@ const userInfo = mysqlPool.define('user_info',{
         type: DataTypes.DATE,
         allowNull: false
     },
-    nonce: {
-        type: DataTypes.NUMBER,
-        allowNull: false
-    }
 })
 
 module.exports = userInfo;
