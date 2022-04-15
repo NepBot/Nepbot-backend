@@ -197,7 +197,7 @@ app.post('/api/sign', async (req, res) => {
 
     let sign = await getSign(params.items)
     
-    res.json(sign)
+    res.json({sign})
 })
 
 app.post('/api/multisign', async (req, res) => {

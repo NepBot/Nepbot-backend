@@ -69,5 +69,5 @@ exports.getSign = async (args)=> {
     const args_string = JSON.stringify(args);
     const data_buffer = Buffer.from(args_string);
     const { signature } = keyPair.sign(data_buffer);
-    return {sign:bs58.encode(signature)};
+    return bs58.encode(signature);
 }
