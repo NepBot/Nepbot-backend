@@ -58,7 +58,7 @@ async function octTask(receipts) {
                 if (key_field[0] != 'appchain_id') {
                     continue
                 }
-                console.log(octRole, fields.oct_role, userField.value)
+                console.log(octRole, fields.oct_role, key_field[1])
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
