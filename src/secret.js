@@ -10,7 +10,7 @@ exports.getSecret = function () {
           host: 'localhost',
           user: 'nepbot',
           password: 'bhc19930805B',
-          database: 'discordserver',
+          database: 'nepbot_mainnet',
         },
       }
       case 'development':
@@ -21,7 +21,7 @@ exports.getSecret = function () {
             host: 'localhost',
             user: 'nepbot',
             password: 'bhc19930805B',
-            database: 'nepbot_mainnet',
+            database: 'discordserver',
           },
         }
   }
