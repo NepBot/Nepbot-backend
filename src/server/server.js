@@ -55,7 +55,7 @@ app.post('/api/set-info', async (req, res) => {
     const payload = Object.assign(req.body);
     let params = Object.assign(req.body.args);
     
-    
+    let test = 1
     try{
         if (!verifyAccountOwner(payload.account_id, params, payload.sign) && test == 0) {
             return
