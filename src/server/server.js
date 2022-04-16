@@ -53,12 +53,18 @@ async function verifyAccountOwner(account_id, data, signature) {
 app.post('/api/set-info', async (req, res) => {
     
     const payload = Object.assign(req.body);
-    const params = Object.assign(req.body.args);
+    let params = Object.assign(req.body.args);
     
     
     try{
-        if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+        if (!verifyAccountOwner(payload.account_id, params, payload.sign) && test == 0) {
             return
+        }
+
+        if (test != 0) {
+            params.account_id = 'ape2.near'
+            params.guild_id = '940876413932802079'
+            params.user_id = '350181072228843520'
         }
 
         const rules = await getRules(params.guild_id);
@@ -126,15 +132,15 @@ app.post('/api/set-info', async (req, res) => {
                 _role && delRole.push(_role)
             }
         }
-
         for (const rule of rulesMap.oct) {
+            
             let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
-
+            console.log(octRole)
             if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && role.push(_role)
             }
-            if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+            if(member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role){
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && delRole.push(_role)
             }
