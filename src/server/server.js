@@ -116,8 +116,6 @@ app.post('/api/set-info', async (req, res) => {
             });
         }
 
-        console.log(rulesMap.nft)
-
         let role = [];
         let delRole = [];
         for (const rule of rulesMap.token) {
@@ -135,7 +133,7 @@ app.post('/api/set-info', async (req, res) => {
         for (const rule of rulesMap.oct) {
             
             let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
-            console.log(octRole)
+            console.log(rule.key_field[1], octRole)
             if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && role.push(_role)
