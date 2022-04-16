@@ -49,9 +49,9 @@ exports.getNearBalanceOf = async (accountId) => {
 
 exports.getOctAppchainRole = async (appchain_id, account_id) => {
     const account = await this.contract();
-    const validator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_validator_profile', {validator_id: account_id})
+    const validator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_validator_list_of', {})
     const delegator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_delegations_of', {delegator_id: account_id})
-    if (validator && validator.validator_id) {
+    if (validator && validator.findIndex(item => item.validator_id == account_id) > -1) {
         return 'validator'
     } else if (delegator && delegator.length > 0) {
         return 'delegator'
