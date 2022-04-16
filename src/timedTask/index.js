@@ -37,7 +37,6 @@ async function octTask(receipts) {
     for (userField of userFields) {
         let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
         let roles = await getRulesByField('appchain_id', userField.value)
-        console.log(roles)
         let guild_ids = []
         roles.map(item => {
             guild_ids.push(item.guild_id)
@@ -51,15 +50,13 @@ async function octTask(receipts) {
         })
         for (user of users) {
             let member = await getMembers(user.guild_id, user.user_id)
-            let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'appchain_id') {
+            for (const {fields, role_id, key_field} of roles) {
+                if (key_field[0] != 'appchain_id' || key_field[1] != userField.value) {
                     continue
                 }
-                console.log(octRole, fields.oct_role, key_field[1])
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
                     const _role = getRoles(user.guild_id, role_id);
                     _role && role.push(_role)
@@ -112,11 +109,6 @@ async function tokenTask(receipts) {
     
     for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
-        // await updateUserToken({
-        //     amount: newAmount,
-        //     near_wallet_id: userToken.near_wallet_id,
-        //     token_id: userToken.token_id
-        // })
         let roles = await getRulesByField('token_id', userToken.value)
         let guild_ids = []
         roles.map(item => {
@@ -130,12 +122,11 @@ async function tokenTask(receipts) {
         })
         for (user of users) {
             let member = await getMembers(user.guild_id, user.user_id)
-            let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'token_id') {
+            for (const {fields, role_id, key_field} of roles) {
+                if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
