@@ -1,5 +1,5 @@
 const {connect, WalletConnection, providers} = require('near-api-js');
-const config = require('../../utils/config').getConfig();
+const config = require('../../config').getConfig();
 const {nearWallet,RULE_CONTRACT} = config;
 const contract = async () => {
     // connect to NEAR

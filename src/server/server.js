@@ -1,20 +1,15 @@
 const express = require('express');
-const userService = require('./services/userService');
+const userService = require('./services/UserInfoService');
 const app = express();
-const config = require('../utils/config').getConfig();
-const secret = require('../utils/secret').getSecret();
+const config = require('../config').getConfig();
+const secret = require('../secret').getSecret();
 const cookieParser = require('cookie-parser');
-const {client} = require("../Bot");
-const {GuildMember, Role} = require("discord.js");
-const {getRoles, getMembers} = require("./api/guild");
+const {getRoles, getMember, getGuild} = require("./api/guild");
 const {getRules, contract, getOctAppchainRole, getBalanceOf, getNearBalanceOf, getNftCountOf} = require("./api/contract");
 const {addUserField} = require("./services/UserFieldService")
 const { getTokenPerOwnerCount } = require('./api/paras');
-const commands  = require('../commands/commands')
-const {connect} = require('near-api-js');
-const {nearWallet, port} = config;
-const tweetnacl = require("tweetnacl");
-const bs58 = require('bs58');
+const {verifyAccountOwner, getSign, verifyUserId, verifyOperationSign} = require('../utils.js')
+const {port} = config;
 const BN = require('bn.js')
 app.use(cookieParser());
 app.use(express.json());
@@ -30,25 +25,6 @@ app.use(allowCrossDomain);
 /**  */
 
 
-function verifySignature(data, signature, public_key) {
-    let bf_data = new Uint8Array(Buffer.from(JSON.stringify(data)))
-    let bf_sign = new Uint8Array(bs58.decode(signature))
-    let bf_pk = new Uint8Array(bs58.decode(public_key))
-    let valid = tweetnacl.sign.detached.verify(bf_data, bf_sign, bf_pk);
-    return valid;
-}
-
-async function verifyAccountOwner(account_id, data, signature) {
-    const near = await connect(nearWallet)
-    const account = await near.account(account_id)
-    const accessKeys = await account.getAccessKeys()
-    return accessKeys.some(it => {
-        const publicKey = it.public_key.replace('ed25519:', '');
-        return verifySignature(data, signature, publicKey)
-    });
-};
-
-
 
 app.post('/api/set-info', async (req, res) => {
     
@@ -61,6 +37,10 @@ app.post('/api/set-info', async (req, res) => {
             return
         }
 
+        if (!verifyUserId(params, params.sign)) {
+            return
+        }
+
         const rules = await getRules(params.guild_id);
         let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
         let doc = await userService.getAllUser({
@@ -69,20 +49,14 @@ app.post('/api/set-info', async (req, res) => {
         })
         for (user of doc) {
             if (user.user_id != params.user_id) {
-                let member = await getMembers(params.guild_id, user.user_id)
+                let member = await getMember(params.guild_id, user.user_id)
                 if (member.roles) {
                     member.roles.remove(roleList).then(console.log).catch(console.error)
                 }
             }
         }
-        await userService.addUser({
-            user_id: params.user_id,
-            guild_id: params.guild_id,
-            near_wallet_id: params.account_id,
-            oauth_time: new Date()
-        });
-        const account = await contract();
-        const member = await getMembers(params.guild_id, params.user_id);
+        
+        const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
             token: [],
@@ -109,8 +83,6 @@ app.post('/api/set-info', async (req, res) => {
                 value: rule.key_field[1]
             });
         }
-
-        console.log(rulesMap.nft)
 
         let role = [];
         let delRole = [];
@@ -196,27 +168,20 @@ app.post('/api/set-info', async (req, res) => {
     }
 
 })
-// /**  */
-// app.get('/api/getMemberList/:guildId', async (req, res) => {
-//     const rs = await rest.get(`${Routes.guildMembers(req.params.guildId)}?limit=5&after=1`, {
-//         auth: true,
-//     })
-//     res.json(rs)
-// })
 
 app.get('/api/getRole/:guildId', async (req, res) => {
-    //console.log(client.guilds.cache.get(req.params.guildId).roles.cache)
-    const roles = client.guilds.cache.get(req.params.guildId).roles.cache;
+    const roles = getRoles(req.params.guildId)
     res.json(roles);
 })
 
-app.get('/api/getServer/:guildId', (req, res) => {
-    const serverList = client.guilds.cache.get(req.params.guildId);
+app.get('/api/getServer/:guildId',async (req, res) => {
+    const serverList = getGuild(req.params.guildId);
     res.json(serverList);
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = await getMembers(req.params.guildId, req.params.userId)
+    const member = getMember(req.params.guildId, req.params.userId)
+    console.log("member", member)
     res.json(member)
 })
 
@@ -226,27 +191,29 @@ app.post('/api/sign', async (req, res) => {
     if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    for (args of params) {
-        const users = await userService.getAllUser({
-            near_wallet_id: payload.account_id,
-            guild_id: args.guild_id
-        });
-        if (users.length == 0){
-            res.json('no user found')
-            return
-        }
-        const { ownerId } = client.guilds.cache.get(args.guild_id);
-        if (ownerId != users[0].user_id) {
-            res.json('no authorization')
-            return
-        }
+
+    if (verifyOperationSign(payload.account_id, params) == false) {
+        return
     }
 
-    const {getSign} = require('../auth/sign_api');
-    let sign = await getSign(params)
+    let sign = await getSign(params.items)
+    
+    res.json({sign})
+})
+
+app.post('/api/operationSign', async (req, res) => {
+    const payload = Object.assign(req.body);
+    const params = Object.assign(req.body.args);
+    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+        return
+    }
+    const nonce = verifyUserId(params, params.sign)
+    if (!nonce) {
+        return
+    }
+    let sign = await getSign(nonce)
     
     res.json(sign)
-
 })
 
 
@@ -276,7 +243,7 @@ app.post('/api/sign', async (req, res) => {
 
 //     res.json(rule)
 // })
-app.get('/oauth',async (req,res,next)=>{
+app.get('/commands',async (req,res,next)=>{
     // const command = await rest.put(Routes.applicationGuildCommands(CLIENT_ID, req.query.guild_id), {body: commands});
     // res.json(res)
     res.setHeader('Content-type','text/html');

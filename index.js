@@ -1,8 +1,8 @@
 require('./src/server/server');
 require('./src/server/services/blockService')
 const {timedTask} = require('./src/timedTask/index')
-const {client} =  require('./src/Bot');
-const secret = require("./src/utils/secret").getSecret()
+const {client} =  require('./src/bot');
+const secret = require("./src/secret").getSecret()
 const {TOKEN} = secret;
 
 async function sleep(ms) {

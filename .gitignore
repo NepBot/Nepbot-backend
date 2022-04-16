@@ -1,5 +1,5 @@
-src/utils/secret.js
-src/utils/env.js
+src/secret.js
+src/env.js
 node_modules
 2.js
 

@@ -1,5 +1,5 @@
 const {Client, Pool} = require('pg')
-const {POSTGRESQL} = require("../../utils/config");
+const {POSTGRESQL} = require("../../config");
 
 const postgrePool = new Pool(POSTGRESQL);
 
