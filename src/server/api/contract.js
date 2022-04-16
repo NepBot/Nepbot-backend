@@ -54,6 +54,7 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
     if (validator && validator.findIndex(item => item.validator_id == account_id) > -1) {
         return 'validator'
     } else if (delegator && delegator.length > 0) {
+        console.log(delegator)
         return 'delegator'
     } else {
         return
