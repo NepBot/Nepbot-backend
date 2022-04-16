@@ -1,11 +1,11 @@
 const {getOctAppchainRole, getRules, getFieldList, getBalanceOf, getRulesByField, getNearBalanceOf, getNftCountOf} = require('../server/api/contract');
-const {getMember, getRoles} = require("../server/api/guild");
+const {getMembers, getRoles} = require("../server/api/guild");
 const {filterTokenActions, filterOctActions, filterRoleActions, filterTransferActions, filterNftActions, filterParasActions} = require('../server/services/blockService')
-const {getAllUser} = require("../server/services/UserInfoService");
+const {getAllUser} = require("../server/services/userService");
 const {getUserFieldList, addUserField, deleteUserField} = require("../server/services/UserFieldService");
 const {getTokenSeries, getTokenPerOwnerCount} = require("../server/api/paras")
 const BN = require('bn.js')
-const config = require('../config').getConfig();
+const config = require('../utils/config').getConfig();
 const {nearWallet} = config;
 const {providers} = require('near-api-js');
 
@@ -20,7 +20,7 @@ async function octTask(receipts) {
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
-        appchainIdList.push()
+        appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
 
@@ -49,13 +49,13 @@ async function octTask(receipts) {
             near_wallet_id: userField.near_wallet_id,
         })
         for (user of users) {
-            let member = await getMember(user.guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'appchain_id') {
+                if (key_field[0] != 'appchain_id' || key_field[1] != userField.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
@@ -110,11 +110,6 @@ async function tokenTask(receipts) {
     
     for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
-        // await updateUserToken({
-        //     amount: newAmount,
-        //     near_wallet_id: userToken.near_wallet_id,
-        //     token_id: userToken.token_id
-        // })
         let roles = await getRulesByField('token_id', userToken.value)
         let guild_ids = []
         roles.map(item => {
@@ -127,13 +122,13 @@ async function tokenTask(receipts) {
             near_wallet_id: userToken.near_wallet_id,
         })
         for (user of users) {
-            let member = await getMember(user.guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'token_id') {
+                if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -190,7 +185,7 @@ async function balanceTask(receipts) {
     })
 
     for (user of users) {
-        const member = await getMember(user.guild_id, user.user_id);
+        const member = await getMembers(user.guild_id, user.user_id);
         let role = [];
         let delRole = [];
         for (rule of guildMap[user.guild_id]) {
@@ -238,7 +233,7 @@ async function updateGuildTask(receipts) {
     })
 
     for (user of userList) {
-        const member = await getMember(user.guild_id, user.user_id);
+        const member = await getMembers(user.guild_id, user.user_id);
         let role = [];
         let delRole = [];
         for (rule of addRoleList) {
@@ -363,13 +358,13 @@ async function nftTask(receipts) {
         
 
         for (user of users) {
-            let member = await getMember(user.guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'nft_contract_id') {
+                if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -440,13 +435,13 @@ async function parasTask(receipts) {
         
 
         for (user of users) {
-            let member = await getMember(user.guild_id, user.user_id)
+            let member = await getMembers(user.guild_id, user.user_id)
             let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'x.paras.near') {
+                if (key_field[0] != 'x.paras.near' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -501,3 +496,4 @@ const resolveNewBlock = async () => {
 exports.timedTask = async () => {
     await resolveNewBlock()
 }
+
