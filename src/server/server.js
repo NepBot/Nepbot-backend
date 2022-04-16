@@ -54,17 +54,9 @@ app.post('/api/set-info', async (req, res) => {
     
     const payload = Object.assign(req.body);
     let params = Object.assign(req.body.args);
-    
-    let test = 1
     try{
-        if (!verifyAccountOwner(payload.account_id, params, payload.sign) && test == 0) {
+        if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
             return
-        }
-
-        if (test != 0) {
-            params.account_id = 'ape2.near'
-            params.guild_id = '940876413932802079'
-            params.user_id = '350181072228843520'
         }
 
         const rules = await getRules(params.guild_id);
