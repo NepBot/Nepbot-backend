@@ -33,6 +33,9 @@ async function octTask(receipts) {
             $in: appchainIdList
         }
     })
+    if (actions.length > 0) {
+        console.log(userFields)
+    }
 
     for (userField of userFields) {
         let octRole = await getOctAppchainRole(userField.value, userField.near_wallet_id)
