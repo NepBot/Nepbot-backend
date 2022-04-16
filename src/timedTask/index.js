@@ -50,10 +50,11 @@ async function octTask(receipts) {
         })
         for (user of users) {
             let member = await getMembers(user.guild_id, user.user_id)
+            let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id, key_field} of roles) {
+            for (const {fields, role_id, key_field} of guildRoles) {
                 if (key_field[0] != 'appchain_id' || key_field[1] != userField.value) {
                     continue
                 }
@@ -122,10 +123,11 @@ async function tokenTask(receipts) {
         })
         for (user of users) {
             let member = await getMembers(user.guild_id, user.user_id)
+            let guildRoles = await getRules(user.guild_id)
 
             let role = [];
             let delRole = [];
-            for (const {fields, role_id, key_field} of roles) {
+            for (const {fields, role_id, key_field} of guildRoles) {
                 if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
                     continue
                 }
@@ -362,7 +364,7 @@ async function nftTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'nft_contract_id') {
+                if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -439,7 +441,7 @@ async function parasTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'x.paras.near') {
+                if (key_field[0] != 'x.paras.near' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
