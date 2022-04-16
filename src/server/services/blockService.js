@@ -26,9 +26,6 @@ exports.filterOctActions = (receipts) => {
         obj.signer_id = receipt.receipt.Action.signer_id
         ret.push(obj)
     }
-    if (ret.length > 0) {
-        console.log(ret)
-    }
     return ret
 }
 
