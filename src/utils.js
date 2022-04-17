@@ -30,6 +30,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
         guild_id: args.guild_id
     })
     if (expire && (Date.now() - user.nonce > 300 * 1000 )) {
+        console.log("failed")
         return
     }
     let keyStore = config.nearWallet.keyStore;
