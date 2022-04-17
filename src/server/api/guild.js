@@ -1,11 +1,17 @@
 
 const {client} = require("../../bot");
-const fs = require("fs")
+const {GuildMember} = require('discord.js')
+const {Routes} = require("discord-api-types/v9");
+const secret = require("../utils/secret").getSecret();
+const {TOKEN} = secret
+const {REST} = require('@discordjs/rest');
+const rest = new REST({version: '9'}).setToken(TOKEN);
 
 exports.getMember = (guildId,memberId)=>{
-    const guild = this.getGuild(guildId)
-    fs.writeFileSync("./haha.txt", JSON.stringify(guild.members.cache))
-    return guild.members.cache.get(memberId);
+    const member = await rest.get(`${Routes.guildMember(guildId,memberId)}`,{
+        auth:true,
+    });
+    return new GuildMember(client,member,this.getGuild(guildId))
 }
 exports.getGuild = (guid_id)=>{
    return client.guilds.cache.get(guid_id)
