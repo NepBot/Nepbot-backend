@@ -180,7 +180,7 @@ app.get('/api/getServer/:guildId',async (req, res) => {
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = getMember(req.params.guildId, req.params.userId)
+    const member = await getMember(req.params.guildId, req.params.userId)
     console.log("member", member)
     res.json(member)
 })
