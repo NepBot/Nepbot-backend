@@ -35,12 +35,11 @@ exports.verifyUserId = async (args, sign, expire=true) => {
     let keyStore = config.nearWallet.keyStore;
     let account_id = config.ACCOUNT_ID
     const keyPair = await keyStore.getKey(config.nearWallet.networkId, account_id);
-
-    const ret = keyPair.verify(JSON.stringify({
+    const ret = verifySignature({
         guild_id: args.guild_id,
         nonce: user.nonce,
         user_id: args.user_id
-    }), sign)
+    }, sign, keyPair.publicKey.toString())
     if (!ret) {
         return false
     }
