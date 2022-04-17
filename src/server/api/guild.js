@@ -2,7 +2,7 @@
 const {client} = require("../../bot");
 const {GuildMember} = require('discord.js')
 const {Routes} = require("discord-api-types/v9");
-const secret = require("../secret").getSecret();
+const secret = require("../../secret").getSecret();
 const {TOKEN} = secret
 const {REST} = require('@discordjs/rest');
 const rest = new REST({version: '9'}).setToken(TOKEN);
