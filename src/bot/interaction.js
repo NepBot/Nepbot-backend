@@ -43,6 +43,8 @@ const events = async interaction => {
                 nonce: nonce
             });
 
+            
+
             await interaction.reply({ content: '\n', ephemeral:true,embeds:[embed],components: [button] });
             break;
         case 'setrule':
