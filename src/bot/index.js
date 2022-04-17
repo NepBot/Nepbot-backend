@@ -5,16 +5,16 @@ const {msgFunc} = require("./message");
 const {onGuildAdd} = require("./guild.js")
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
+    console.log(data)
     regeistryCommands()
 });
 /**
  * Listen for interaction
  * */
 
-// client.on('guildCreate', async (interaction) => {
-//     console.log('guildCreate')
-//     await onGuildAdd(interaction);
-// })
+client.on('guildCreate', async (interaction) => {
+    await onGuildAdd(interaction);
+})
 
 // client.on('guildDelete', async (interaction) => {
 //     console.log('guildDelete')
