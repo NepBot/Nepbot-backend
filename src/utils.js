@@ -29,6 +29,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
         user_id: args.user_id,
         guild_id: args.guild_id
     })
+    console.log(Date.now(), user.nonce)
     if (expire && (Date.now() - user.nonce > 300 )) {
         return
     }

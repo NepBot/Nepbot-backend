@@ -55,7 +55,6 @@ app.post('/api/set-info', async (req, res) => {
                 }
             }
         }
-        console.log(params.guild_id, params.user_id)
         const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
