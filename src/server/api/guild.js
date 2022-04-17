@@ -7,7 +7,7 @@ const {TOKEN} = secret
 const {REST} = require('@discordjs/rest');
 const rest = new REST({version: '9'}).setToken(TOKEN);
 
-exports.getMember = (guildId,memberId)=>{
+exports.getMember = async (guildId,memberId)=>{
     const member = await rest.get(`${Routes.guildMember(guildId,memberId)}`,{
         auth:true,
     });
