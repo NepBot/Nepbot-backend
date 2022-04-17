@@ -4,7 +4,7 @@ const fs = require("fs")
 
 exports.getMember = (guildId,memberId)=>{
     const guild = this.getGuild(guildId)
-    fs.writeFileSync("./haha.txt", guild.members.cache)
+    fs.writeFileSync("./haha.txt", JSON.stringify(guild.members.cache))
     return guild.members.cache.get(memberId);
 }
 exports.getGuild = (guid_id)=>{
