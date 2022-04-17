@@ -2,31 +2,25 @@ const UserInfo = require('../models/userInfo');
 const {where} = require("sequelize");
 
 exports.addUser = async (data)=>{
-    const user = await this.queryUser({
+    const user = await this.getUser({
         guild_id:data.guild_id,
         user_id:data.user_id
     });
-    if (user.msg){
+    if (user){
         return await this.updateUser(data);
     }else{
-        const ins = await UserInfo.create(data);
-        return ins.toJSON();
+        const userInfo = await UserInfo.create(data);
+        return userInfo.toJSON();
     }
 }
 
-exports.queryUser = async (data) =>{
-    let result = await UserInfo.findAll({
+exports.getUser = async (data) =>{
+    const user = await UserInfo.findOne({
         where:data
     });
-    if(result){
-        result = JSON.parse(JSON.stringify(result));
-        if(result.length>0){
-            return {msg:true,code:1}
-        }
-    }
-
-    return {msg:false,code:0}
+    return user;
 };
+
 exports.getAllUser = async (data) =>{
     return await UserInfo.findAll({
         where:data

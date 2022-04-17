@@ -38,7 +38,6 @@ const events = async interaction => {
             await userService.addUser({
                 user_id: interaction.user.id,
                 guild_id: interaction.guildId,
-                near_wallet_id: "unknown",
                 create_time: nonce,
                 nonce: nonce
             });

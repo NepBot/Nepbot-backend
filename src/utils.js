@@ -3,7 +3,7 @@ const {connect} = require('near-api-js');
 const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
-const { queryUser, updateUser } = require('./server/services/UserInfoService');
+const userInfo  = require('./server/services/UserInfoService');
 
 
 const verifySignature = (data, signature, public_key) => {
@@ -25,12 +25,11 @@ exports.verifyAccountOwner = async (account_id, data, signature) => {
 };
 
 exports.verifyUserId = async (args, sign, expire=true) => {
-    let user = await queryUser({
+    let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    console.log(Date.now(), user.nonce)
-    if (expire && (Date.now() - user.nonce > 300 )) {
+    if (expire && (Date.now() - user.nonce > 300 * 1000 )) {
         return
     }
     let keyStore = config.nearWallet.keyStore;
@@ -45,7 +44,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
         return false
     }
     const nonce = Date.now()
-    await updateUser({
+    await userInfo.updateUser({
         user_id: args.user_id,
         guild_id: args.guild_id,
         nonce: nonce
