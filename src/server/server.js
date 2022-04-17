@@ -55,7 +55,7 @@ app.post('/api/set-info', async (req, res) => {
                 }
             }
         }
-        
+        console.log(params.guild_id, params.user_id)
         const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
@@ -181,7 +181,6 @@ app.get('/api/getServer/:guildId',async (req, res) => {
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
     const member = await getMember(req.params.guildId, req.params.userId)
-    console.log("member", member)
     res.json(member)
 })
 
