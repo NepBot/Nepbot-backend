@@ -4,6 +4,7 @@ const {client} = require("../../bot");
 exports.getMember = (guildId,memberId)=>{
     const guild = this.getGuild(guildId)
     const user = client.users.cache.get(memberId)
+    console.log(user)
     return guild.members.cache.get(user);
 }
 exports.getGuild = (guid_id)=>{
