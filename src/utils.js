@@ -39,7 +39,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
         guild_id: args.guild_id,
         nonce: user.nonce,
         user_id: args.user_id
-    }, sign, keyPair.publicKey.toString())
+    }, sign, keyPair.publicKey.toString().replace('ed25519:', ''))
     if (!ret) {
         return false
     }
