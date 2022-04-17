@@ -5,7 +5,7 @@ const {msgFunc} = require("./message");
 const {onGuildAdd} = require("./guild.js")
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
-    console.log(data)
+    //console.log(data)
     regeistryCommands()
 });
 /**
