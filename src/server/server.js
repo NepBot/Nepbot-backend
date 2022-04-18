@@ -33,11 +33,11 @@ app.post('/api/set-info', async (req, res) => {
     
     
     try{
-        if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+        if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
             return
         }
 
-        if (!verifyUserId(params, params.sign)) {
+        if (!await verifyUserId(params, params.sign)) {
             return
         }
 
@@ -186,11 +186,11 @@ app.get('/api/getUser/:guildId/:userId', async (req, res) => {
 app.post('/api/sign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
-    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+    if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
 
-    if (!verifyOperationSign(payload.account_id, params)) {
+    if (!await verifyOperationSign(payload.account_id, params)) {
         return
     }
 
@@ -206,7 +206,6 @@ app.post('/api/operationSign', async (req, res) => {
         return
     }
     if (!await verifyUserId(params, params.sign)) {
-        res.json("failed")
         return
     }
     let sign = await getSign(0)
