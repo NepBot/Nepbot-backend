@@ -58,9 +58,7 @@ exports.verifyOperationSign = async (args) => {
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    console.log(user)
-    const data = await this.getSign(user.nonce)
-    return await this.verifyAccountOwner(config.ACCOUNT_ID, data, args.sign)
+    return await this.verifyAccountOwner(config.ACCOUNT_ID, user.nonce, args.sign)
 }
 
 exports.getSign = async (args)=> {
