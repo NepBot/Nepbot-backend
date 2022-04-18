@@ -203,7 +203,7 @@ app.post('/api/sign', async (req, res) => {
         return
     }
 
-    const guild = await getGuild(params.guid_id)
+    const guild = await getGuild(params.guild_id)
     if (params.user_id != guild.ownerId) {
         return
     }
