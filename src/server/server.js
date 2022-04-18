@@ -59,8 +59,8 @@ app.post('/api/set-info', async (req, res) => {
         }
 
         await userService.updateUser({
-            user_id: interaction.user.id,
-            guild_id: interaction.guildId,
+            user_id: params.user.id,
+            guild_id: params.guildId,
             near_wallet_id: payload.account_id
         });
 
