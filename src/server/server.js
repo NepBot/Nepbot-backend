@@ -190,7 +190,7 @@ app.post('/api/sign', async (req, res) => {
         return
     }
 
-    if (!await verifyOperationSign(payload.account_id, params)) {
+    if (!await verifyOperationSign(params)) {
         return
     }
 
@@ -207,7 +207,7 @@ app.post('/api/operationSign', async (req, res) => {
     }
     const nonce = await verifyUserId(params, params.sign)
     if (!nonce) {
-        if (params.operationSign && await verifyOperationSign(payload.account_id, {
+        if (params.operationSign && await verifyOperationSign({
             user_id: params.user_id,
             guild_id: params.guild_id,
             sign: params.operationSign

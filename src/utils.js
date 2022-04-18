@@ -53,13 +53,13 @@ exports.verifyUserId = async (args, sign) => {
     return nonce
 }
 
-exports.verifyOperationSign = async (account_id, args) => {
+exports.verifyOperationSign = async (args) => {
     let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
     const data = await this.getSign(user.nonce)
-    return await this.verifyAccountOwner(account_id, data, args.sign)
+    return await this.verifyAccountOwner(config.ACCOUNT_ID, data, args.sign)
 }
 
 exports.getSign = async (args)=> {
