@@ -55,7 +55,7 @@ exports.verifyUserId = async (args, sign, expire=true) => {
 }
 
 exports.verifyOperationSign = async (account_id, args) => {
-    let user = await getUser({
+    let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
