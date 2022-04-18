@@ -41,6 +41,8 @@ app.post('/api/set-info', async (req, res) => {
             return
         }
 
+        
+
         const rules = await getRules(params.guild_id);
         let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
         let doc = await userService.getAllUser({
@@ -55,6 +57,13 @@ app.post('/api/set-info', async (req, res) => {
                 }
             }
         }
+
+        await userService.updateUser({
+            user_id: interaction.user.id,
+            guild_id: interaction.guildId,
+            near_wallet_id: payload.account_id
+        });
+
         const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
