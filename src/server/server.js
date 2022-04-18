@@ -206,7 +206,7 @@ app.post('/api/operationSign', async (req, res) => {
         return
     }
     const nonce = verifyUserId(params, params.sign)
-    if (!nonce) {
+    if (nonce == false) {
         return
     }
     let sign = await getSign(nonce)
