@@ -226,11 +226,10 @@ app.post('/api/operationSign', async (req, res) => {
             guild_id: params.guild_id,
             sign: params.operationSign
         })) {
-            console.log("=============================")
             res.json(params.operationSign)
             return
         } 
-        
+
         return
     }
     let sign = await getSign(nonce)
