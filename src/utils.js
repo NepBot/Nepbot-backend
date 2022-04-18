@@ -25,7 +25,6 @@ exports.verifyAccountOwner = async (account_id, data, signature) => {
 };
 
 exports.verifyUserId = async (args, sign) => {
-    console.log(args)
     let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
