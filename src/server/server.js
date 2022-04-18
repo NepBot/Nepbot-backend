@@ -202,15 +202,13 @@ app.post('/api/sign', async (req, res) => {
 app.post('/api/operationSign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
-    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+    if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    const nonce = verifyUserId(params, params.sign)
-    console.log(nonce)
-    if (!nonce) {
+    if (!await verifyUserId(params, params.sign)) {
         return
     }
-    let sign = await getSign(nonce)
+    let sign = await getSign(0)
     
     res.json(sign)
 })
