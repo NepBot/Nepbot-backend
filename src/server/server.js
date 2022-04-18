@@ -229,7 +229,9 @@ app.post('/api/operationSign', async (req, res) => {
             console.log("=============================")
             res.json(params.operationSign)
             return
-        }
+        } 
+        
+        return
     }
     let sign = await getSign(nonce)
     
