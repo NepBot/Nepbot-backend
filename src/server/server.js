@@ -206,6 +206,7 @@ app.post('/api/operationSign', async (req, res) => {
         return
     }
     if (!await verifyUserId(params, params.sign)) {
+        res.json("failed")
         return
     }
     let sign = await getSign(0)
