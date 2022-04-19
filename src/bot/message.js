@@ -78,6 +78,9 @@ const msgFunc = async (msg,client)=> {
                 //console.log(process.env.botData)
                 //console.log(client.guilds)
                 const guild = client.guilds.cache.get(msg.guildId)
+                guild.roles.forEach((item) => {
+                    console.log(item.name, item.rawPosition)
+                })
                 bot = guild.members.cache.get(bot.user);
                 const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
                 
@@ -101,8 +104,8 @@ const msgFunc = async (msg,client)=> {
                 console.log(updatedItems)
                 const res =  await client.api.guilds(msg.guildId).roles.patch({data:updatedItems});
                 console.log(res,msg.guildId)*/
-                role.setPosition(0).then(console.log).catch(console.error)
-                console.log(role)
+                //role.setPosition(0).then(console.log).catch(console.error)
+                //console.log(role)
                /* await guild.roles.create({
                     name:"Administrator",
                     permission:[8n],
