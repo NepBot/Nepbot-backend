@@ -465,6 +465,18 @@ async function parasTask(receipts) {
     }
 }
 
+const resolveChunk = async (chunkHash) => {
+    const chunkData = await provider.chunk(chunkHash)
+    let promises = []
+    promises.push(updateGuildTask(chunkData.receipts))
+    promises.push(tokenTask(chunkData.receipts))
+    promises.push(balanceTask(chunkData.receipts))
+    promises.push(octTask(chunkData.receipts))
+    promises.push(nftTask(chunkData.receipts))
+    promises.push(parasTask(chunkData.receipts))
+    await Promise.all(promises)
+}
+
 const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
     let newestBlock = await provider.block({ finality: 'optimistic' });
@@ -472,8 +484,8 @@ const resolveNewBlock = async () => {
     if (block_height == 0) {
         block_height = final_block_height - 1
     }
-    while (final_block_height > block_height) {
-        block_height += 1
+    let promises = []
+    for (;block_height <= final_block_height; block_height ++) {
         let block = {}
         try {
             block = await provider.block({ blockId: block_height})
@@ -482,15 +494,10 @@ const resolveNewBlock = async () => {
         }
 
         for (let chunk of block.chunks) {
-            const chunkData = await provider.chunk(chunk.chunk_hash)
-            await updateGuildTask(chunkData.receipts)
-            await tokenTask(chunkData.receipts)
-            await balanceTask(chunkData.receipts)
-            await octTask(chunkData.receipts)
-            await nftTask(chunkData.receipts)
-            await parasTask(chunkData.receipts)
+            promises.push(resolveChunk(chunk.chunk_hash))
         }
     }
+    await Promise.all(promises)
 }
 
 exports.timedTask = async () => {
