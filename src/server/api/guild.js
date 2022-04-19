@@ -1,15 +1,13 @@
 
-const {client} = require("../../bot");
+const {client, rest} = require("../../bot");
+const {GuildMember} = require('discord.js')
+const {Routes} = require("discord-api-types/v9");
 
-exports.getMember = (guildId,memberId)=>{
-    const guild = this.getGuild(guildId)
-    for (member of guild.members.cache) {
-        console.log(member.user.id)
-        if (member.user.id == memberId) {
-            console.log("found+++++++++++++++++++++++=")
-        }
-    }
-    return guild.members.cache.get(memberId);
+exports.getMember = async (guildId,memberId)=>{
+    const member = await rest.get(`${Routes.guildMember(guildId,memberId)}`,{
+        auth:true,
+    });
+    return new GuildMember(client,member,this.getGuild(guildId))
 }
 exports.getGuild = (guid_id)=>{
    return client.guilds.cache.get(guid_id)

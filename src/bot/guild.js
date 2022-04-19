@@ -9,16 +9,9 @@ const {TOKEN} = secret
 
 /** commands response*/
 const onGuildAdd = async (guild) => {
-    // guild.commands.create({
-    //     name: "verify",
-    //     type: "CHAT_INPUT",
-    //     description: "Replies with user walletAuthorization"
-    // }) //, "940255224256409611")
-    // guild.commands.create({
-    //     name: "setrule",
-    //     type: "CHAT_INPUT",
-    //     description: "Replies with user walletAuthorization"
-    // })
+    let bot = JSON.parse(process.env.botData);
+    bot = guild.members.cache.get(bot.user);
+    const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
 }
 
 

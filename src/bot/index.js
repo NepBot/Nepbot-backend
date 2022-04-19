@@ -3,18 +3,25 @@ const client = new Client({ intents:[Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_M
 const { events } = require('./interaction')
 const {msgFunc} = require("./message");
 const {onGuildAdd} = require("./guild.js")
+const secret = require("../secret").getSecret();
+const {TOKEN} = secret
+const {REST} = require('@discordjs/rest');
+const rest = new REST({version: '9'}).setToken(TOKEN);
+
+
+
 client.on('ready',async (data)=>{
     process.env.botData = JSON.stringify(data);
+    //console.log(data)
     regeistryCommands()
 });
 /**
  * Listen for interaction
  * */
 
-// client.on('guildCreate', async (interaction) => {
-//     console.log('guildCreate')
-//     await onGuildAdd(interaction);
-// })
+client.on('guildCreate', async (interaction) => {
+    await onGuildAdd(interaction);
+})
 
 // client.on('guildDelete', async (interaction) => {
 //     console.log('guildDelete')
@@ -45,4 +52,4 @@ const regeistryCommands = async () => {
 
 
 
-module.exports = {client};
+module.exports = {client,rest};

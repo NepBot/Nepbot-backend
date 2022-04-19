@@ -31,13 +31,15 @@ app.post('/api/set-info', async (req, res) => {
     const payload = Object.assign(req.body);
     let params = Object.assign(req.body.args);
     try{
-        if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+        if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
             return
         }
 
-        if (!verifyUserId(params, params.sign)) {
+        if (!await verifyUserId(params, params.sign)) {
             return
         }
+
+        
 
         const rules = await getRules(params.guild_id);
         let roleList = Array.from(new Set(rules.map(({role_id}) => role_id)));
@@ -53,7 +55,13 @@ app.post('/api/set-info', async (req, res) => {
                 }
             }
         }
-        
+
+        await userService.updateUser({
+            user_id: params.user_id,
+            guild_id: params.guild_id,
+            near_wallet_id: payload.account_id
+        });
+
         const member = await getMember(params.guild_id, params.user_id);
 
         let rulesMap = {
@@ -176,19 +184,23 @@ app.get('/api/getServer/:guildId',async (req, res) => {
 })
 
 app.get('/api/getUser/:guildId/:userId', async (req, res) => {
-    const member = getMember(req.params.guildId, req.params.userId)
-    console.log("member", member)
+    const member = await getMember(req.params.guildId, req.params.userId)
     res.json(member)
 })
 
 app.post('/api/sign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
-    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+    if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
 
-    if (verifyOperationSign(payload.account_id, params) == false) {
+    if (!await verifyOperationSign(params)) {
+        return
+    }
+
+    const guild = await getGuild(params.guild_id)
+    if (params.user_id != guild.ownerId) {
         return
     }
 
@@ -200,11 +212,20 @@ app.post('/api/sign', async (req, res) => {
 app.post('/api/operationSign', async (req, res) => {
     const payload = Object.assign(req.body);
     const params = Object.assign(req.body.args);
-    if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
+    if (!await verifyAccountOwner(payload.account_id, params, payload.sign)) {
         return
     }
-    const nonce = verifyUserId(params, params.sign)
+    const nonce = await verifyUserId(params, params.sign)
     if (!nonce) {
+        if (params.operationSign && await verifyOperationSign({
+            user_id: params.user_id,
+            guild_id: params.guild_id,
+            sign: params.operationSign
+        })) {
+            res.json(params.operationSign)
+            return
+        } 
+
         return
     }
     let sign = await getSign(nonce)

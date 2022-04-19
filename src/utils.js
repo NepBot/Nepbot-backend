@@ -3,7 +3,7 @@ const {connect} = require('near-api-js');
 const {nearWallet} = config;
 const tweetnacl = require("tweetnacl");
 const bs58 = require('bs58');
-const { queryUser, updateUser } = require('./server/services/UserInfoService');
+const userInfo  = require('./server/services/UserInfoService');
 
 
 const verifySignature = (data, signature, public_key) => {
@@ -24,13 +24,14 @@ exports.verifyAccountOwner = async (account_id, data, signature) => {
     });
 };
 
-exports.verifyUserId = async (args, sign, expire=true) => {
-    let user = await queryUser({
+exports.verifyUserId = async (args, sign) => {
+    let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    if (expire && (Date.now() - user.nonce > 300 )) {
-        return
+    if (Date.now() - user.nonce > 300 * 1000 ) {  // 5min limit
+        console.log("failed")
+        return false
     }
     let keyStore = config.nearWallet.keyStore;
     let account_id = config.ACCOUNT_ID
@@ -39,12 +40,12 @@ exports.verifyUserId = async (args, sign, expire=true) => {
         guild_id: args.guild_id,
         nonce: user.nonce,
         user_id: args.user_id
-    }, sign, keyPair.toString())
+    }, sign, keyPair.publicKey.toString().replace('ed25519:', ''))
     if (!ret) {
         return false
     }
     const nonce = Date.now()
-    await updateUser({
+    await userInfo.updateUser({
         user_id: args.user_id,
         guild_id: args.guild_id,
         nonce: nonce
@@ -52,13 +53,12 @@ exports.verifyUserId = async (args, sign, expire=true) => {
     return nonce
 }
 
-exports.verifyOperationSign = async (account_id, args) => {
-    let user = await queryUser({
+exports.verifyOperationSign = async (args) => {
+    let user = await userInfo.getUser({
         user_id: args.user_id,
         guild_id: args.guild_id
     })
-    const data = await this.getSign(user.nonce)
-    return await verifyAccountOwner(account_id, data, args.sign)
+    return await this.verifyAccountOwner(config.ACCOUNT_ID, user.nonce, args.sign)
 }
 
 exports.getSign = async (args)=> {

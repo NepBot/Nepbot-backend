@@ -1,12 +1,12 @@
 const UserField = require('../models/userField');
 
 exports.addUserField = async (data)=>{
-    const user = await this.queryUserField({
+    const user = await this.getUserField({
         near_wallet_id: data.near_wallet_id,
         key: data.key,
         value: data.value,
     });
-    if (user.msg){
+    if (user){
         return await this.updateUserField(data);
     }else{
         const user = await UserField.create(data);
@@ -14,31 +14,20 @@ exports.addUserField = async (data)=>{
     }
 }
 
-exports.queryUserField = async (data) =>{
-    let result = await UserField.findAll({
-        where:data
-    });
-    if(result){
-        result = JSON.parse(JSON.stringify(result));
-        if(result.length>0){
-            return {msg:true,code:1}
-        }
-    }
-
-    return {msg:false,code:0}
-};
 exports.getUserField = async (data) =>{
-    const users = await UserField.findOne({
+    const user = await UserField.findOne({
         where:data
     });
-    return JSON.parse(JSON.stringify(users));
+    return user;
 };
+
 exports.getUserFieldList = async (data) =>{
     const users = await UserField.findAll({
         where:data
     });
-    return JSON.parse(JSON.stringify(users));
+    return users
 };
+
 exports.updateUserField = async (data)=> {
     if(!data.near_wallet_id) return {msg:'Missing parameters near_wallet_id',code:0}
     const params = {
