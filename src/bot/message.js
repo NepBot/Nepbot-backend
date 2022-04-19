@@ -78,11 +78,13 @@ const msgFunc = async (msg,client)=> {
                 //console.log(process.env.botData)
                 //console.log(client.guilds)
                 const guild = client.guilds.cache.get(msg.guildId)
-                guild.roles.cache.forEach((item) => {
+                
+                bot = guild.members.cache.get(bot.user);
+                //const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
+
+                bot.roles.cache.forEach((item) => {
                     console.log(item.name, item.rawPosition)
                 })
-                bot = guild.members.cache.get(bot.user);
-                const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
                 
                 //
                 // console.log(role[0])
