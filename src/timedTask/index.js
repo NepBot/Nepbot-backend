@@ -466,7 +466,7 @@ async function parasTask(receipts) {
 }
 
 const resolveChunk = async (chunkHash) => {
-    const chunkData = await provider.chunk()
+    const chunkData = await provider.chunk(chunkHash)
     let promises = []
     promises.push(updateGuildTask(chunkData.receipts))
     promises.push(tokenTask(chunkData.receipts))
