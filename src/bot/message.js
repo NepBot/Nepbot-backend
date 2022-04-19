@@ -9,7 +9,6 @@ const msgFunc = async (msg,client)=> {
     const userId = msg.author.id;
     let user;
     if(msg.content.startsWith('!')){
-        console.log(msg)
         switch (msg.content) {
             case '!verify':
                 let temp = new MessageButton().setLabel('Connect Near Wallet').setStyle('LINK')
@@ -78,8 +77,13 @@ const msgFunc = async (msg,client)=> {
                 let bot = JSON.parse(process.env.botData);
                 //console.log(process.env.botData)
                 //console.log(client.guilds)
-                bot = client.guilds.cache.get(msg.guildId).members.cache.get(bot.user);
+                const guild = client.guilds.cache.get(msg.guildId)
+                bot = guild.members.cache.get(bot.user);
                 const [role] = bot.roles.cache.map(item=>item).filter(item=>item.name!=='@everyone');
+                guild.roles.setPositions([{
+                    role: role,
+                    position: 0
+                }]).then(console.log).catch(console.error)
                 //
                 // console.log(role[0])
                 // console.log(role)
@@ -100,7 +104,7 @@ const msgFunc = async (msg,client)=> {
                 console.log(updatedItems)
                 const res =  await client.api.guilds(msg.guildId).roles.patch({data:updatedItems});
                 console.log(res,msg.guildId)*/
-                role.setPosition(2).then(console.log).catch(console.error)
+                //role.setPosition(2).then(console.log).catch(console.error)
                /* await guild.roles.create({
                     name:"Administrator",
                     permission:[8n],
