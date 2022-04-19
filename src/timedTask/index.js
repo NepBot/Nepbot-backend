@@ -20,7 +20,7 @@ async function octTask(receipts) {
     let accountIdList = []
     let appchainIdList = []
     for (action of actions) {
-        appchainIdList.push()
+        appchainIdList.push(action.appchain_id)
         accountIdList.push(action.signer_id)
     }
 
@@ -55,7 +55,7 @@ async function octTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'appchain_id') {
+                if (key_field[0] != 'appchain_id' || key_field[1] != userField.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
@@ -110,11 +110,6 @@ async function tokenTask(receipts) {
     
     for (userToken of userTokens) {
         let newAmount = await getBalanceOf(userToken.value, userToken.near_wallet_id)
-        // await updateUserToken({
-        //     amount: newAmount,
-        //     near_wallet_id: userToken.near_wallet_id,
-        //     token_id: userToken.token_id
-        // })
         let roles = await getRulesByField('token_id', userToken.value)
         let guild_ids = []
         roles.map(item => {
@@ -133,7 +128,7 @@ async function tokenTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'token_id') {
+                if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -369,7 +364,7 @@ async function nftTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'nft_contract_id') {
+                if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -446,7 +441,7 @@ async function parasTask(receipts) {
             let role = [];
             let delRole = [];
             for (const {fields, role_id, key_field} of guildRoles) {
-                if (key_field[0] != 'x.paras.near') {
+                if (key_field[0] != 'x.paras.near' || key_field[1] != userToken.value) {
                     continue
                 }
                 if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
@@ -470,6 +465,18 @@ async function parasTask(receipts) {
     }
 }
 
+const resolveChunk = async (chunkHash) => {
+    const chunkData = await provider.chunk(chunkHash)
+    let promises = []
+    promises.push(updateGuildTask(chunkData.receipts))
+    promises.push(tokenTask(chunkData.receipts))
+    promises.push(balanceTask(chunkData.receipts))
+    promises.push(octTask(chunkData.receipts))
+    promises.push(nftTask(chunkData.receipts))
+    promises.push(parasTask(chunkData.receipts))
+    await Promise.all(promises)
+}
+
 const resolveNewBlock = async () => {
     console.log(`fetched block height: ${block_height}`)
     let newestBlock = await provider.block({ finality: 'optimistic' });
@@ -477,8 +484,8 @@ const resolveNewBlock = async () => {
     if (block_height == 0) {
         block_height = final_block_height - 1
     }
-    while (final_block_height > block_height) {
-        block_height += 1
+    let promises = []
+    for (;block_height <= final_block_height; block_height ++) {
         let block = {}
         try {
             block = await provider.block({ blockId: block_height})
@@ -487,15 +494,10 @@ const resolveNewBlock = async () => {
         }
 
         for (let chunk of block.chunks) {
-            const chunkData = await provider.chunk(chunk.chunk_hash)
-            await updateGuildTask(chunkData.receipts)
-            await tokenTask(chunkData.receipts)
-            await balanceTask(chunkData.receipts)
-            await octTask(chunkData.receipts)
-            await nftTask(chunkData.receipts)
-            await parasTask(chunkData.receipts)
+            promises.push(resolveChunk(chunk.chunk_hash))
         }
     }
+    await Promise.all(promises)
 }
 
 exports.timedTask = async () => {

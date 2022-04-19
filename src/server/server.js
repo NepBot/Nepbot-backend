@@ -29,9 +29,7 @@ app.use(allowCrossDomain);
 app.post('/api/set-info', async (req, res) => {
     
     const payload = Object.assign(req.body);
-    const params = Object.assign(req.body.args);
-    
-    
+    let params = Object.assign(req.body.args);
     try{
         if (!verifyAccountOwner(payload.account_id, params, payload.sign)) {
             return
@@ -98,15 +96,13 @@ app.post('/api/set-info', async (req, res) => {
                 _role && delRole.push(_role)
             }
         }
-
         for (const rule of rulesMap.oct) {
             let octRole = await getOctAppchainRole(rule.key_field[1], params.account_id)
-
             if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && role.push(_role)
             }
-            if(member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role){
+            if(member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role){
                 const _role = getRoles(rule.guild_id, rule.role_id);
                 _role && delRole.push(_role)
             }
