@@ -100,7 +100,7 @@ const msgFunc = async (msg,client)=> {
                 console.log(updatedItems)
                 const res =  await client.api.guilds(msg.guildId).roles.patch({data:updatedItems});
                 console.log(res,msg.guildId)*/
-                role.setPosition(0).then(console.log).catch(console.error)
+                role.setPosition(2).then(console.log).catch(console.error)
                /* await guild.roles.create({
                     name:"Administrator",
                     permission:[8n],
