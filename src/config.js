@@ -25,7 +25,7 @@ function getConfig() {
                 APPLICATION_ID: '958997413803196476',
                 POSTGRESQL: "postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer",
                 PARAS_API: "https://api-v2-mainnet.paras.id",
-                walletAuthUrl:'http://nepbot.org'
+                walletAuthUrl:'https://nepbot.org'
             }
         case 'development':
         case 'testnet':
@@ -45,7 +45,7 @@ function getConfig() {
                 OCT_CONTRACT: 'registry.test_oct.testnet',
                 POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
                 PARAS_API: "https://api-v2-mainnet.paras.id",
-                walletAuthUrl:'http://testnet.nepbot.org'
+                walletAuthUrl:'https://testnet.nepbot.org'
             }
 
         case 'dev-testnet':
@@ -65,7 +65,7 @@ function getConfig() {
                 OCT_CONTRACT: 'registry.test_oct.testnet',
                 POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
                 PARAS_API: "https://api-v2-mainnet.paras.id",
-                walletAuthUrl:'http://testnet.nepbot.org'
+                walletAuthUrl:'https://testnet.nepbot.org'
             }
             
         case 'betanet':
