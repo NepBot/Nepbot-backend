@@ -38,15 +38,36 @@ function getConfig() {
                     helperUrl: 'https://helper.testnet.near.org',
                 },   
                 port: 6000,
-                RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
+                RULE_CONTRACT: 'app.nepbot.testnet',
                 LINKDROP: 'linkdrop6.bhc8521.testnet',
-                ACCOUNT_ID: 'nepbot.testnet',
+                ACCOUNT_ID: 'sign.nepbot.testnet',
                 APPLICATION_ID: '928559137179172874',
                 OCT_CONTRACT: 'registry.test_oct.testnet',
                 POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
                 PARAS_API: "https://api-v2-mainnet.paras.id",
                 walletAuthUrl:'http://testnet.nepbot.org'
             }
+
+        case 'dev-testnet':
+            return {
+                nearWallet: {
+                    networkId: 'testnet',
+                    keyStore: key,
+                    nodeUrl: 'https://rpc.testnet.near.org',
+                    walletUrl: 'https://wallet.testnet.near.org',
+                    helperUrl: 'https://helper.testnet.near.org',
+                },   
+                port: 6000,
+                RULE_CONTRACT: 'app.test-nepbot.testnet',
+                LINKDROP: 'linkdrop6.bhc8521.testnet',
+                ACCOUNT_ID: 'test-nepbot.testnet',
+                APPLICATION_ID: '928559137179172874',
+                OCT_CONTRACT: 'registry.test_oct.testnet',
+                POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
+                PARAS_API: "https://api-v2-mainnet.paras.id",
+                walletAuthUrl:'http://testnet.nepbot.org'
+            }
+            
         case 'betanet':
             return {
             networkId: 'betanet',
