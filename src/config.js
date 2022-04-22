@@ -65,7 +65,7 @@ function getConfig() {
                 OCT_CONTRACT: 'registry.test_oct.testnet',
                 POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
                 PARAS_API: "https://api-v2-mainnet.paras.id",
-                walletAuthUrl:'https://testnet.nepbot.org'
+                walletAuthUrl:'http://18.138.243.39:8080/'
             }
             
         case 'betanet':
