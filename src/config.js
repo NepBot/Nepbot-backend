@@ -61,7 +61,7 @@ function getConfig() {
                 RULE_CONTRACT: 'app.dev-nepbot.testnet',
                 LINKDROP: 'linkdrop6.bhc8521.testnet',
                 ACCOUNT_ID: 'dev-nepbot.testnet',
-                APPLICATION_ID: '928559137179172874',
+                APPLICATION_ID: '967009211823304744',
                 OCT_CONTRACT: 'registry.test_oct.testnet',
                 POSTGRESQL: 'postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer',
                 PARAS_API: "https://api-v2-mainnet.paras.id",
