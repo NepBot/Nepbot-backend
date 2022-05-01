@@ -14,7 +14,7 @@
 └──  <big>_**deploy-commands.js**_</big>    deploy commands. Commanly used for test or develop a new command.
 
 ## Note
-If you need to execute this project, the config.json in config and .env file is needed. Please contact with project mananger.
+If you need to execute this project, the near_net.json in conf and .env file in root path is needed, there is a sample file in the currently folder. Don't forget to rename the both file by deleting `_sample`. more infomation please contact with the manager.
 
 ## Local debug 
 ### the environment

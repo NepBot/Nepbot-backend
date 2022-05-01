@@ -1,5 +1,5 @@
 .env
-conf/*
-node_modules
-.exlintrc.json
+.eslintrc.json
+conf/near_net.json
 logs/*
+node_modules
