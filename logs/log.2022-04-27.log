@@ -1,0 +1,421 @@
+[2022-04-27T16:01:27.509] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T16:01:27.948] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T16:01:27.950] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T16:01:27.961] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T16:01:27.966] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T16:01:27.967] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T16:01:27.983] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:27.998] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.013] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.026] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.043] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.075] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.088] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T16:01:28.102] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T16:01:28.113] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T16:01:28.113] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T16:01:28.126] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.139] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.151] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T16:01:28.163] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T16:01:28.176] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.189] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.202] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T16:01:28.214] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T16:01:28.225] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T16:01:28.225] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T16:01:28.236] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.249] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.262] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T16:01:28.275] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.301] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T16:01:28.314] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T16:01:28.325] [INFO] default - Sync models to mysql finished.
+[2022-04-27T16:01:29.281] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T16:01:46.200] [DEBUG] default - 0xJZ#0770 in #0xjzs-server triggered an interaction.
+[2022-04-27T17:16:16.177] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T17:16:16.877] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T17:16:16.880] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:16:16.891] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T17:16:16.893] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T17:16:16.894] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:16:16.909] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:16.922] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:16.935] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:16.947] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:16.959] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:16:16.972] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:16:16.985] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T17:16:16.998] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:16:17.007] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T17:16:17.008] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:16:17.019] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:17.032] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:17.044] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T17:16:17.056] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T17:16:17.068] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:16:17.096] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:16:17.109] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T17:16:17.122] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:16:17.133] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T17:16:17.134] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:16:17.145] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:17.167] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:17.180] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T17:16:17.193] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:16:17.206] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:16:17.237] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T17:16:17.274] [INFO] default - Sync models to mysql finished.
+[2022-04-27T17:16:18.161] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T17:18:54.589] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T17:18:55.212] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T17:18:55.213] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:18:55.222] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T17:18:55.225] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T17:18:55.226] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:18:55.239] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.252] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.264] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.276] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.288] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.300] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.314] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T17:18:55.330] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:18:55.340] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T17:18:55.341] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:18:55.354] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.368] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.380] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T17:18:55.392] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T17:18:55.405] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.417] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.429] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T17:18:55.440] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:18:55.451] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T17:18:55.451] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:18:55.462] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.473] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.486] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T17:18:55.497] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.509] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:18:55.521] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T17:18:55.531] [INFO] default - Sync models to mysql finished.
+[2022-04-27T17:18:56.167] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T17:19:15.584] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T17:19:16.201] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T17:19:16.203] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:19:16.212] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T17:19:16.215] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T17:19:16.215] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:19:16.228] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.242] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.256] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.271] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.285] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.298] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.311] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T17:19:16.324] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:19:16.336] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T17:19:16.337] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:19:16.352] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.365] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.387] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T17:19:16.401] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T17:19:16.415] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.434] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.454] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T17:19:16.471] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T17:19:16.484] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T17:19:16.485] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T17:19:16.497] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.521] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.552] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T17:19:16.581] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.598] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T17:19:16.615] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T17:19:16.633] [INFO] default - Sync models to mysql finished.
+[2022-04-27T17:19:17.082] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T17:19:23.440] [DEBUG] default - 0xJZ#0770 in #0xjzs-server triggered an interaction.
+[2022-04-27T18:11:29.842] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T18:11:29.934] [INFO] default - process controller: hello.js...
+[2022-04-27T18:11:29.935] [INFO] default - invalid URL: opts
+[2022-04-27T18:11:29.935] [INFO] default - invalid URL: methods
+[2022-04-27T18:11:29.935] [INFO] default - invalid URL: params
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: stack
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: acl
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: bind
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: checkout
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: connect
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: copy
+[2022-04-27T18:11:29.936] [INFO] default - invalid URL: delete
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: get
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: head
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: link
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: lock
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: m-search
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: merge
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: mkactivity
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: mkcalendar
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: mkcol
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: move
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: notify
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: options
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: patch
+[2022-04-27T18:11:29.937] [INFO] default - invalid URL: post
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: propfind
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: proppatch
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: purge
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: put
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: rebind
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: report
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: search
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: source
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: subscribe
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: trace
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: unbind
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: unlink
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: unlock
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: unsubscribe
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: del
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: use
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: prefix
+[2022-04-27T18:11:29.938] [INFO] default - invalid URL: middleware
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: routes
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: allowedMethods
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: all
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: redirect
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: register
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: route
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: url
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: match
+[2022-04-27T18:11:29.939] [INFO] default - invalid URL: param
+[2022-04-27T18:11:30.579] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T18:11:30.580] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:11:30.590] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T18:11:30.592] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T18:11:30.592] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:11:30.605] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.618] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.631] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.645] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.658] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.672] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.686] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T18:11:30.701] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:11:30.714] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T18:11:30.714] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:11:30.727] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.741] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.755] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T18:11:30.769] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T18:11:30.784] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.799] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.815] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T18:11:30.828] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:11:30.840] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T18:11:30.841] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:11:30.854] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.868] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.881] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T18:11:30.894] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.917] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:11:30.931] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T18:11:30.942] [INFO] default - Sync models to mysql finished.
+[2022-04-27T18:11:31.655] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T18:13:05.336] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T18:13:05.453] [INFO] default - process controller: hello.js...
+[2022-04-27T18:13:05.455] [INFO] default - invalid URL: opts
+[2022-04-27T18:13:05.455] [INFO] default - invalid URL: methods
+[2022-04-27T18:13:05.455] [INFO] default - invalid URL: params
+[2022-04-27T18:13:05.456] [INFO] default - invalid URL: stack
+[2022-04-27T18:13:05.456] [INFO] default - invalid URL: acl
+[2022-04-27T18:13:05.456] [INFO] default - invalid URL: bind
+[2022-04-27T18:13:05.456] [INFO] default - invalid URL: checkout
+[2022-04-27T18:13:05.456] [INFO] default - invalid URL: connect
+[2022-04-27T18:13:05.457] [INFO] default - invalid URL: copy
+[2022-04-27T18:13:05.457] [INFO] default - invalid URL: delete
+[2022-04-27T18:13:05.457] [INFO] default - invalid URL: get
+[2022-04-27T18:13:05.457] [INFO] default - invalid URL: head
+[2022-04-27T18:13:05.457] [INFO] default - invalid URL: link
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: lock
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: m-search
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: merge
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: mkactivity
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: mkcalendar
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: mkcol
+[2022-04-27T18:13:05.458] [INFO] default - invalid URL: move
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: notify
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: options
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: patch
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: post
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: propfind
+[2022-04-27T18:13:05.459] [INFO] default - invalid URL: proppatch
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: purge
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: put
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: rebind
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: report
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: search
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: source
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: subscribe
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: trace
+[2022-04-27T18:13:05.460] [INFO] default - invalid URL: unbind
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: unlink
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: unlock
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: unsubscribe
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: del
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: use
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: prefix
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: middleware
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: routes
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: allowedMethods
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: all
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: redirect
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: register
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: route
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: url
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: match
+[2022-04-27T18:13:05.461] [INFO] default - invalid URL: param
+[2022-04-27T18:13:06.046] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T18:13:06.048] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:06.058] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T18:13:06.061] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T18:13:06.061] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:06.080] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.098] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.113] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.128] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.142] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.158] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.172] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T18:13:06.186] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:06.199] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T18:13:06.199] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:06.214] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.230] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.249] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T18:13:06.262] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T18:13:06.275] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.290] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.302] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T18:13:06.313] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:06.323] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T18:13:06.324] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:06.335] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.348] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.360] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:06.372] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.385] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:06.399] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T18:13:06.412] [INFO] default - Sync models to mysql finished.
+[2022-04-27T18:13:06.826] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T18:13:54.839] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T18:13:54.919] [INFO] default - process controller: hello.js...
+[2022-04-27T18:13:54.922] [INFO] default - register URL mapping: GET /hello/:name
+[2022-04-27T18:13:55.448] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T18:13:55.449] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:55.460] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T18:13:55.461] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T18:13:55.462] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:55.476] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.489] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.502] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.515] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.529] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.543] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.556] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T18:13:55.569] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:55.579] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T18:13:55.580] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:55.591] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.604] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.617] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T18:13:55.630] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T18:13:55.643] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.655] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.669] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T18:13:55.681] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:13:55.693] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T18:13:55.694] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:13:55.706] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.720] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.734] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T18:13:55.748] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.761] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:13:55.774] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T18:13:55.785] [INFO] default - Sync models to mysql finished.
+[2022-04-27T18:13:56.298] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T18:16:31.118] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T18:16:31.221] [INFO] default - process controller: hello.js...
+[2022-04-27T18:16:31.223] [INFO] default - register URL mapping: GET /hello/:name
+[2022-04-27T18:16:31.777] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T18:16:31.779] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:16:31.790] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T18:16:31.794] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T18:16:31.794] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:16:31.810] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.823] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.838] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.851] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.865] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:16:31.879] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:16:31.895] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T18:16:31.909] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:16:31.921] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T18:16:31.921] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:16:31.951] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.966] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:31.980] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T18:16:31.993] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T18:16:32.006] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:16:32.022] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:16:32.037] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T18:16:32.050] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:16:32.061] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T18:16:32.062] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:16:32.073] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:32.086] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:32.099] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T18:16:32.111] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:16:32.124] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:16:32.136] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T18:16:32.149] [INFO] default - Sync models to mysql finished.
+[2022-04-27T18:16:32.654] [INFO] default - Ready! Logged in as Guide Bot#6981
+[2022-04-27T18:16:35.365] [INFO] default - Process GET /hello/jack...
+[2022-04-27T18:16:47.112] [DEBUG] default - 0xJZ#0770 in #0xjzs-server triggered an interaction.
+[2022-04-27T18:25:12.448] [INFO] default - Start to sync all of the models... If the models already exists, it will not sync.
+[2022-04-27T18:25:12.554] [INFO] default - process controller: hello.js...
+[2022-04-27T18:25:12.556] [INFO] default - register URL mapping: GET /hello/:name
+[2022-04-27T18:25:12.974] [INFO] default - app listening at http://127.0.0.1:3000/api
+[2022-04-27T18:25:13.115] [DEBUG] default - Executing (default): SELECT 1+1 AS result
+[2022-04-27T18:25:13.116] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER NOT NULL auto_increment , `role_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `token_id` VARCHAR(255) NOT NULL, `amount` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:25:13.126] [INFO] default - Connection with mysql has been established successfully.
+[2022-04-27T18:25:13.127] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `rules`;
+[2022-04-27T18:25:13.127] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:25:13.140] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `role_id` `role_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.155] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.170] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `token_id` `token_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.183] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `amount` `amount` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.196] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.209] [DEBUG] default - Executing (default): ALTER TABLE `rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.222] [DEBUG] default - Executing (default): SHOW INDEX FROM `rules`
+[2022-04-27T18:25:13.235] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_infos` (`id` INTEGER NOT NULL auto_increment , `user_id` VARCHAR(255) NOT NULL, `guild_id` VARCHAR(255) NOT NULL, `near_wallet_id` VARCHAR(255), `nonce` BIGINT NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:25:13.246] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_infos`;
+[2022-04-27T18:25:13.246] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_infos' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:25:13.258] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `user_id` `user_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.270] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `guild_id` `guild_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.283] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255);
+[2022-04-27T18:25:13.295] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `nonce` `nonce` BIGINT NOT NULL;
+[2022-04-27T18:25:13.308] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.321] [DEBUG] default - Executing (default): ALTER TABLE `user_infos` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.333] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_infos`
+[2022-04-27T18:25:13.345] [DEBUG] default - Executing (default): CREATE TABLE IF NOT EXISTS `user_fields` (`id` INTEGER NOT NULL auto_increment , `near_wallet_id` VARCHAR(255) NOT NULL, `key` VARCHAR(255) NOT NULL, `value` VARCHAR(255) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[2022-04-27T18:25:13.355] [DEBUG] default - Executing (default): SHOW FULL COLUMNS FROM `user_fields`;
+[2022-04-27T18:25:13.355] [DEBUG] default - Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'user_fields' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='discord_server' AND REFERENCED_TABLE_NAME IS NOT NULL;
+[2022-04-27T18:25:13.366] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `near_wallet_id` `near_wallet_id` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.377] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `key` `key` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.391] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `value` `value` VARCHAR(255) NOT NULL;
+[2022-04-27T18:25:13.403] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.417] [DEBUG] default - Executing (default): ALTER TABLE `user_fields` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+[2022-04-27T18:25:13.428] [DEBUG] default - Executing (default): SHOW INDEX FROM `user_fields`
+[2022-04-27T18:25:13.439] [INFO] default - Sync models to mysql finished.
+[2022-04-27T18:25:14.280] [INFO] default - Ready! Logged in as Guide Bot#6981
