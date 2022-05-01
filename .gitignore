@@ -2,4 +2,4 @@
 conf/*
 node_modules
 .exlintrc.json
-logs
+logs/*
