@@ -3,6 +3,15 @@ const resp = require('../pkg/models/object/response');
 const near_utils = require('../pkg/utils/near_utils');
 const user_utils = require('../pkg/utils/user_utils');
 const discord_utils = require('../pkg/utils/discord_utils');
+
+/* POST method income structrue:
+	{
+		args: {xxx}      //maybe another signature here, used for link verifaction or operate verification
+		account_id: String   //near account
+        sign: String    //account id verification, args signature signed by this account
+	}
+*/
+
 // api/get-sign
 const fn_getSign = async (ctx, next) => {
 	const req = ctx.request.body;
