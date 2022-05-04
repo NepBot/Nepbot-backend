@@ -2,11 +2,10 @@ const config = require('./config');
 const { connect } = require('near-api-js');
 const tweetnacl = require('tweetnacl');
 const bs58 = require('bs58');
-const near_wallet = config.near_wallet;
 const user_infos = require('../models/object/user_infos');
 
 // sign means signature
-const verify_sign = (data, signature, public_key) => {
+const verifySign = (data, signature, public_key) => {
 	const bf_data = new Uint8Array(Buffer.from(JSON.stringify(data)));
 	const bf_sign = new Uint8Array(bs58.decode(signature));
 	const bf_pk = new Uint8Array(bs58.decode(public_key));
@@ -20,7 +19,7 @@ const verifyAccountOwner = async (account_id, data, signature) => {
 	const accessKeys = await account.getAccessKeys();
 	return accessKeys.some(it => {
 		const publicKey = it.public_key.replace('ed25519:', '');
-		return verify_sign(data, signature, publicKey);
+		return verifySign(data, signature, publicKey);
 	});
 };
 
@@ -35,8 +34,8 @@ const verifyOperationSign = async (args) => {
 };
 
 const getSign = async (args) => {
-	const keyStore = config.near_wallet.keyStore;
-	const keyPair = await keyStore.getKey(config.near_wallet.network_id, config.account_id);
+	const keyStore = config.nearWallet.keyStore;
+	const keyPair = await keyStore.getKey(config.nearWallet.network_id, config.account_id);
 
 	const args_string = JSON.stringify(args);
 	const data_buffer = Buffer.from(args_string);
@@ -45,7 +44,7 @@ const getSign = async (args) => {
 };
 
 module.exports = {
-	verify_sign,
+	verifySign,
 	verifyAccountOwner,
 	verifyOperationSign,
 	getSign,
