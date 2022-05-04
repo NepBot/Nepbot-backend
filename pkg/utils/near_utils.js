@@ -35,7 +35,7 @@ const verifyOperationSign = async (args) => {
 
 const getSign = async (args) => {
 	const keyStore = config.nearWallet.keyStore;
-	const keyPair = await keyStore.getKey(config.nearWallet.network_id, config.account_id);
+	const keyPair = await keyStore.getKey(config.nearWallet.networkId, config.account_id);
 	console.log(config.account_id, "==========================================")
 	const args_string = JSON.stringify(args);
 	const data_buffer = Buffer.from(args_string);
