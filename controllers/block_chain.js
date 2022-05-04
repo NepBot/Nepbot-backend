@@ -68,6 +68,6 @@ const fn_operateSign = async (ctx, next) => {
 };
 
 module.exports = {
-	'GET /api/sign': fn_getSign,
-	'GET /api/operationSign': fn_operateSign,
+	'POST /api/sign': fn_getSign,
+	'POST /api/operationSign': fn_operateSign,
 };
