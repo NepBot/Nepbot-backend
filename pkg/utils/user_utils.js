@@ -1,7 +1,7 @@
 const config = require('./config');
 const user_infos = require('../models/object/user_infos');
 const logger = require('./logger');
-const { verify_sign } = require('./near_utils');
+const { verifySign } = require('./near_utils');
 
 exports.verifyUserId = async (args, sign) => {
 	const user_info = await user_infos.findOne({ where: { user_id: args.user_id, guild_id: args.guild_id } });
@@ -9,10 +9,10 @@ exports.verifyUserId = async (args, sign) => {
 		logger.error('the user nonce is great than 5 mintes');
 		return false;
 	}
-	const key_store = config.near_wallet.key_store;
+	const keyStore = config.near_wallet.keyStore;
 	const account_id = config.account_id;
-	const keyPair = await key_store.getKey(config.nearWallet.networkId, account_id);
-	const ret = verify_sign({
+	const keyPair = await keyStore.getKey(config.nearWallet.networkId, account_id);
+	const ret = verifySign({
 		guild_id: args.guild_id,
 		nonce: user_info.nonce,
 		user_id: args.user_id,
