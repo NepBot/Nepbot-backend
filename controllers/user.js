@@ -55,7 +55,6 @@ const fn_setInfo = async (ctx, next) => {
 		guild_id: req.guild_id,
 		near_wallet_id: req.account_id,
 	});
-	await user_infos.save();
 
 	//
 	const member = await discord_utils.getMember(req.guild_id, req.user_id);
@@ -87,8 +86,6 @@ const fn_setInfo = async (ctx, next) => {
 			key: rules.key_field[0],
 			value: rules.key_field[1],
 		});
-		user_fields.save();
-
 	}
 	const role = [];
 	const delRole = [];

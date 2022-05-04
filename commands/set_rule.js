@@ -35,7 +35,6 @@ const execute = async interaction => {
 				guild_id: interaction.guildId,
 			},
 		});
-		await user_infos.save();
 		button.setURL(`${config.wallet_auth_url}/setrule/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);
 		interaction.reply({
 			content:'\n',

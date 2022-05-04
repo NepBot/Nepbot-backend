@@ -14,7 +14,7 @@ const verifySign = (data, signature, public_key) => {
 };
 
 const verifyAccountOwner = async (account_id, data, signature) => {
-	const near = await connect(near_wallet);
+	const near = await connect(config.nearWallet);
 	const account = await near.account(account_id);
 	const accessKeys = await account.getAccessKeys();
 	return accessKeys.some(it => {
@@ -30,7 +30,7 @@ const verifyOperationSign = async (args) => {
 			guild_id: args.guild_id,
 		},
 	});
-	return await this.verifyAccountOwner(config.ACCOUNT_ID, user_info.nonce, args.sign);
+	return await this.verifyAccountOwner(config.account_id, user_info.nonce, args.sign);
 };
 
 const getSign = async (args) => {
