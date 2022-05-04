@@ -29,6 +29,11 @@ const execute = async interaction => {
 			user_id: interaction.user.id,
 			guild_id: interaction.guildId,
 			nonce: nonce,
+		}, {
+			where: {
+				user_id: interaction.user.id,
+				guild_id: interaction.guildId,
+			},
 		});
 		await user_infos.save();
 		button.setURL(`${config.wallet_auth_url}/setrule/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);

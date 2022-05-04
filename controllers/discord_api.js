@@ -24,7 +24,7 @@ const fn_getUser = async (ctx, next) => {
 };
 
 module.exports = {
-	'GET /api/get-role/:guildId': fn_getRole,
-	'GET /api/get-server/:guildId': fn_getServer,
-	'GET /api/get-user/:guildId/:userId': fn_getUser,
+	'GET /api/getRole/:guildId': fn_getRole,
+	'GET /api/getServer/:guildId': fn_getServer,
+	'GET /api/getUser/:guildId/:userId': fn_getUser,
 };
