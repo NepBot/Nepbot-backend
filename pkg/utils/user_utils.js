@@ -9,7 +9,7 @@ exports.verifyUserId = async (args, sign) => {
 		logger.error('the user nonce is great than 5 mintes');
 		return false;
 	}
-	const key_store = config.near_wallet.key_store;
+	const key_store = config.near_wallet.keyStore;
 	const account_id = config.account_id;
 	const keyPair = await key_store.getKey(config.nearWallet.networkId, account_id);
 	const ret = verify_sign({
