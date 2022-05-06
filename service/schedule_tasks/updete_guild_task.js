@@ -1,8 +1,8 @@
-const contract_utils = require('../pkg/utils/contract_utils');
-const discord_utils = require('../pkg/utils/discord_utils');
-const logger = require('../pkg/utils/logger');
-const user_fields_obj = require('../pkg/models/object/user_fields');
-const user_infos_obj = require('../pkg/models/object/user_infos');
+const contract_utils = require('../../pkg/utils/contract_utils');
+const discord_utils = require('../../pkg/utils/discord_utils');
+const logger = require('../../pkg/utils/logger');
+const user_fields_obj = require('../../pkg/models/object/user_fields');
+const user_infos_obj = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 const update_guild_task = async function(receipts) {
 	const actions = await contract_utils.filterRoleActions(receipts);

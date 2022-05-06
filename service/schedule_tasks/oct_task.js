@@ -1,8 +1,8 @@
-const contract_utils = require('../pkg/utils/contract_utils');
-const discord_utils = require('../pkg/utils/discord_utils');
-const logger = require('../pkg/utils/logger');
-const user_fields_obj = require('../pkg/models/object/user_fields');
-const user_infos_obj = require('../pkg/models/object/user_infos');
+const contract_utils = require('../../pkg/utils/contract_utils');
+const discord_utils = require('../../pkg/utils/discord_utils');
+const logger = require('../../pkg/utils/logger');
+const user_fields_obj = require('../../pkg/models/object/user_fields');
+const user_infos_obj = require('../../pkg/models/object/user_infos');
 const oct_task = async function(receipts) {
 	const actions = contract_utils.filterOctActions(receipts);
 	const accountIdList = [];

@@ -1,9 +1,9 @@
-const contract_utils = require('../pkg/utils/contract_utils');
-const discord_utils = require('../pkg/utils/discord_utils');
-const near_utils = require('../pkg/utils/near_utils');
-const logger = require('../pkg/utils/logger');
-const user_infos_obj = require('../pkg/models/object/user_infos');
-const user_fields_obj = require('../pkg/models/object/user_fields');
+const contract_utils = require('../../pkg/utils/contract_utils');
+const discord_utils = require('../../pkg/utils/discord_utils');
+const near_utils = require('../../pkg/utils/near_utils');
+const logger = require('../../pkg/utils/logger');
+const user_infos_obj = require('../../pkg/models/object/user_infos');
+const user_fields_obj = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
 const token_task = async function(receipts) {
 	const allFieldList = await contract_utils.getFieldList();

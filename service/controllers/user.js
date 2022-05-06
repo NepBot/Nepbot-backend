@@ -1,11 +1,11 @@
-const logger = require('../pkg/utils/logger');
-const resp = require('../pkg/models/object/response');
-const near_utils = require('../pkg/utils/near_utils');
-const user_utils = require('../pkg/utils/user_utils');
-const contract_utils = require('../pkg/utils/contract_utils');
-const discord_utils = require('../pkg/utils/discord_utils');
-const user_infos = require('../pkg/models/object/user_infos');
-const user_fields = require('../pkg/models/object/user_fields');
+const logger = require('../../pkg/utils/logger');
+const resp = require('../../pkg/models/object/response');
+const near_utils = require('../../pkg/utils/near_utils');
+const user_utils = require('../../pkg/utils/user_utils');
+const contract_utils = require('../../pkg/utils/contract_utils');
+const discord_utils = require('../../pkg/utils/discord_utils');
+const user_infos = require('../../pkg/models/object/user_infos');
+const user_fields = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
 
 const fn_setInfo = async (ctx, next) => {
