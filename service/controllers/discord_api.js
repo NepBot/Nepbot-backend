@@ -18,8 +18,7 @@ const fn_getServer = async (ctx, next) => {
 const fn_getUser = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
-	const member = discord_utils.getMember(guildId, userId);
-	console.log(member)
+	const member = await discord_utils.getMember(guildId, userId);
 	resp.data = member;
 	ctx.body = resp;
 };
