@@ -15,66 +15,64 @@ const discord_utils = require('../../pkg/utils/discord_utils');
 // api/get-sign
 const fn_getSign = async (ctx, next) => {
 	const req = ctx.request.body;
+	const args = req.args
 	logger.info(`revice request by access 'api/get-sign': ${JSON.stringify(req)}`);
 	// verify user account
-	if (!await near_utils.verifyAccountOwner(req.account_id, req, req.sign)) {
+	if (!await near_utils.verifyAccountOwner(req.account_id, args, req.sign)) {
 		logger.error('fn verifyAccountOwner failed in api/get-sign');
 		ctx.body = new resp({
 			code: 500, 
 			message: 'fn verifyAccountOwner failed in api/get-sign',
 			success: false,
-			data: req,
 		});
 		return;
 	}
 
-	if (!await near_utils.verifyOperationSign(req)) {
+	if (!await near_utils.verifyOperationSign(args)) {
 		logger.error('fn verifyOperationSign failed in api/get-sign');
 		ctx.body = new resp({
 			code: 500, 
 			message: 'fn verifyOperationSign failed in api/get-sign',
 			success: false,
-			data: req,
 		});
 		return;
 	}
 
-	const guild = await discord_utils.getGuild(req.guild_id);
-	if (req.user_id != guild.ownerId) {
-		logger.error('req.user_id != guild.ownerId');
+	const guild = await discord_utils.getGuild(args.guild_id);
+	if (args.user_id != guild.ownerId) {
+		logger.error('user_id != guild.ownerId');
 		ctx.body = new resp({
 			code: 500, 
-			message: 'req.user_id != guild.ownerId',
+			message: 'user_id != guild.ownerId',
 			success: false,
-			data: req,
 		});
 		return;
 	}
 
-	const sign = await near_utils.getSign(req.items);
+	const sign = await near_utils.getSign(args.items);
 	ctx.body = new resp({data: sign});
 };
 // api/opearte-sign
 const fn_operateSign = async (ctx, next) => {
 	const req = ctx.request.body;
-	if (!await near_utils.verifyAccountOwner(req.account_id, req, req.sign)) {
+	const args = req.args
+	if (!await near_utils.verifyAccountOwner(req.account_id, args, req.sign)) {
 		return;
 	}
-	const nonce = await user_utils.verifyUserId(req, req.sign);
+	const nonce = await user_utils.verifyUserId(args, args.sign);
 	if (!nonce) {
-		if (req.operationSign && await near_utils.verifyOperationSign({
-			user_id: req.user_id,
-			guild_id: req.guild_id,
-			sign: req.operationSign,
+		if (args.operationSign && await near_utils.verifyOperationSign({
+			user_id: args.user_id,
+			guild_id: args.guild_id,
+			sign: args.operationSign,
 		})) {
-			ctx.body = new resp({data: req.operationSign});
+			ctx.body = new resp({data: args.operationSign});
 			return;
 		}
 		ctx.body = new resp({
 			code: 500, 
 			message: 'nonce expired',
 			success: false,
-			data: req,
 		});
 		return;
 	}

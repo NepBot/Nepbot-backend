@@ -10,41 +10,40 @@ const BN = require('bn.js');
 
 const fn_setInfo = async (ctx, next) => {
 	const req = ctx.request.body;
+	const args = req.args
 	logger.info(`revice request by access 'api/set-info': ${JSON.stringify(req)}`);
 	// verify user account
-	if (!await near_utils.verifyAccountOwner(req.account_id, req, req.sign)) {
+	if (!await near_utils.verifyAccountOwner(req.account_id, args, req.sign)) {
 		logger.error('fn verifyAccountOwner failed in api/set-info');
 		ctx.body = new resp({
 			code: 500, 
 			message: 'fn verifyAccountOwner failed in api/get-sign',
 			success: false,
-			data: req,
 		});
 		return;
 	}
 	// verify user id
-	if (!await user_utils.verifyUserId(req, req.sign)) {
+	if (!await user_utils.verifyUserId(args, args.sign)) {
 		logger.error('fn verifyUserId failed in api/set-info');
 		ctx.body = new resp({
 			code: 500, 
 			message: 'fn verifyOperationSign failed in api/get-sign',
 			success: false,
-			data: req,
 		});
 		return;
 	}
 
-	const rules = await contract_utils.getRules(req.guild_id);
+	const rules = await contract_utils.getRules(args.guild_id);
 	const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
 	const result1 = await user_infos.findAll({
 		where:{
-			guild_id: req.guild_id,
-			near_wallet_id: req.account_id,
+			guild_id: args.guild_id,
+			near_wallet_id: args.account_id,
 		},
 	});
 	for (const user_info of result1) {
-		if (user_info.user_id != req.user_id) {
-			const member = await discord_utils.getMember(req.guild_id, req.user_id);
+		if (user_info.user_id != args.user_id) {
+			const member = await discord_utils.getMember(args.guild_id, args.user_id);
 			if (member.roles) {
 				member.roles.remove(roleList).then(console.log).catch(console.error);
 			}
@@ -53,13 +52,13 @@ const fn_setInfo = async (ctx, next) => {
 
 	// update user
 	await user_infos.update({
-		user_id: req.user_id,
-		guild_id: req.guild_id,
-		near_wallet_id: req.account_id,
+		user_id: args.user_id,
+		guild_id: args.guild_id,
+		near_wallet_id: args.account_id,
 	});
 
 	//
-	const member = await discord_utils.getMember(req.guild_id, req.user_id);
+	const member = await discord_utils.getMember(args.guild_id, args.user_id);
 	const rulesMap = {
 		token: [],
 		oct: [],
@@ -84,7 +83,7 @@ const fn_setInfo = async (ctx, next) => {
 			rulesMap.paras.push(rule);
 		}
 		await user_fields.update({
-			near_wallet_id: req.account_id,
+			near_wallet_id: args.account_id,
 			key: rules.key_field[0],
 			value: rules.key_field[1],
 		});
@@ -92,7 +91,7 @@ const fn_setInfo = async (ctx, next) => {
 	const role = [];
 	const delRole = [];
 	for (const rule of rulesMap.token) {
-		const tokenAmount = await contract_utils.getBalanceOf(rule.key_field[1], req.account_id);
+		const tokenAmount = await contract_utils.getBalanceOf(rule.key_field[1], args.account_id);
 
 		if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 			const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
@@ -105,7 +104,7 @@ const fn_setInfo = async (ctx, next) => {
 	}
 
 	for (const rule of rulesMap.oct) {
-		const octRole = await contract_utils.getOctAppchainRole(rule.key_field[1], req.account_id);
+		const octRole = await contract_utils.getOctAppchainRole(rule.key_field[1], args.account_id);
 
 		if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
 			const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
@@ -119,7 +118,7 @@ const fn_setInfo = async (ctx, next) => {
 
 	for (const rule of rulesMap.balance) {
 
-		const balance = await contract_utils.getNearBalanceOf(req.account_id);
+		const balance = await contract_utils.getNearBalanceOf(args.account_id);
 
 		if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 			const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
@@ -132,7 +131,7 @@ const fn_setInfo = async (ctx, next) => {
 	}
 
 	for (const rule of rulesMap.nft) {
-		const tokenAmount = await contract_utils.getNftCountOf(rule.key_field[1], req.account_id);
+		const tokenAmount = await contract_utils.getNftCountOf(rule.key_field[1], args.account_id);
 		if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 			const _role = discord_utils. getRoles(rule.guild_id, rule.role_id);
 			_role && role.push(_role);
@@ -144,7 +143,7 @@ const fn_setInfo = async (ctx, next) => {
 	}
 
 	for (const rule of rulesMap.paras) {
-		const tokenAmount = await contract_utils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
+		const tokenAmount = await contract_utils.getTokenPerOwnerCount(rule.key_field[1], args.account_id);
 
 		if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 			const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
