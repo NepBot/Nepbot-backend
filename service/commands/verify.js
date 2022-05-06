@@ -50,7 +50,7 @@ const execute = async interaction => {
 		}
 		
 	})
-	console.log(user)
+	console.log(!!user)
 	// store data into mysql
 	if (user) {
 		await user_infos.update({
