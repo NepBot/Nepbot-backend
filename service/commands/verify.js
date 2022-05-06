@@ -25,19 +25,34 @@ const execute = async interaction => {
 	const nonce = Date.now();
 	const signature = await near_utils.getSign({
 		guild_id: interaction.guildId,
-		nonce: Date.now(),
+		nonce: nonce,
 		user_id: interaction.user.id,
 	});
 	// Set the url
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
 	// store data into mysql
-	const saveUserInfo = await user_infos.create({
+	if (await user_infos.findOne({
 		user_id: interaction.user.id,
-		guild_id: interaction.guildId,
-		create_time: nonce,
-		nonce: nonce,
-	});
-	logger.debug(`saving user info...|${saveUserInfo.toJSON()}`);
+		guild_id: interaction.guildId
+	})) {
+		user_infos.update({
+			nonce: nonce,
+		}, {
+			where: {
+				user_id: interaction.user.id,
+				guild_id: interaction.guildId
+			}
+		})
+	} else {
+		const saveUserInfo = await user_infos.create({
+			user_id: interaction.user.id,
+			guild_id: interaction.guildId,
+			nonce: nonce,
+		});
+		logger.debug(`saving user info...|${saveUserInfo.toJSON()}`);
+	}
+	
+	
 	// replay message to discord user
 	await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 };
