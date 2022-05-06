@@ -41,7 +41,8 @@ const execute = async interaction => {
 			guild_id: interaction.guildId
 		}
 	})
-	logger.debug(`saving user info...|${saveUserInfo.toJSON()}`);
+	console.log(saveUserInfo)
+	//logger.debug(`saving user info...|${saveUserInfo.toJSON()}`);
 	
 	
 	// replay message to discord user
