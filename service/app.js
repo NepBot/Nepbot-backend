@@ -2,7 +2,7 @@ const fs = require('fs');
 const logger = require('../pkg/utils/logger');
 // get the app root path
 const appRoot = require('app-root-path');
-const controller_dir = `${appRoot}/controllers`;
+const controller_dir = `${appRoot}/service/controllers`;
 
 const Koa = require('koa');
 
