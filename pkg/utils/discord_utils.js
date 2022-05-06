@@ -7,7 +7,6 @@ exports.getMember = async (guildId, memberId) => {
 	const member = await rest.get(`${Routes.guildMember(guildId, memberId)}`, {
 		auth:true,
 	});
-	console.log(member)
 	return new GuildMember(client, member, this.getGuild(guildId));
 };
 
