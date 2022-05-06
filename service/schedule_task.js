@@ -2,12 +2,12 @@ const logger = require('../pkg/utils/logger');
 const config = require('../pkg/utils/config');
 const schedule = require('node-schedule');
 // Task
-const balance_task = require('../schedule_tasks/balance_task');
-const ntf_task = require('../schedule_tasks/ntf_task');
-const oct_task = require('../schedule_tasks/oct_task');
-const paras_task = require('../schedule_tasks/paras_task');
-const token_task = require('../schedule_tasks/token_task');
-const updete_guild_task = require('../schedule_tasks/updete_guild_task');
+const balance_task = require('./schedule_tasks/balance_task');
+const ntf_task = require('./schedule_tasks/ntf_task');
+const oct_task = require('./schedule_tasks/oct_task');
+const paras_task = require('./schedule_tasks/paras_task');
+const token_task = require('./schedule_tasks/token_task');
+const updete_guild_task = require('./schedule_tasks/updete_guild_task');
 const { providers } = require('near-api-js');
 
 const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
