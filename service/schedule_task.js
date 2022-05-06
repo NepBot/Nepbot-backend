@@ -13,15 +13,20 @@ const { providers } = require('near-api-js');
 const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
 
 const resolveChunk = async (chunkHash) => {
-	const chunkData = await provider.chunk(chunkHash);
-	const promises = [];
-	promises.push(updete_guild_task(chunkData.receipts));
-	promises.push(token_task(chunkData.receipts));
-	promises.push(balance_task(chunkData.receipts));
-	promises.push(oct_task(chunkData.receipts));
-	promises.push(ntf_task(chunkData.receipts));
-	promises.push(paras_task(chunkData.receipts));
-	await Promise.all(promises);
+	try {
+		const chunkData = await provider.chunk(chunkHash);
+		const promises = [];
+		promises.push(updete_guild_task(chunkData.receipts));
+		promises.push(token_task(chunkData.receipts));
+		promises.push(balance_task(chunkData.receipts));
+		promises.push(oct_task(chunkData.receipts));
+		promises.push(ntf_task(chunkData.receipts));
+		promises.push(paras_task(chunkData.receipts));
+		await Promise.all(promises);
+	} catch (e) {
+		
+	}
+	
 };
 
 let block_height = 0;
