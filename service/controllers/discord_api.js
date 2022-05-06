@@ -1,5 +1,5 @@
-const resp = require('../pkg/models/object/response');
-const discord_utils = require('../pkg/utils/discord_utils');
+const resp = require('../../pkg/models/object/response');
+const discord_utils = require('../../pkg/utils/discord_utils');
 
 const fn_getRole = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
@@ -18,6 +18,7 @@ const fn_getServer = async (ctx, next) => {
 const fn_getUser = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
+	console.log(guildId, userId)
 	const member = discord_utils.getMember(guildId, userId);
 	resp.data = member;
 	ctx.body = resp;

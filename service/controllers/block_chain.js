@@ -1,8 +1,8 @@
-const logger = require('../pkg/utils/logger');
-const resp = require('../pkg/models/object/response');
-const near_utils = require('../pkg/utils/near_utils');
-const user_utils = require('../pkg/utils/user_utils');
-const discord_utils = require('../pkg/utils/discord_utils');
+const logger = require('../../pkg/utils/logger');
+const resp = require('../../pkg/models/object/response');
+const near_utils = require('../../pkg/utils/near_utils');
+const user_utils = require('../../pkg/utils/user_utils');
+const discord_utils = require('../../pkg/utils/discord_utils');
 
 /* POST method income structrue:
 	{

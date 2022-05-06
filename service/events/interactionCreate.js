@@ -1,4 +1,4 @@
-const logger = require('../pkg/utils/logger');
+const logger = require('../../pkg/utils/logger');
 
 module.exports = {
 	name: 'interactionCreate',

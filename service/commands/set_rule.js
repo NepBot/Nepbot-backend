@@ -1,6 +1,6 @@
-const near_utils = require('../pkg/utils/near_utils');
-const user_infos = require('../pkg/models/object/user_infos');
-const config = require('../pkg/utils/config');
+const near_utils = require('../../pkg/utils/near_utils');
+const user_infos = require('../../pkg/models/object/user_infos');
+const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
