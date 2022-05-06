@@ -31,16 +31,16 @@ const execute = async interaction => {
 	// Set the url
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
 
-	await user_infos.upsert({
-		user_id: interaction.user.id,
-		guild_id: interaction.guildId,
-		nonce: nonce,
-	}, {
-		where: {
-			user_id: interaction.user.id,
-			guild_id: interaction.guildId
-		}
-	})
+	// await user_infos.upsert({
+	// 	user_id: interaction.user.id,
+	// 	guild_id: interaction.guildId,
+	// 	nonce: nonce,
+	// }, {
+	// 	where: {
+	// 		user_id: interaction.user.id,
+	// 		guild_id: interaction.guildId
+	// 	}
+	// })
 
 
 	const user = await user_infos.findOne({
