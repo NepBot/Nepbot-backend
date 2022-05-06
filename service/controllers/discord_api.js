@@ -4,23 +4,20 @@ const discord_utils = require('../../pkg/utils/discord_utils');
 const fn_getRole = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const roles = discord_utils.getRoles(guildId);
-	resp.data = roles;
-	ctx.body = resp;
+	ctx.body = new resp({data: roles});
 };
 
 const fn_getServer = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const serverList = discord_utils.getGuild(guildId);
-	resp.data = serverList;
-	ctx.body = resp;
+	ctx.body = new resp({data: serverList});
 };
 
 const fn_getUser = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
 	const member = await discord_utils.getMember(guildId, userId);
-	resp.data = member;
-	ctx.body = resp;
+	ctx.body = new resp({data: member});
 };
 
 module.exports = {

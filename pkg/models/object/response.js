@@ -1,6 +1,8 @@
-module.exports = {
-	code: this.code || 200,
-	message: this.message || 'success',
-	success: this.success || true,
-	data: this.data,
+module.exports = class {
+	constructor({code, message, success, data}) {
+		this.code = code || 200
+		this.message = message || 'success'
+		this.success = success || true
+		this.data = data
+	}
 };

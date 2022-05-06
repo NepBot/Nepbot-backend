@@ -13,22 +13,24 @@ const fn_setInfo = async (ctx, next) => {
 	logger.info(`revice request by access 'api/set-info': ${JSON.stringify(req)}`);
 	// verify user account
 	if (!await near_utils.verifyAccountOwner(req.account_id, req, req.sign)) {
-		resp.code = 500;
-		resp.message = 'fn verifyAccountOwner is faild in api/set-info';
-		resp.success = false;
-		resp.data = req;
-		logger.error('fn verifyAccountOwner is faild in api/set-info');
-		ctx.body = resp;
+		logger.error('fn verifyAccountOwner failed in api/set-info');
+		ctx.body = new resp({
+			code: 500, 
+			message: 'fn verifyAccountOwner failed in api/get-sign',
+			success: false,
+			data: req,
+		});
 		return;
 	}
 	// verify user id
 	if (!await user_utils.verifyUserId(req, req.sign)) {
-		resp.code = 500;
-		resp.message = 'fn verifyUserId is faild in api/set-info';
-		resp.success = false;
-		resp.data = req;
-		logger.error('fn verifyUserId is faild in api/set-info');
-		ctx.body = resp;
+		logger.error('fn verifyUserId failed in api/set-info');
+		ctx.body = new resp({
+			code: 500, 
+			message: 'fn verifyOperationSign failed in api/get-sign',
+			success: false,
+			data: req,
+		});
 		return;
 	}
 
