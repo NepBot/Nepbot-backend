@@ -30,12 +30,14 @@ const execute = async interaction => {
 	});
 	// Set the url
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
-	// store data into mysql
-	if (await user_infos.findOne({
+	const user = await user_infos.findOne({
 		user_id: interaction.user.id,
 		guild_id: interaction.guildId
-	})) {
-		user_infos.update({
+	})
+	console.log(user)
+	// store data into mysql
+	if (user) {
+		await user_infos.update({
 			nonce: nonce,
 		}, {
 			where: {
