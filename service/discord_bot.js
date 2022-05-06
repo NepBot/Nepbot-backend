@@ -1,7 +1,7 @@
 // get the app root path
 const appRoot = require('app-root-path');
 const commands_dir = `${ appRoot }/service/commands`;
-const events_dir = `${ appRoot }service//events`;
+const events_dir = `${ appRoot }/service/events`;
 // require logger
 const logger = require('../pkg/utils/logger');
 
