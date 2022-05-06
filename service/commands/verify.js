@@ -1,9 +1,9 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const config = require('../pkg/utils/config');
-const near_utils = require('../pkg/utils/near_utils');
-const user_infos = require('../pkg/models/object/user_infos');
-const logger = require('../pkg/utils/logger');
+const config = require('../../pkg/utils/config');
+const near_utils = require('../../pkg/utils/near_utils');
+const user_infos = require('../../pkg/models/object/user_infos');
+const logger = require('../../pkg/utils/logger');
 
 const embed = new MessageEmbed()
 	.setColor('#0099ff')
