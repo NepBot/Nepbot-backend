@@ -12,12 +12,12 @@ const oct_task = async function(receipts) {
 		accountIdList.push(action.signer_id);
 	}
 
-	const user_fields = await user_fields_obj.findAll({
-		where: {
-			key: 'appchain_id',
-			near_wallet_id: accountIdList,
-			value: appchainIdList,
+	const user_fields = await user_fields_obj.getUserFields({
+		key: 'appchain_id',
+		near_wallet_id: {
+			$in: accountIdList
 		},
+		value: appchainIdList,
 	});
 
 	for (const user_field of user_fields) {
@@ -28,11 +28,9 @@ const oct_task = async function(receipts) {
 			guild_ids.push(item.guild_id);
 		});
 
-		const user_infos = await user_infos_obj.findAll({
-			where: {
-				guild_id: guild_ids,
-				near_wallet_id: user_field.near_wallet_id,
-			},
+		const user_infos = await user_infos_obj.getUsers({
+			guild_id: guild_ids,
+			near_wallet_id: user_field.near_wallet_id,
 		});
 		for (const user_info of user_infos) {
 			const member = await discord_utils.getMember(user_info.guild_id, user_info.user_id);

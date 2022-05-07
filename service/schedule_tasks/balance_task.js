@@ -6,10 +6,8 @@ const user_infos_obj = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 
 const balance_task = async function(receipts) {
-	const userFields = await user_fields_obj.findAll({
-		where: {
-			key: 'near',
-		},
+	const userFields = await user_fields_obj.getUserFields({
+		key: 'near',
 	});
 	let accountIds = [];
 	userFields.forEach(item => accountIds.push(item.near_wallet_id));
@@ -31,11 +29,9 @@ const balance_task = async function(receipts) {
 		guildMap[item.guild_id].push(item);
 	});
 
-	const user_infos = await user_infos_obj.findAll({
-		where: {
-			guild_id: guild_ids,
-			near_wallet_id: accountIds,
-		},
+	const user_infos = await user_infos_obj.getUsers({
+		guild_id: guild_ids,
+		near_wallet_id: accountIds,
 	});
 
 	for (const user_info of user_infos) {

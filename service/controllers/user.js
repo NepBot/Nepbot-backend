@@ -35,13 +35,11 @@ const fn_setInfo = async (ctx, next) => {
 
 	const rules = await contract_utils.getRules(args.guild_id);
 	const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
-	const result1 = await user_infos.findAll({
-		where:{
-			guild_id: args.guild_id,
-			near_wallet_id: args.account_id,
-		},
+	const result = await user_infos.getUsers({
+		guild_id: args.guild_id,
+		near_wallet_id: args.account_id,
 	});
-	for (const user_info of result1) {
+	for (const user_info of result) {
 		if (user_info.user_id != args.user_id) {
 			const member = await discord_utils.getMember(args.guild_id, args.user_id);
 			if (member.roles) {
@@ -51,10 +49,10 @@ const fn_setInfo = async (ctx, next) => {
 	}
 
 	// update user
-	await user_infos.update({
+	await user_infos.addUser({
+		near_wallet_id: args.account_id,
 		user_id: args.user_id,
 		guild_id: args.guild_id,
-		near_wallet_id: args.account_id,
 	});
 
 	//
@@ -82,10 +80,10 @@ const fn_setInfo = async (ctx, next) => {
 		else if (rule.key_field[0] == 'x.paras.near') {
 			rulesMap.paras.push(rule);
 		}
-		await user_fields.update({
+		await user_fields.addUserField({
 			near_wallet_id: args.account_id,
 			key: rules.key_field[0],
-			value: rules.key_field[1],
+			value: rules.key_field[1]
 		});
 	}
 	const role = [];

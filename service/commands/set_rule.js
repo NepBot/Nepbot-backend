@@ -25,15 +25,10 @@ const execute = async interaction => {
 			nonce: nonce,
 			user_id: interaction.user.id,
 		});
-		await user_infos.update({
+		await user_infos.updateUser({
 			user_id: interaction.user.id,
 			guild_id: interaction.guildId,
 			nonce: nonce,
-		}, {
-			where: {
-				user_id: interaction.user.id,
-				guild_id: interaction.guildId,
-			},
 		});
 		button.setURL(`${config.wallet_auth_url}/setrule/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);
 		interaction.reply({

@@ -33,11 +33,9 @@ const paras_task = async function(receipts) {
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
 		});
-		const user_infos = await user_infos_obj.findAll({
-			where: {
-				guild_id: guild_ids,
-				near_wallet_id: userToken.near_wallet_id,
-			},
+		const user_infos = await user_infos_obj.getUsers({
+			guild_id: guild_ids,
+			near_wallet_id: userToken.near_wallet_id,
 		});
 		let newAmount = 0;
 		if (!userToken.value || userToken.value == '') {

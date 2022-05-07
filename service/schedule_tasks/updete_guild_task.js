@@ -22,10 +22,8 @@ const update_guild_task = async function(receipts) {
 			}
 		}
 	}
-	const user_infos = await user_infos_obj.findAll({
-		where: {
-			guild_id: guildIds,
-		},
+	const user_infos = await user_infos_obj.getUsers({
+		guild_id: guildIds,
 	});
 
 	for (const user_info of user_infos) {

@@ -5,8 +5,19 @@ const logger = require('../../utils/logger');
 const config = require('../../utils/config');
 const { Sequelize } = require('sequelize');
 
+const operatorsAliases = {
+	$eq: Op.eq,
+	$ne: Op.ne,
+	$in: Op.in,
+	$any: Op.any,
+	$all: Op.all,
+	$values: Op.values,
+	$col: Op.col
+  };
+
 const mysql = new Sequelize(`${config.mysql_url}`, {
 	logging: msg => logger.debug(msg),
+	operatorsAliases
 });
 
 try {

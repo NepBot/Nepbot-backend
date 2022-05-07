@@ -4,7 +4,7 @@ const logger = require('./logger');
 const { verifySign } = require('./near_utils');
 
 exports.verifyUserId = async (args, sign) => {
-	const user_info = await user_infos.findOne({ where: { user_id: args.user_id, guild_id: args.guild_id } });
+	const user_info = await user_infos.getUser({ user_id: args.user_id, guild_id: args.guild_id });
 	console.log(Date.now(), user_info.nonce)
 	if (Date.now() - user_info.nonce > 300 * 1000) { // 5min limit
 		logger.error('the user nonce is great than 5 mintes');

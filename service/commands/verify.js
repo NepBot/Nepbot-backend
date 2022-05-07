@@ -32,32 +32,15 @@ const execute = async interaction => {
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
 
 
-	const user = await user_infos.findOne({
-		where: {
-			user_id: interaction.user.id,
-			guild_id: interaction.guildId
-		}
-		
+	await user_infos.addUser({
+		user_id: interaction.user.id,
+		guild_id: interaction.guildId,
+		nonce: nonce,
 	})
-
 	// store data into mysql
-	if (user) {
-		await user_infos.update({
-			nonce: nonce,
-		}, {
-			where: {
-				user_id: interaction.user.id,
-				guild_id: interaction.guildId
-			}
-		})
-	} else {
-		const saveUserInfo = await user_infos.create({
-			user_id: interaction.user.id,
-			guild_id: interaction.guildId,
-			nonce: nonce,
-		});
-		logger.debug(`saving user info...|${saveUserInfo.toJSON()}`);
-	}
+	
+	logger.debug(`saving user info...`);
+	
 	
 	
 	// replay message to discord user

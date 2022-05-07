@@ -22,12 +22,10 @@ const nft_task = async function(receipts) {
 		contractList.push(action.contract_id);
 	}
 
-	const userTokens = await user_fields_obj.findAll({
-		where: {
-			key: 'nft_contract_id',
-			near_wallet_id: accountIdList,
-			value: contractList,
-		},
+	const userTokens = await user_fields_obj.getUserFields({
+		key: 'nft_contract_id',
+		near_wallet_id: accountIdList,
+		value: contractList,
 	});
 
 
@@ -37,11 +35,9 @@ const nft_task = async function(receipts) {
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
 		});
-		const user_infos = await user_infos_obj.findAll({
-			where: {
-				guild_id: guild_ids,
-				near_wallet_id: userToken.near_wallet_id,
-			},
+		const user_infos = await user_infos_obj.getUsers({
+			guild_id: guild_ids,
+			near_wallet_id: userToken.near_wallet_id,
 		});
 		const newAmount = await contract_utils.getNftCountOf(userToken.value, userToken.near_wallet_id);
 

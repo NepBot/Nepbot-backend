@@ -24,11 +24,9 @@ const verifyAccountOwner = async (account_id, data, signature) => {
 };
 
 const verifyOperationSign = async (args) => {
-	const user_info = await user_infos.findOne({
-		where: {
-			user_id: args.user_id,
-			guild_id: args.guild_id,
-		},
+	const user_info = await user_infos.getUser({
+		user_id: args.user_id,
+		guild_id: args.guild_id,
 	});
 	return await this.verifyAccountOwner(config.account_id, user_info.nonce, args.sign);
 };
