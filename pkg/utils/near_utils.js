@@ -39,7 +39,7 @@ const verifyOperationSign = async (args) => {
 		user_id: args.user_id,
 		guild_id: args.guild_id,
 	});
-	return await this.verifyAccountOwner(config.account_id, user_info.nonce, args.sign);
+	return await verifyAccountOwner(config.account_id, user_info.nonce, args.sign);
 };
 
 const getSign = async (args) => {

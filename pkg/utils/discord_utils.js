@@ -10,8 +10,8 @@ exports.getMember = async (guildId, memberId) => {
 	return new GuildMember(client, member, this.getGuild(guildId));
 };
 
-exports.getGuild = (guid_id) => {
-	return client.guilds.cache.get(guid_id);
+exports.getGuild = (guild_id) => {
+	return client.guilds.cache.get(guild_id);
 };
 
 exports.getRoles = (guid_id, role_id) => {
@@ -19,4 +19,8 @@ exports.getRoles = (guid_id, role_id) => {
 		return client.guilds.cache.get(guid_id).roles.cache.get(role_id);
 	}
 	return client.guilds.cache.get(guid_id).roles.cache;
+};
+
+exports.getOwnerId = (guild_id) => {
+	return client.guilds.cache.get(guild_id).ownerId;
 };
