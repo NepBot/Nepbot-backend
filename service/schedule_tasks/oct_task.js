@@ -1,8 +1,8 @@
 const contract_utils = require('../../pkg/utils/contract_utils');
 const discord_utils = require('../../pkg/utils/discord_utils');
 const logger = require('../../pkg/utils/logger');
-const user_fields_obj = require('../../pkg/models/object/user_fields');
-const user_infos_obj = require('../../pkg/models/object/user_infos');
+const userFields = require('../../pkg/models/object/user_fields');
+const userInfos = require('../../pkg/models/object/user_infos');
 const oct_task = async function(receipts) {
 	const actions = contract_utils.filterOctActions(receipts);
 	const accountIdList = [];
@@ -12,43 +12,43 @@ const oct_task = async function(receipts) {
 		accountIdList.push(action.signer_id);
 	}
 
-	const user_fields = await user_fields_obj.getUserFields({
+	const _userFields = await userFields.getUserFields({
 		key: 'appchain_id',
 		near_wallet_id: {
-			$in: accountIdList
+			$in: accountIdList,
 		},
 		value: appchainIdList,
 	});
 
-	for (const user_field of user_fields) {
-		const octRole = await contract_utils.getOctAppchainRole(user_field.value, user_field.near_wallet_id);
-		const roles = await contract_utils.getRulesByField('appchain_id', user_field.value);
+	for (const _userField of _userFields) {
+		const octRole = await contract_utils.getOctAppchainRole(_userField.value, _userField.near_wallet_id);
+		const roles = await contract_utils.getRulesByField('appchain_id', _userField.value);
 		const guild_ids = [];
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
 		});
 
-		const user_infos = await user_infos_obj.getUsers({
+		const _userInfos = await userInfos.getUsers({
 			guild_id: guild_ids,
-			near_wallet_id: user_field.near_wallet_id,
+			near_wallet_id: _userField.near_wallet_id,
 		});
-		for (const user_info of user_infos) {
-			const member = await discord_utils.getMember(user_info.guild_id, user_info.user_id);
-			const guildRoles = await discord_utils.getRules(user_info.guild_id);
+		for (const _userInfo of _userInfos) {
+			const member = await discord_utils.getMember(_userInfo.guild_id, _userInfo.user_id);
+			const guildRoles = await discord_utils.getRules(_userInfo.guild_id);
 
 			const role = [];
 			const delRole = [];
 			for (const { fields, role_id, key_field } of guildRoles) {
-				if (key_field[0] != 'appchain_id' || key_field[1] != user_field.value) {
+				if (key_field[0] != 'appchain_id' || key_field[1] != _userField.value) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
-					const _role = discord_utils.getRoles(user_info.guild_id, role_id);
+					const _role = discord_utils.getRoles(_userInfo.guild_id, role_id);
 					_role && role.push(_role);
 				}
 
 				if (member._roles.includes(role_id) && octRole != fields.oct_role) {
-					const _role = discord_utils.getRoles(user_info.guild_id, role_id);
+					const _role = discord_utils.getRoles(_userInfo.guild_id, role_id);
 					_role && delRole.push(_role);
 				}
 			}

@@ -1,5 +1,5 @@
-const near_utils = require('../../pkg/utils/near_utils');
-const user_infos = require('../../pkg/models/object/user_infos');
+const nearUtils = require('../../pkg/utils/near_utils');
+const userInfos = require('../../pkg/models/object/user_infos');
 const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
@@ -20,12 +20,12 @@ const execute = async interaction => {
 	const userId = interaction.user.id;
 	if (userId === ownerId) {
 		const nonce = Date.now();
-		const sign = await near_utils.getSign({
+		const sign = await nearUtils.getSign({
 			guild_id: interaction.guildId,
 			nonce: nonce,
 			user_id: interaction.user.id,
 		});
-		await user_infos.updateUser({
+		await userInfos.updateUser({
 			user_id: interaction.user.id,
 			guild_id: interaction.guildId,
 			nonce: nonce,

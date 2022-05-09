@@ -1,19 +1,19 @@
-const contract_utils = require('../../pkg/utils/contract_utils');
-const discord_utils = require('../../pkg/utils/discord_utils');
+const contractUtils = require('../../pkg/utils/contract_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
 const logger = require('../../pkg/utils/logger');
-const user_fields_obj = require('../../pkg/models/object/user_fields');
-const user_infos_obj = require('../../pkg/models/object/user_infos');
+const userFields = require('../../pkg/models/object/user_fields');
+const userInfos = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 
 const nft_task = async function(receipts) {
-	const allFieldList = await contract_utils.getFieldList();
+	const allFieldList = await contractUtils.getFieldList();
 	const allContractList = [];
 	for (const field of allFieldList) {
 		if (field[0] == 'nft_contract_id') {
 			allContractList.push(field[1]);
 		}
 	}
-	const actions = await contract_utils.filterNftActions(allContractList, receipts);
+	const actions = await contractUtils.filterNftActions(allContractList, receipts);
 	const accountIdList = [];
 	const contractList = [];
 	for (const action of actions) {
@@ -22,7 +22,7 @@ const nft_task = async function(receipts) {
 		contractList.push(action.contract_id);
 	}
 
-	const userTokens = await user_fields_obj.getUserFields({
+	const userTokens = await userFields.getUserFields({
 		key: 'nft_contract_id',
 		near_wallet_id: accountIdList,
 		value: contractList,
@@ -30,21 +30,21 @@ const nft_task = async function(receipts) {
 
 
 	for (const userToken of userTokens) {
-		const roles = await contract_utils.getRulesByField('nft_contract_id', userToken.value);
+		const roles = await contractUtils.getRulesByField('nft_contract_id', userToken.value);
 		const guild_ids = [];
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
 		});
-		const user_infos = await user_infos_obj.getUsers({
+		const _userInfos = await userInfos.getUsers({
 			guild_id: guild_ids,
 			near_wallet_id: userToken.near_wallet_id,
 		});
-		const newAmount = await contract_utils.getNftCountOf(userToken.value, userToken.near_wallet_id);
+		const newAmount = await contractUtils.getNftCountOf(userToken.value, userToken.near_wallet_id);
 
 
-		for (const user_info of user_infos) {
-			const member = await discord_utils.getMembers(user_info.guild_id, user_info.user_id);
-			const guildRoles = await discord_utils.getRules(user_info.guild_id);
+		for (const _userInfo of _userInfos) {
+			const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
+			const guildRoles = await discordUtils.getRules(_userInfo.guild_id);
 
 			const role = [];
 			const delRole = [];
@@ -53,11 +53,11 @@ const nft_task = async function(receipts) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-					const _role = discord_utils.getRoles(user_info.guild_id, role_id);
+					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
 					_role && role.push(_role);
 				}
 				if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-					const _role = discord_utils.getRoles(user_info.guild_id, role_id);
+					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
 					_role && delRole.push(_role);
 				}
 			}

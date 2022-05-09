@@ -1,8 +1,8 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const config = require('../../pkg/utils/config');
-const near_utils = require('../../pkg/utils/near_utils');
-const user_infos = require('../../pkg/models/object/user_infos');
+const nearUtils = require('../../pkg/utils/near_utils');
+const userInfos = require('../../pkg/models/object/user_infos');
 const logger = require('../../pkg/utils/logger');
 
 const embed = new MessageEmbed()
@@ -23,7 +23,7 @@ const data = new SlashCommandBuilder()
 
 const execute = async interaction => {
 	const nonce = Date.now();
-	const signature = await near_utils.getSign({
+	const signature = await nearUtils.getSign({
 		guild_id: interaction.guildId,
 		nonce: nonce,
 		user_id: interaction.user.id,
@@ -31,18 +31,13 @@ const execute = async interaction => {
 	// Set the url
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
 
-
-	await user_infos.addUser({
+	await userInfos.addUser({
 		user_id: interaction.user.id,
 		guild_id: interaction.guildId,
 		nonce: nonce,
-	})
+	});
 	// store data into mysql
-	
-	logger.debug(`saving user info...`);
-	
-	
-	
+	logger.debug('saving user info...');
 	// replay message to discord user
 	await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 };

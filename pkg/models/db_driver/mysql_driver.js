@@ -3,7 +3,7 @@ https://www.sequelize.com.cn/
 */
 const logger = require('../../utils/logger');
 const config = require('../../utils/config');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 
 const operatorsAliases = {
 	$eq: Op.eq,
@@ -12,12 +12,12 @@ const operatorsAliases = {
 	$any: Op.any,
 	$all: Op.all,
 	$values: Op.values,
-	$col: Op.col
-  };
+	$col: Op.col,
+};
 
 const mysql = new Sequelize(`${config.mysql_url}`, {
 	logging: msg => logger.debug(msg),
-	operatorsAliases
+	operatorsAliases,
 });
 
 try {

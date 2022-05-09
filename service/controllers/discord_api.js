@@ -1,27 +1,27 @@
-const resp = require('../../pkg/models/object/response');
-const discord_utils = require('../../pkg/utils/discord_utils');
+const Resp = require('../../pkg/models/object/response');
+const discordUtils = require('../../pkg/utils/discord_utils');
 
-const fn_getRole = async (ctx, next) => {
+const getRole = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
-	const roles = discord_utils.getRoles(guildId);
-	ctx.body = new resp({data: roles});
+	const roles = discordUtils.getRoles(guildId);
+	ctx.body = new Resp({ data: roles });
 };
 
-const fn_getServer = async (ctx, next) => {
+const getServer = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
-	const serverList = discord_utils.getGuild(guildId);
-	ctx.body = new resp({data: serverList});
+	const serverList = discordUtils.getGuild(guildId);
+	ctx.body = new Resp({ data: serverList });
 };
 
-const fn_getUser = async (ctx, next) => {
+const getUser = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
-	const member = await discord_utils.getMember(guildId, userId);
-	ctx.body = new resp({data: member});
+	const member = await discordUtils.getMember(guildId, userId);
+	ctx.body = new Resp({ data: member });
 };
 
 module.exports = {
-	'GET /api/getRole/:guildId': fn_getRole,
-	'GET /api/getServer/:guildId': fn_getServer,
-	'GET /api/getUser/:guildId/:userId': fn_getUser,
+	'GET /api/getRole/:guildId': getRole,
+	'GET /api/getServer/:guildId': getServer,
+	'GET /api/getUser/:guildId/:userId': getUser,
 };

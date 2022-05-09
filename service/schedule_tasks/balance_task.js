@@ -1,24 +1,24 @@
-const contract_utils = require('../../pkg/utils/contract_utils');
-const discord_utils = require('../../pkg/utils/discord_utils');
+const contractUtils = require('../../pkg/utils/contract_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
 const logger = require('../../pkg/utils/logger');
-const user_fields_obj = require('../../pkg/models/object/user_fields');
-const user_infos_obj = require('../../pkg/models/object/user_infos');
+const userFields = require('../../pkg/models/object/user_fields');
+const userInfos = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 
 const balance_task = async function(receipts) {
-	const userFields = await user_fields_obj.getUserFields({
+	const _userFields = await userFields.getUserFields({
 		key: 'near',
 	});
-	let accountIds = [];
-	userFields.forEach(item => accountIds.push(item.near_wallet_id));
-	const actions = await contract_utils.filterTransferActions(accountIds, receipts);
-	accountIds = [];
-	for (const action of actions) {
-		accountIds.push(action.account_id);
+	let _accountIds = [];
+	_userFields.forEach(item => _accountIds.push(item.near_wallet_id));
+	const _actions = await contractUtils.filterTransferActions(_accountIds, receipts);
+	_accountIds = [];
+	for (const action of _actions) {
+		_accountIds.push(action.account_id);
 	}
-	logger.debug(`accountIds: ${accountIds}`);
+	logger.debug(`accountIds: ${_accountIds}`);
 
-	const roles = await contract_utils.getRulesByField('near', 'balance');
+	const roles = await contractUtils.getRulesByField('near', 'balance');
 	const guild_ids = [];
 	const guildMap = {};
 	roles.map(item => {
@@ -29,23 +29,23 @@ const balance_task = async function(receipts) {
 		guildMap[item.guild_id].push(item);
 	});
 
-	const user_infos = await user_infos_obj.getUsers({
+	const _userInfos = await userInfos.getUsers({
 		guild_id: guild_ids,
-		near_wallet_id: accountIds,
+		near_wallet_id: _accountIds,
 	});
 
-	for (const user_info of user_infos) {
-		const member = await discord_utils.getMembers(user_info.guild_id, user_info.user_id);
+	for (const _userInfo of _userInfos) {
+		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
 		const role = [];
 		const delRole = [];
-		for (const rule of guildMap[user_infos.guild_id]) {
-			const balance = await contract_utils.getNearBalanceOf(user_info.near_wallet_id);
+		for (const rule of guildMap[_userInfos.guild_id]) {
+			const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
 			if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
-				const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
+				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && role.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
-				const _role = discord_utils.getRoles(rule.guild_id, rule.role_id);
+				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && delRole.push(_role);
 			}
 		}
