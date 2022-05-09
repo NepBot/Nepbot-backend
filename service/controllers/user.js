@@ -22,6 +22,7 @@ const setInfo = async (ctx, next) => {
 		});
 		return;
 	}
+	logger.info("=======================")
 	// verify user id
 	if (!await userUtils.verifyUserId(args, args.sign)) {
 		logger.error('fn verifyUserId failed in api/set-info');
