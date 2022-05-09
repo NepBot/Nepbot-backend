@@ -39,7 +39,6 @@ const getOwnerSign = async (ctx, next) => {
 		});
 	}
 };
-// 2.验证用户是否有权限mint, 具体逻辑：查看用户所属的roles, 判断这些roles是否包含在collection中的mintable_roles中，返回这个人的near_account_id加timestamp的签名
 
 module.exports = {
 	'GET /api/getRole/:guildId': getRole,
