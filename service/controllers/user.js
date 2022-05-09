@@ -22,7 +22,7 @@ const setInfo = async (ctx, next) => {
 		});
 		return;
 	}
-	logger.info("=======================")
+	
 	// verify user id
 	if (!await userUtils.verifyUserId(args, args.sign)) {
 		logger.error('fn verifyUserId failed in api/set-info');
@@ -55,7 +55,7 @@ const setInfo = async (ctx, next) => {
 		user_id: args.user_id,
 		guild_id: args.guild_id,
 	});
-
+	logger.info("=======================")
 	//
 	const member = await discordUtils.getMember(args.guild_id, args.user_id);
 	const rulesMap = {
