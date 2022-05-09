@@ -26,7 +26,6 @@ const verifyAccountOwner = async (account_id, data, signature) => {
 		const accessKeys = await account.getAccessKeys();
 		return accessKeys.some(it => {
 			const publicKey = it.public_key.replace('ed25519:', '');
-			logger.info(publicKey);
 			return verifySign(data, signature, publicKey);
 		});
 	}
