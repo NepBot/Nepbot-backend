@@ -160,8 +160,7 @@ const setInfo = async (ctx, next) => {
 	if (delRole.length) {
 		member.roles.remove(delRole).then(console.log).catch(console.error);
 	}
-	logger.info("=======================")
-	ctx.body = Resp;
+	ctx.body = new Resp({});
 };
 
 module.exports = {
