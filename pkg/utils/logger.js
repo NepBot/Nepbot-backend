@@ -15,8 +15,8 @@ logger.fatal('this is fatal');
 
 // get the app root path
 const appRoot = require('app-root-path');
-// load .env file into process
-require('dotenv').config({ path: `${appRoot}/.env` });
+// load config
+const config = require('./config');
 
 const log4js = require('log4js');
 log4js.configure({
@@ -32,11 +32,13 @@ log4js.configure({
 		},
 	},
 	categories: {
-		default: { appenders: ['out', 'app'], level: process.env.RUNTIME_ENV },
+		default: { appenders: ['out', 'app'], level: config.runtime_env },
+		file: { appenders: ['app'], level: config.runtime_env },
+		console: { appenders: ['out'], level: config.runtime_env },
 	},
 	replaceConsole: true,
 });
 
-const logger = log4js.getLogger('default');
+const logger = log4js.getLogger(config.logger_mode);
 
 module.exports = logger;

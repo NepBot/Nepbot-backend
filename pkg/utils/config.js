@@ -16,5 +16,7 @@ config.nearWallet.keyStore = new keyStores.UnencryptedFileSystemKeyStore(credent
 config.bot_token = process.env.BOT_TOKEN;
 config.bot_appid = process.env.BOT_APPID;
 config.mysql_url = process.env.MYSQL_URL;
+config.runtime_env = process.env.RUNTIME_ENV;
+config.logger_mode = process.env.LOGGER_MODE;
 
 module.exports = config;
