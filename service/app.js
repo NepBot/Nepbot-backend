@@ -10,7 +10,12 @@ const router = require('koa-router')();
 
 const bodyParser = require('koa-bodyparser');
 
+// resolve the cross region problem
+const cors = require('koa2-cors');
+
 const app = new Koa();
+
+app.use(cors());
 
 // log request URL:
 app.use(async (ctx, next) => {
@@ -21,7 +26,7 @@ app.use(async (ctx, next) => {
 // parse request body:
 app.use(bodyParser());
 
-// add controllers:
+// add controllers:F
 addControllers(controller_dir);
 app.use(router.routes());
 
