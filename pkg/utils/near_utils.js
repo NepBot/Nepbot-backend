@@ -34,12 +34,12 @@ const verifyAccountOwner = async (account_id, data, signature) => {
 	}
 };
 
-const verifyOperationSign = async (args) => {
+const verifyOperationSign = async (args, account_id) => {
 	const user_info = await userInfos.getUser({
 		user_id: args.user_id,
 		guild_id: args.guild_id,
 	});
-	return await verifyAccountOwner(config.account_id, user_info.nonce, args.sign);
+	return await verifyAccountOwner(config.account_id, user_info.nonce + account_id, args.sign);
 };
 
 const getSign = async (args) => {

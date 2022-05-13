@@ -12,23 +12,23 @@ const setInfo = async (ctx, next) => {
 	try {
 		const req = ctx.request.body;
 		const args = req.args;
-		logger.info(`revice request by access 'api/set-info': ${JSON.stringify(req)}`);
+		logger.info(`revice request by access 'api/setInfo': ${JSON.stringify(req)}`);
 		// verify user account
 		if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
-			logger.error('fn verifyAccountOwner failed in api/set-info');
+			logger.error('fn verifyAccountOwner failed in api/setInfo');
 			ctx.body = new Resp({
 				code: 500,
-				message: 'fn verifyAccountOwner failed in api/get-sign',
+				message: 'fn verifyAccountOwner failed in api/getOwnerSign',
 				success: false,
 			});
 			return;
 		}
 		// verify user id
 		if (!await userUtils.verifyUserId(args, args.sign)) {
-			logger.error('fn verifyUserId failed in api/set-info');
+			logger.error('fn verifyUserId failed in api/setInfo');
 			ctx.body = new Resp({
 				code: 500,
-				message: 'fn verifyUserId failed in api/get-sign',
+				message: 'fn verifyUserId failed in api/getOwnerSign',
 				success: false,
 			});
 			return;
@@ -173,5 +173,5 @@ const setInfo = async (ctx, next) => {
 };
 
 module.exports = {
-	'POST /api/set-info': setInfo,
+	'POST /api/setInfo': setInfo,
 };

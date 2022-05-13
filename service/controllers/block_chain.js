@@ -12,11 +12,11 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 	}
 */
 
-// api/get-sign
-const getSign = async (ctx, next) => {
+// api/getOwnerSign
+const getOwnerSign = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
-	logger.info(`revice request by access 'api/get-sign': ${JSON.stringify(req)}`);
+	logger.info(`revice request by access 'api/getOwnerSign': ${JSON.stringify(req)}`);
 	// verify user account
 	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
 		logger.error('fn verifyAccountOwner failed in api/get-sign');
@@ -28,7 +28,7 @@ const getSign = async (ctx, next) => {
 		return;
 	}
 
-	if (!await nearUtils.verifyOperationSign(args)) {
+	if (!await nearUtils.verifyOperationSign(args, req.account_id)) {
 		logger.error('fn verifyOperationSign failed in api/get-sign');
 		ctx.body = new Resp({
 			code: 500,
@@ -53,7 +53,7 @@ const getSign = async (ctx, next) => {
 	ctx.body = new Resp({ data: sign });
 };
 // api/opearte-sign
-const operateSign = async (ctx, next) => {
+const getOperationSign = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
 	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
@@ -65,7 +65,7 @@ const operateSign = async (ctx, next) => {
 			user_id: args.user_id,
 			guild_id: args.guild_id,
 			sign: args.operationSign,
-		})) {
+		}, req.account_id)) {
 			ctx.body = new Resp({ data: args.operationSign });
 			return;
 		}
@@ -76,11 +76,11 @@ const operateSign = async (ctx, next) => {
 		});
 		return;
 	}
-	const sign = await nearUtils.getSign(nonce);
+	const sign = await nearUtils.getSign(nonce + req.account_id);
 	ctx.body = new Resp({ data: sign });
 };
 
 module.exports = {
-	'POST /api/sign': getSign,
-	'POST /api/operationSign': operateSign,
+	'POST /api/getOwnerSign': getOwnerSign,
+	'POST /api/getOperationSign': getOperationSign,
 };
