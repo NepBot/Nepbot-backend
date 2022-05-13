@@ -49,7 +49,7 @@ const getSign = async (ctx, next) => {
 		return;
 	}
 
-	const sign = await nearUtils.getSign(args.items);
+	const sign = await nearUtils.getSign(req.account_id + Date.now() + "000000");
 	ctx.body = new Resp({ data: sign });
 };
 // api/opearte-sign

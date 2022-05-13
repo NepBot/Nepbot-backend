@@ -38,7 +38,7 @@ const setInfo = async (ctx, next) => {
 		const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
 		const result = await userInfos.getUsers({
 			guild_id: args.guild_id,
-			near_wallet_id: args.account_id,
+			near_wallet_id: req.account_id,
 		});
 		for (const user_info of result) {
 			if (user_info.user_id != args.user_id) {
@@ -51,7 +51,7 @@ const setInfo = async (ctx, next) => {
 
 		// update user
 		await userInfos.addUser({
-			near_wallet_id: args.account_id,
+			near_wallet_id: req.account_id,
 			user_id: args.user_id,
 			guild_id: args.guild_id,
 		});
@@ -82,7 +82,7 @@ const setInfo = async (ctx, next) => {
 				rulesMap.paras.push(rule);
 			}
 			await userFields.addUserField({
-				near_wallet_id: args.account_id,
+				near_wallet_id: req.account_id,
 				key: rule.key_field[0],
 				value: rule.key_field[1],
 			});
@@ -90,7 +90,7 @@ const setInfo = async (ctx, next) => {
 		const role = [];
 		const delRole = [];
 		for (const rule of rulesMap.token) {
-			const tokenAmount = await contractUtils.getBalanceOf(rule.key_field[1], args.account_id);
+			const tokenAmount = await contractUtils.getBalanceOf(rule.key_field[1], req.account_id);
 
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
@@ -103,7 +103,7 @@ const setInfo = async (ctx, next) => {
 		}
 
 		for (const rule of rulesMap.oct) {
-			const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], args.account_id);
+			const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], req.account_id);
 
 			if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
@@ -117,7 +117,7 @@ const setInfo = async (ctx, next) => {
 
 		for (const rule of rulesMap.balance) {
 
-			const balance = await contractUtils.getNearBalanceOf(args.account_id);
+			const balance = await contractUtils.getNearBalanceOf(req.account_id);
 
 			if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
@@ -130,7 +130,7 @@ const setInfo = async (ctx, next) => {
 		}
 
 		for (const rule of rulesMap.nft) {
-			const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], args.account_id);
+			const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], req.account_id);
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils. getRoles(rule.guild_id, rule.role_id);
 				_role && role.push(_role);
@@ -142,7 +142,7 @@ const setInfo = async (ctx, next) => {
 		}
 
 		for (const rule of rulesMap.paras) {
-			const tokenAmount = await contractUtils.getTokenPerOwnerCount(rule.key_field[1], args.account_id);
+			const tokenAmount = await contractUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
 
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
