@@ -1,0 +1,16 @@
+{
+  "nearWallet": {
+    "networkId": "testnet",
+    "nodeUrl": "https://rpc.testnet.near.org",
+    "walletUrl": "https://wallet.testnet.near.org",
+    "helperUrl": "https://helper.testnet.near.org"
+  },
+  "port": 3000,
+  "rule_contract": "app.nepbot.testnet",
+  "linkdrop": "linkdrop6.bhc8521.testnet",
+  "account_id": "sign.nepbot.testnet",
+  "oct_contract": "registry.test_oct.testnet",
+  "near_indexer": "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer",
+  "paras_api": "https://api-v2-mainnet.paras.id",
+  "wallet_auth_url":"https://testnet.nepbot.org"
+}

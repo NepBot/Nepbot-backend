@@ -1,24 +1,25 @@
-require('./src/server/server');
-require('./src/server/services/blockService')
-const {timedTask} = require('./src/timedTask/index')
-const {client} =  require('./src/bot');
-const secret = require("./src/secret").getSecret()
-const {TOKEN} = secret;
+// Load config info
+const config = require('./pkg/utils/config');
 
-async function sleep(ms) {
-    return new Promise(resolve=>setTimeout(resolve, ms))
-}
+// Load logger
+const logger = require('./pkg/utils/logger');
 
-client.login(TOKEN).then(async () => {
-    console.log('Success login ');
-    while (true) {
-        try {
-            await timedTask()
-            await sleep(1000)
-        } catch (e) {
-            continue
-        }
-        
-    }
-    
+// Checking connection of mysql wheather success or not.
+require('./pkg/models/db_driver/mysql_driver');
+
+// Sync models to mysql
+require('./pkg/utils/sync_models');
+
+// Run backend app
+const app = require('./service/app');
+app.listen(config.port, () => {
+	logger.info(`app listening at http://127.0.0.1:${config.port}/api`);
 });
+
+// Run schedule task
+const task = require('./service/schedule_task');
+task.scheduleTask();
+
+// Run discord bot
+const client = require('./service/discord_bot');
+client.login(config.bot_token);
