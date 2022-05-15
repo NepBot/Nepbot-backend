@@ -49,8 +49,8 @@ const getOwnerSign = async (ctx, next) => {
 		return;
 	}
 
-	const timestamp = Date.now()
-	const sign = await nearUtils.getSign(req.account_id + timestamp + "000000");
+	const timestamp = Date.now() + "000000"
+	const sign = await nearUtils.getSign(req.account_id + timestamp);
 	ctx.body = new Resp({ 
 		data: {
 			timestamp: timestamp,
