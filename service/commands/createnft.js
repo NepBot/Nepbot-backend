@@ -12,7 +12,7 @@ const button = new MessageButton().setStyle('LINK').setLabel('Create NFT Collect
 const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
-	.setName('cretatenft')
+	.setName('createnft')
 	.setDescription('Replies the server info');
 
 const execute = async interaction => {
