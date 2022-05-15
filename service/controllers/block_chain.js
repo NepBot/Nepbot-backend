@@ -49,8 +49,12 @@ const getOwnerSign = async (ctx, next) => {
 		return;
 	}
 
-	const sign = await nearUtils.getSign(req.account_id + Date.now() + "000000");
-	ctx.body = new Resp({ data: sign });
+	const nanosecondTimestamp = Date.now() + "000000"
+	const sign = await nearUtils.getSign(req.account_id + nanosecondTimestamp);
+	ctx.body = new Resp({ data: {
+		timestamp: nanosecondTimestamp,
+		sign: sign
+	} });
 };
 // api/opearte-sign
 const getOperationSign = async (ctx, next) => {

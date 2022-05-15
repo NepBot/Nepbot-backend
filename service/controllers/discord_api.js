@@ -21,28 +21,13 @@ const getUser = async (ctx, next) => {
 	ctx.body = new Resp({ data: member });
 };
 
-const getOwnerSign = async (ctx, next) => {
-	const req = ctx.request.body;
-	const ownerId = await discordUtils.getOwnerId(req.guild_id);
-	if (req.user_id == ownerId) {
-		const sign = await nearUtils.getSign({
-			account_id: req.account_id,
-			timestamp: Date.now(),
-		});
-		ctx.body = new Resp({ data: sign });
-	}
-	else {
-		ctx.body = new Resp({
-			code: 200,
-			message: `currently user is not owner, ${req.user_id}`,
-			success: true,
-		});
-	}
-};
+const getMintSign = async (ctx, next) => {
+
+}
 
 module.exports = {
 	'GET /api/getRole/:guildId': getRole,
 	'GET /api/getServer/:guildId': getServer,
 	'GET /api/getUser/:guildId/:userId': getUser,
-	'POST /api/get-owner-sign': getOwnerSign,
+	'POST /api/getMintSign': getMintSign
 };
