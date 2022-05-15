@@ -12,7 +12,7 @@ const button = new MessageButton().setStyle('LINK').setLabel('Mint NFT');
 const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
-	.setName('cretatenft')
+	.setName('mint')
 	.setDescription('Replies the server info');
 
 const execute = async interaction => {
