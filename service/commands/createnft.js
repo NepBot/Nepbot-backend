@@ -5,14 +5,14 @@ const config = require('../../pkg/utils/config');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
-const content = new MessageEmbed().setDescription('Click the button below to enter the setting rules page').setColor('BLUE');
+const content = new MessageEmbed().setDescription('Click the button below to enter the NFT setting page').setColor('BLUE');
 
-const button = new MessageButton().setStyle('LINK').setLabel('Set Rule');
+const button = new MessageButton().setStyle('LINK').setLabel('Create NFT Collection');
 
 const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
-	.setName('set_rule')
+	.setName('cretatenft')
 	.setDescription('Replies the server info');
 
 const execute = async interaction => {
@@ -30,7 +30,7 @@ const execute = async interaction => {
 			guild_id: interaction.guildId,
 			nonce: nonce,
 		});
-		button.setURL(`${config.wallet_auth_url}/setrule/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);
+		button.setURL(`${config.wallet_auth_url}/collectionlist/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);
 		interaction.reply({
 			content:'\n',
 			embeds:[content],
