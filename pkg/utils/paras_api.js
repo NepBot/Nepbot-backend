@@ -1,4 +1,4 @@
-const request = require("axios")
+const axios = require("axios")
 const config = require('../../pkg/utils/config');
 
 exports.getCollection = async (collectionId) => {
