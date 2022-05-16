@@ -16,20 +16,21 @@ const proxy = httpProxy.createProxyServer({
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
-proxy.on('proxyReq', (proxyReq, req, res, options) => {
-    //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-    //console.log(proxyReq)
-    console.log("===================")
-})
 
-proxy.on('proxyRes', (proxyRes, req, res) => {
-    //proxyRes.removeHeader('Authorization')
-    console.log("-----------------------------------")
-})
 
 
 const createParasCollection = async (ctx, next) => {
     // console.log("=========================================")
+    proxy.once('proxyReq', (proxyReq, req, res, options) => {
+        //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
+        //console.log(proxyReq)
+        console.log("===================")
+    })
+    
+    proxy.once('proxyRes', (proxyRes, req, res) => {
+        //proxyRes.removeHeader('Authorization')
+        console.log(proxyRes)
+    })
     const auth = await nearUtils.genParasAuthToken()
     // ctx.redirect(`https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`)
     // return
