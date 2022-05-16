@@ -18,7 +18,6 @@ exports.createCollection = async (formData) => {
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
         data: formData
     });
-    console.log(result)
     if (result.data.status == 1) {
         return result.data.data
     }
