@@ -16,7 +16,10 @@ exports.createCollection = async (formData, auth) => {
     const result = await axios.request({
         method: 'post',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-        headers:{Authorization: auth},
+        headers:{
+            'Connection': 'keep-alive',
+            'Authorization': auth
+        },
         data: formData
     });
     if (result.data.status == 1) {
