@@ -12,7 +12,8 @@ var FormData = require('form-data');
 
 
 const proxy = httpProxy.createProxyServer({
-    xfwd: true
+    changeOrigin: true,
+    //xfwd: true
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
