@@ -5,7 +5,7 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
 
 const createParasCollection = async (ctx, next) => {
-    console.log(ctx)
+    console.log(ctx.req)
     // const req = ctx.request.body;
     // const args = req.args;
     // if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
