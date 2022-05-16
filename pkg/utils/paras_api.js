@@ -1,4 +1,5 @@
 const request = require("request")
+const config = require('../../pkg/utils/config');
 
 exports.getCollection = async (collectionId) => {
     const result = await request({
