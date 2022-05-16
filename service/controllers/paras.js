@@ -18,7 +18,7 @@ const proxy = httpProxy.createProxyServer({
 
 proxy.on('proxyReq', (proxyReq, req, res, options) => {
     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-    console.log(proxyReq)
+    //console.log(proxyReq)
 })
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
