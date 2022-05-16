@@ -11,33 +11,34 @@ const { createCollection } = require('../../pkg/utils/paras_api');
 var FormData = require('form-data');
 
 
-// const proxy = httpProxy.createProxyServer({
-    
-//     // other options, see https://www.npmjs.com/package/http-proxy
-// })
+const proxy = httpProxy.createProxyServer({
+    xfwd: true
+    // other options, see https://www.npmjs.com/package/http-proxy
+})
 
-// proxy.on('proxyReq', (proxyReq, req, res, options) => {
-//     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-//     //console.log(proxyReq)
-// })
+proxy.on('proxyReq', (proxyReq, req, res, options) => {
+    //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
+    //console.log(proxyReq)
+    console.log("===================")
+})
 
-// proxy.on('proxyRes', (proxyRes, req, res) => {
-//     //proxyRes.removeHeader('Authorization')
-//     console.log("-----------------------------------")
-// })
+proxy.on('proxyRes', (proxyRes, req, res) => {
+    //proxyRes.removeHeader('Authorization')
+    console.log("-----------------------------------")
+})
 
 
 const createParasCollection = async (ctx, next) => {
     // console.log("=========================================")
     const auth = await nearUtils.genParasAuthToken()
-    ctx.redirect(`https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`)
-    return
-    // proxy.web(ctx.req, ctx.res, {
-    //     target: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
-    //     headers: { 'Authorization': auth }
-    // }, (e) => {
-    //     console.log(e)
-    // })
+    // ctx.redirect(`https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`)
+    // return
+    proxy.web(ctx.req, ctx.res, {
+        target: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
+        headers: { 'Authorization': auth }
+    }, (e) => {
+        console.log(e)
+    })
     console.log(ctx.res)
     
     // let form = new multiparty.Form();
