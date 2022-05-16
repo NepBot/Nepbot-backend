@@ -1,7 +1,8 @@
 const config = require('./config');
-const { connect } = require('near-api-js');
+const { connect, WalletConnection } = require('near-api-js');
 const tweetnacl = require('tweetnacl');
 const bs58 = require('bs58');
+const Base64 = require('js-base64')
 const userInfos = require('../models/object/user_infos');
 const logger = require('./logger');
 
@@ -51,9 +52,30 @@ const getSign = async (args) => {
 	return bs58.encode(signature);
 };
 
+const genParasAuthToken = async () => {
+    const near = await connect(config.nearWallet);
+	const account = await near.account(account_id);
+    const accountId = account.accountId;
+
+    const arr = new Array(accountId)
+    for (var i = 0; i < accountId.length; i++) {
+        arr[i] = accountId.charCodeAt(i)
+    }
+
+    const msgBuf = new Uint8Array(arr)
+    const signedMsg = await account.connection.signer.signMessage(msgBuf, accountId, config.networkId)
+
+    const pubKey = Buffer.from(signedMsg.publicKey.data).toString('hex')
+    const signature = Buffer.from(signedMsg.signature).toString('hex')
+    const payload = [accountId, pubKey, signature]
+
+    return Base64.encode(payload.join('&'))
+}
+
 module.exports = {
 	verifySign,
 	verifyAccountOwner,
 	verifyOperationSign,
 	getSign,
+	genParasAuthToken
 };

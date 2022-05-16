@@ -24,3 +24,4 @@ exports.createCollection = async (formData) => {
     }
     return result.data
 }
+
