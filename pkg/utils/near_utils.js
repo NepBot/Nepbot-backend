@@ -61,7 +61,7 @@ const genParasAuthToken = async () => {
     }
 
     const msgBuf = new Uint8Array(arr)
-	const hash = new Uint8Array(js_sha256.default.sha256.array(msgBuf));
+	const hash = new Uint8Array(js_sha256.sha256.array(msgBuf));
 	const keyPair = await this.keyStore.getKey(networkId, accountId);
 	const signedMsg = keyPair.sign(hash);
 
