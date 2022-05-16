@@ -16,13 +16,15 @@ const proxy = httpProxy.createProxyServer({
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
-// proxy.on('proxyReq', async (proxyReq, req, res, options) => {
-//     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-// })
+proxy.on('proxyReq', async (proxyReq, req, res, options) => {
+    //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
+    console.log("==============================")
+})
 
-// proxy.on('proxyRes', (proxyRes, req, res) => {
-//     //proxyRes.removeHeader('Authorization')
-// })
+proxy.on('proxyRes', (proxyRes, req, res) => {
+    //proxyRes.removeHeader('Authorization')
+    console.log("-----------------------------------")
+})
 
 
 const createParasCollection = async (ctx, next) => {
