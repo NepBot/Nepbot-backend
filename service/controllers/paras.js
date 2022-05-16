@@ -1,10 +1,11 @@
+const logger = require('../../pkg/utils/logger');
 const config = require('../../pkg/utils/config');
 const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
 
 const createParasCollection = async (ctx, next) => {
-    console.log(ctx.req.files, ctx.req.body)
+    console.log(ctx.request.files, ctx.request.body)
     // const req = ctx.request.body;
     // const args = req.args;
     // if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
