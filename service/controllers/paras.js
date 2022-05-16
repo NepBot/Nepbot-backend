@@ -14,6 +14,7 @@ const createParasCollection = async (ctx, next) => {
             resolve({args: JSON.parse(fields.args[0]), files: files})
         })
     })
+    console.log(req)
     
     const args = req.args;
     if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
