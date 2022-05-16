@@ -16,7 +16,7 @@ const proxy = httpProxy.createProxyServer({
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
-proxy.on('proxyReq', async (proxyReq, req, res, options) => {
+proxy.on('proxyReq', (proxyReq, req, res, options) => {
     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
     console.log("==============================")
 })
@@ -76,10 +76,10 @@ const createParasCollection = async (ctx, next) => {
     
     // const res = await createCollection(formData)
     // console.log(res)
-    ctx.body = new Resp({ 
-		data: {
-		}
-	});
+    // ctx.body = new Resp({ 
+	// 	data: {
+	// 	}
+	// });
 }
 
 module.exports = {
