@@ -12,7 +12,6 @@ var FormData = require('form-data');
 
 
 const proxy = httpProxy.createProxyServer({
-    changeOrigin: true,
     //xfwd: true
     // other options, see https://www.npmjs.com/package/http-proxy
 })
@@ -36,7 +35,9 @@ const createParasCollection = async (ctx, next) => {
     // return
     proxy.web(ctx.req, ctx.res, {
         target: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
-        headers: { 'Authorization': auth }
+        headers: { 'Authorization': auth },
+        autoRewrite: true,
+        changeOrigin: true,
     }, (e) => {
         console.log(e)
     })
