@@ -5,7 +5,7 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
 
 const createParasCollection = async (ctx, next) => {
-    console.log(ctx.req.files)
+    console.log(ctx.request.body)
     // const req = ctx.request.body;
     // const args = req.args;
     // if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
@@ -43,6 +43,10 @@ const createParasCollection = async (ctx, next) => {
 
     // //paras - collection
     // const res = await createCollection(formData);
+    ctx.body = new Resp({ 
+		data: {
+		}
+	});
 }
 
 module.exports = {
