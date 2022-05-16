@@ -41,7 +41,7 @@ const createParasCollection = async (ctx, next) => {
     let form = new multiparty.Form();
     const {req, files} = await new Promise((resolve, reject) => {
         form.parse(ctx.req, function (err, fields, files) {
-            resolve({req: JSON.parse(fields.args[0]), files: files.files})
+            resolve({req: JSON.parse(fields.args[0]), files: null})
         })
     })
     
@@ -70,10 +70,10 @@ const createParasCollection = async (ctx, next) => {
     Object.keys(args.args).forEach((key) => {
         formData.append(key, args.args[key]);
     });
-    for (let file of files) {
-        const fileObj = fs.readFileSync(file.path)
-        formData.append('files',fileObj)
-    }
+    // for (let file of files) {
+    //     const fileObj = fs.readFileSync(file.path)
+    //     formData.append('files',fileObj)
+    // }
     
     const res = await createCollection(formData, await nearUtils.genParasAuthToken())
     ctx.body = new Resp({ 
