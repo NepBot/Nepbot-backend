@@ -39,7 +39,7 @@ const createParasCollection = async (ctx, next) => {
     }, (e) => {
         console.log(e)
     })
-    console.log(ctx.res)
+    //console.log(ctx.res)
     
     // let form = new multiparty.Form();
     // const {req, files} = await new Promise((resolve, reject) => {
