@@ -74,10 +74,10 @@ const createParasCollection = async (ctx, next) => {
     
     // const res = await createCollection(formData)
     // console.log(res)
-    ctx.body = new Resp({ 
-		data: {
-		}
-	});
+    // ctx.body = new Resp({ 
+	// 	data: {
+	// 	}
+	// });
 }
 
 module.exports = {
