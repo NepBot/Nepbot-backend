@@ -7,6 +7,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const multiparty = require("multiparty");
 const fs = require("fs");
 const { createCollection } = require('../../pkg/utils/paras_api');
+var FormData = require('form-data');
 
 const createParasCollection = async (ctx, next) => {
     let form = new multiparty.Form();
