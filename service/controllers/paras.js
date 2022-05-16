@@ -29,9 +29,6 @@ const createParasCollection = async (ctx, next) => {
     let res = await new Promise((resolve, reject) => {
         proxy.web(ctx.req, ctx.res, {
             // other options, see docs
-        }, (res) => {
-            console.log(res)
-            resolve(res)
         })
     })
     
