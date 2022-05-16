@@ -31,6 +31,8 @@ const createParasCollection = async (ctx, next) => {
     proxy.web(ctx.req, ctx.res, {
         target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
         headers: { 'Authorization': auth }
+    }, (e) => {
+        console.log(e)
     })
     
     // let form = new multiparty.Form();
@@ -72,10 +74,10 @@ const createParasCollection = async (ctx, next) => {
     
     // const res = await createCollection(formData)
     // console.log(res)
-    // ctx.body = new Resp({ 
-	// 	data: {
-	// 	}
-	// });
+    ctx.body = new Resp({ 
+		data: {
+		}
+	});
 }
 
 module.exports = {
