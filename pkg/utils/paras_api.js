@@ -17,7 +17,7 @@ exports.createCollection = async (formData, auth) => {
         method: 'POST',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
         headers: {
-            "Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`,
+            "Content-Type": formData.getHeader(),
             "Authorization": auth
         },
         data: formData
