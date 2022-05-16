@@ -8,9 +8,14 @@ const multiparty = require("multiparty");
 
 const createParasCollection = async (ctx, next) => {
     let form = new multiparty.Form();
-    form.parse(ctx.req, function (err, fields, files) {
-        console.log(fields)
+    await new Promise((resolve, reject) => {
+        form.parse(ctx.req, function (err, fields, files) {
+            console.log(fields)
+            console.log(files)
+            resolve()
+        })
     })
+    
     // const req = ctx.request.body;
     // const args = req.args;
     // if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
