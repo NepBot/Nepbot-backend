@@ -5,7 +5,8 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
 
 const multiparty = require("multiparty");
-const fs = require("fs")
+const fs = require("fs");
+const { createCollection } = require('../../pkg/utils/paras_api');
 
 const createParasCollection = async (ctx, next) => {
     let form = new multiparty.Form();
@@ -36,10 +37,6 @@ const createParasCollection = async (ctx, next) => {
 		return;
 	}
 
-    const collection = await getCollection(`${args.collection}-by-${config.account_id}`)
-    if (!collection || collection.results.length > 0) {
-        return
-    }
     const formData = new FormData();
     Object.keys(args.args).forEach((key) => {
         formData.append(key, args.args[key]);
@@ -49,11 +46,7 @@ const createParasCollection = async (ctx, next) => {
         formData.append('files',fileObj)
     }
     
-    const res = await request({
-        method: 'POST',
-        url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-        formData
-    });
+    const res = await createCollection(formData)
     console.log(res)
     ctx.body = new Resp({ 
 		data: {
