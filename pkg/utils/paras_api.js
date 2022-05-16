@@ -16,6 +16,7 @@ exports.createCollection = async (formData) => {
     const result = await request({
         method: 'POST',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+        headers: {"Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`},
         data: formData
     });
     if (result.data.status == 1) {
