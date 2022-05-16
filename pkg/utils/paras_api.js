@@ -1,4 +1,4 @@
-const request = require("request")
+const request = require("axios")
 const config = require('../../pkg/utils/config');
 
 exports.getCollection = async (collectionId) => {
@@ -13,13 +13,10 @@ exports.getCollection = async (collectionId) => {
 }
 
 exports.createCollection = async (formData, auth) => {
-    const result = await request({
-        method: 'POST',
+    const result = await axios.request({
+        method: 'post',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-        headers: {
-            "Content-Type": formData.getHeaders(),
-            "Authorization": auth
-        },
+        headers:{Authorization: auth},
         data: formData
     });
     if (result.data.status == 1) {
