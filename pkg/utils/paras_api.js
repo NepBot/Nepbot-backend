@@ -12,11 +12,14 @@ exports.getCollection = async (collectionId) => {
     return false
 }
 
-exports.createCollection = async (formData) => {
+exports.createCollection = async (formData, auth) => {
     const result = await request({
         method: 'POST',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-        headers: {"Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`},
+        headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`,
+            "Authorization": auth
+        },
         data: formData
     });
     if (result.data.status == 1) {
