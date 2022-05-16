@@ -16,7 +16,7 @@ exports.createCollection = async (formData) => {
     const result = await request({
         method: 'POST',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-        formData
+        data: formData
     });
     console.log(result)
     if (result.data.status == 1) {
