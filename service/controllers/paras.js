@@ -76,10 +76,8 @@ const createParasCollection = async (ctx, next) => {
     }
     
     const res = await createCollection(formData, await nearUtils.genParasAuthToken())
-    console.log(res)
     ctx.body = new Resp({ 
-		data: {
-		}
+		data: res
 	});
 }
 
