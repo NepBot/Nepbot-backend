@@ -18,7 +18,7 @@ const proxy = httpProxy.createProxyServer({
 
 proxy.on('proxyReq', (proxyReq, req, res, options) => {
     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-    console.log("==============================")
+    console.log(proxyReq)
 })
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -30,13 +30,12 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 const createParasCollection = async (ctx, next) => {
     console.log("=========================================")
     const auth = await nearUtils.genParasAuthToken()
-    let res = proxy.web(ctx.req, ctx.res, {
+    proxy.web(ctx.req, ctx.res, {
         target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
         headers: { 'Authorization': auth }
     }, (e) => {
         console.log(e)
     })
-    console.log(res)
     
     // let form = new multiparty.Form();
     // const {req, files} = await new Promise((resolve, reject) => {
