@@ -3,6 +3,7 @@ const { connect, WalletConnection } = require('near-api-js');
 const tweetnacl = require('tweetnacl');
 const bs58 = require('bs58');
 const Base64 = require('js-base64')
+const js_sha256 = require('js-sha256')
 const userInfos = require('../models/object/user_infos');
 const logger = require('./logger');
 
