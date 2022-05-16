@@ -32,7 +32,7 @@ const createParasCollection = async (ctx, next) => {
     const auth = await nearUtils.genParasAuthToken()
     proxy.web(ctx.req, ctx.res, {
         forward: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
-        //headers: { 'Authorization': auth }
+        headers: { 'Authorization': auth }
     }, (e) => {
         console.log(e)
     })
