@@ -12,7 +12,7 @@ const httpProxy = require("http-proxy")
 
 
 const proxy = httpProxy.createProxyServer({
-    target: 'https://some-other-server.com',
+    target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
