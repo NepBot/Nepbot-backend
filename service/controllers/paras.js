@@ -17,11 +17,11 @@ const proxy = httpProxy.createProxyServer({
 })
 
 proxy.on('proxyReq', async (proxyReq, req, res, options) => {
-    proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
+    //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
 })
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
-    proxyRes.removeHeader('Authorization')
+    //proxyRes.removeHeader('Authorization')
 })
 
 
