@@ -12,23 +12,24 @@ const httpProxy = require("http-proxy")
 
 
 const proxy = httpProxy.createProxyServer({
-    target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+    
     // other options, see https://www.npmjs.com/package/http-proxy
 })
 
-proxy.on('proxyReq', async (proxyReq, req, res, options) => {
-    //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-})
+// proxy.on('proxyReq', async (proxyReq, req, res, options) => {
+//     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
+// })
 
-proxy.on('proxyRes', (proxyRes, req, res) => {
-    //proxyRes.removeHeader('Authorization')
-})
+// proxy.on('proxyRes', (proxyRes, req, res) => {
+//     //proxyRes.removeHeader('Authorization')
+// })
 
 
 const createParasCollection = async (ctx, next) => {
     let res = await new Promise((resolve, reject) => {
         proxy.web(ctx.req, ctx.res, {
-            // other options, see docs
+            target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+            headers: { 'Authorization': await nearUtils.genParasAuthToken() }
         })
     })
     
