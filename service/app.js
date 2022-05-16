@@ -17,14 +17,16 @@ const app = new Koa();
 
 app.use(cors());
 
+// parse request body:
+app.use(bodyParser({multipart: true}));
+
 // log request URL:
 app.use(async (ctx, next) => {
 	logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
 	await next();
 });
 
-// parse request body:
-app.use(bodyParser({multipart: true}));
+
 
 // add controllers:F
 addControllers(controller_dir);

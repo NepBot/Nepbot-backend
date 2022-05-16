@@ -4,8 +4,13 @@ const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
 
+const multiparty = require("multiparty");
+
 const createParasCollection = async (ctx, next) => {
-    console.log(ctx)
+    let form = new multiparty.Form();
+    form.parse(ctx.req, function (err, fields, files) {
+        console.log(fields)
+    })
     // const req = ctx.request.body;
     // const args = req.args;
     // if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
