@@ -29,7 +29,7 @@ const createParasCollection = async (ctx, next) => {
     
     proxy.once('proxyRes', (proxyRes, req, res) => {
         //proxyRes.removeHeader('Authorization')
-        console.log(proxyRes)
+        fs.writeFileSync("./log.txt", JSON.stringify(proxyRes))
     })
     const auth = await nearUtils.genParasAuthToken()
     // ctx.redirect(`https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`)
