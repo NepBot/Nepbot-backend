@@ -18,7 +18,7 @@ const proxy = httpProxy.createProxyServer({
 
 proxy.on('proxyReq', (proxyReq, req, res, options) => {
     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-    console.log(proxyReq)
+    
 })
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -31,7 +31,7 @@ const createParasCollection = async (ctx, next) => {
     console.log("=========================================")
     const auth = await nearUtils.genParasAuthToken()
     proxy.web(ctx.req, ctx.res, {
-        target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+        target: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
         headers: { 'Authorization': auth }
     }, (e) => {
         console.log(e)
