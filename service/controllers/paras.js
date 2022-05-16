@@ -11,6 +11,7 @@ const createParasCollection = async (ctx, next) => {
     let form = new multiparty.Form();
     const {req, files} = await new Promise((resolve, reject) => {
         form.parse(ctx.req, function (err, fields, files) {
+            console.log(fields)
             resolve({args: JSON.parse(fields.args[0]), files: files})
         })
     })
