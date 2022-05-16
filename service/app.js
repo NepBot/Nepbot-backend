@@ -24,7 +24,7 @@ app.use(async (ctx, next) => {
 });
 
 // parse request body:
-app.use(bodyParser());
+app.use(bodyParser({multipart: true}));
 
 // add controllers:F
 addControllers(controller_dir);
