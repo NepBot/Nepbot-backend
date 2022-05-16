@@ -26,7 +26,6 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
 
 
 const createParasCollection = async (ctx, next) => {
-    console.log(ctx.request)
     let res = await new Promise((resolve, reject) => {
         proxy.web(ctx.req, ctx.res, {
             // other options, see docs
