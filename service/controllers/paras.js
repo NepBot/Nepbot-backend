@@ -26,6 +26,7 @@ const proxy = httpProxy.createProxyServer({
 
 
 const createParasCollection = async (ctx, next) => {
+    console.log("=========================================")
     const auth = await nearUtils.genParasAuthToken()
     proxy.web(ctx.req, ctx.res, {
         target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
