@@ -27,11 +27,9 @@ const proxy = httpProxy.createProxyServer({
 
 const createParasCollection = async (ctx, next) => {
     const auth = await nearUtils.genParasAuthToken()
-    let res = await new Promise((resolve, reject) => {
-        proxy.web(ctx.req, ctx.res, {
-            target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
-            headers: { 'Authorization': auth }
-        })
+    proxy.web(ctx.req, ctx.res, {
+        target: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+        headers: { 'Authorization': auth }
     })
     
     // let form = new multiparty.Form();
