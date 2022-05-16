@@ -54,7 +54,7 @@ const getSign = async (args) => {
 
 const genParasAuthToken = async () => {
     const near = await connect(config.nearWallet);
-	const account = await near.account(account_id);
+	const account = await near.account(config.account_id);
     const accountId = account.accountId;
 
     const arr = new Array(accountId)
