@@ -14,7 +14,11 @@ const update_guild_task = async function(receipts) {
             continue
         }
         const command = client.commands.get("mint")
-        command.data.addStringOption().setName(actions.outer_collection_id.split("-")[0])
+        command.data.addStringOption()
+        command.data.addStringOption(option =>
+            option.setName(actions.outer_collection_id.split("-")[0])
+                .setDescription('the collection you want to mint')
+                .setRequired(true));
         await discordUtils.addSubCommand(action.guild_id, command.data.id, command.data.toJSON())
     }
 
