@@ -18,9 +18,9 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	console.log(interaction)
+	console.log(interaction.command)
 
-	nearUtils.getNFTMintableRoles
+	const roles = await nearUtils.getNFTMintableRoles()
 	
 	if (userId === ownerId) {
 		const nonce = Date.now();
