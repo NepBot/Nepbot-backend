@@ -24,9 +24,9 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const nonce = Date.now();
 	const signature = await nearUtils.getSign({
-		guild_id: interaction.guildId,
 		nonce: nonce,
 		user_id: interaction.user.id,
+		guild_id: interaction.guildId,
 	});
 	// Set the url
 	button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);

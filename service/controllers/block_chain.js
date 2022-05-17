@@ -105,7 +105,7 @@ const getMintSign = async (ctx, next) => {
 	// 	return;
 	// }
 
-	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign);
+	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id, collection_id: args.collection_id}, args.sign);
 	if (!nonce) {
 		ctx.body = new Resp({
 			code: 500,

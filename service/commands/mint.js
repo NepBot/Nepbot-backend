@@ -22,10 +22,10 @@ const execute = async interaction => {
 		const nonce = Date.now();
 		const collectionId = "paras:1-by-171111testnet"
 		const sign = await nearUtils.getSign({
-			guild_id: interaction.guildId,
 			nonce: nonce,
-			collection_id: collectionId,
 			user_id: interaction.user.id,
+			guild_id: interaction.guildId,
+			collection_id: collectionId,
 		});
 		await userInfos.addUser({
 			user_id: interaction.user.id,
