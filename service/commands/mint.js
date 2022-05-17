@@ -18,7 +18,6 @@ const action = new MessageActionRow().addComponents(button);
 const data = new SlashCommandBuilder()
 	.setName('mint')
 	.setDescription('Replies the server info')
-	.addSubcommand(subcommand)
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
