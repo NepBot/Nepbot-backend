@@ -30,7 +30,7 @@ const execute = async interaction => {
 	const option = interaction.options.get("collection").value
 	
 	const collections = await getCollectionsByGuild(interaction.guildId)
-	const index = collections.findIndex(item => item.collection_id.indexOf(option) > -1)
+	const index = collections.findIndex(item => item.collection_id.split("-")[0] == option)
 	if(index == -1) {
 		interaction.reply({
 			content:'\n',
@@ -55,7 +55,6 @@ const execute = async interaction => {
 			}
 		}
 	}
-	console.log("6")
 	if (canMint || ownerId == userId) {
 		const nonce = Date.now();
 		const sign = await nearUtils.getSign({
