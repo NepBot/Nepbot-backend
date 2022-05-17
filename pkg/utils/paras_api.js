@@ -2,6 +2,7 @@ const request = require("request")
 const config = require('../../pkg/utils/config');
 let rp = require("request-promise")
 const fs = require("fs");
+const logger = require("./logger");
 
 exports.getCollection = async (collectionId) => {
     const result = await request({
@@ -15,36 +16,17 @@ exports.getCollection = async (collectionId) => {
 }
 
 exports.createCollection = async (formData, auth) => {
-    // let options = {
-    //     method: 'POST',
-    //     url: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
-    //     headers:{
-    //         'authorization': auth,
-    //     },
-    //     body: formData,
-    //     timeout: 10000
-    // };
-    // let result = await rp(options).catch(e => {
-    //     fs.writeFileSync("log22222", JSON.stringify(e))
-    // });
-    // console.log(result)
-    // return JSON.parse(result.body)
-    return await new Promise((resolve, reject) => {
-        formData.submit({
-            hostname: `api-v2-${config.nearWallet.networkId}-master.paras.id`,
-            port: 443,
-            path: "collections",
-            method: 'POST',
-            headers: {
-                'authorization': auth,
-            }
-        },function(err, res) {
-            if (err) {
-                reject(err)
-            }
-            resolve(res)
-        });
-    })
-    
+    let options = {
+        method: 'POST',
+        url: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
+        headers: formData.getHeaders({
+            'authorization': auth,
+        }),
+        body: formData,
+    };
+    let result = await rp(options).catch(e => {
+        logger.error(e)
+    });
+    return JSON.parse(result)
 }
 
