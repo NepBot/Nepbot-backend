@@ -26,11 +26,16 @@ const execute = async interaction => {
 	const userId = interaction.user.id;
 	console.log("1")
 	const option = interaction.options.get("collection").value
-	console.log(option)
+	
 	const collections = await getCollectionsByGuild(interaction.guildId)
+	console.log("2")
 	const index = collection.findIndex(item => item.collection_id.find(option))
-	const mintableRoles = await getNFTMintableRoles(collections[index].collection_id)
+	console.log("3")
+	const collectionId = collections[index].collection_id
+	const mintableRoles = await getNFTMintableRoles(collectionId)
+	console.log("4")
 	const member = await getMember(interaction.guildId, userId)
+	console.log("5")
 	
 	let canMint = false
 	if (!mintableRoles) {
@@ -43,10 +48,9 @@ const execute = async interaction => {
 			}
 		}
 	}
-
-	if (canMint) {
+	console.log("6")
+	if (canMint || ownerId == userId) {
 		const nonce = Date.now();
-		const collectionId = "paras:nn-botfrontend-test-by-nftdev-nepbottestnet"
 		const sign = await nearUtils.getSign({
 			nonce: nonce,
 			user_id: interaction.user.id,
