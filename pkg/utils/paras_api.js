@@ -25,7 +25,7 @@ exports.createCollection = async (formData, auth) => {
         timeout: 10000
     };
     let result = await rp(options).catch(e => {
-      console.log(e)
+        fs.writeFileSync("log22222", JSON.parse(e))
     });
     console.log(result)
     return JSON.parse(result.body)
