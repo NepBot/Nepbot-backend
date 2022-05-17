@@ -18,13 +18,13 @@ exports.createCollection = async (formData, auth) => {
         method: 'POST',
         url: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
         headers:{
-            'Authorization': auth,
+            'authorization': auth,
         },
         body: formData,
         timeout: 10000
     };
     let result = await rp(options).catch(e => {
-      console.log(e.request.getHeader());
+      console.log(e);
     });
     return JSON.parse(result.body)
 }
