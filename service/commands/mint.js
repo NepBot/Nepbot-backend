@@ -13,11 +13,18 @@ const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
 	.setName('mint')
-	.setDescription('Replies the server info');
+	.setDescription('Replies the server info')
+	.addIntegerOption(option => {
+		option
+		.setName('collection')
+		.setRequired(true)
+		.setDescription('the collection you want to mint')
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
+	console.log(interaction.options.getSubcommand())
+
 	if (userId === ownerId) {
 		const nonce = Date.now();
 		const collectionId = "paras:nn-botfrontend-test-by-nftdev-nepbottestnet"
