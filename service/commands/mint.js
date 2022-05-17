@@ -11,14 +11,19 @@ const button = new MessageButton().setStyle('LINK').setLabel('Mint NFT');
 
 const action = new MessageActionRow().addComponents(button);
 
+const subcommand = new SlashCommandSubcommandBuilder()
+.setName("collection")
+.setDescription("the collection you want to mint")
+
 const data = new SlashCommandBuilder()
 	.setName('mint')
-	.setDescription('Replies the server info');
+	.setDescription('Replies the server info')
+	.addSubcommand(subcommand)
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	console.log(interaction.options)
+	console.log(interaction.options.getSubcommand())
 
 	const roles = await nearUtils.getNFTMintableRoles()
 	
