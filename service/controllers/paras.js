@@ -19,8 +19,8 @@ const multiparty = require("multiparty");
 
 const createParasCollection = async (ctx, next) => {
 
-    const fileRecievedFromClient = req.files
-    console.log(fileRecievedFromClient)
+    // const fileRecievedFromClient = req.files
+    // console.log(fileRecievedFromClient)
 
     // console.log("=========================================")
     // proxy.once('proxyReq', (proxyReq, req, res, options) => {
