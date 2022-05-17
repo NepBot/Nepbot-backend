@@ -51,7 +51,7 @@ const createParasCollection = async (ctx, next) => {
     // }
     
     const res = await createCollection(formData, await nearUtils.genParasAuthToken())
-    ctx.res = res
+    ctx.body = res
 }
 
 module.exports = {
