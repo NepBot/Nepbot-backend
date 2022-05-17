@@ -11,9 +11,9 @@ const button = new MessageButton().setStyle('LINK').setLabel('Mint NFT');
 
 const action = new MessageActionRow().addComponents(button);
 
-const subcommand = new SlashCommandSubcommandBuilder()
-.setName("collection")
-.setDescription("the collection you want to mint")
+// const subcommand = new SlashCommandSubcommandBuilder()
+// .setName("collection")
+// .setDescription("the collection you want to mint")
 
 const data = new SlashCommandBuilder()
 	.setName('mint')
