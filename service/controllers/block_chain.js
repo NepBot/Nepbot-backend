@@ -96,10 +96,10 @@ const getMintSign = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
 	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
-		logger.error('fn verifyAccountOwner failed in api/getOperationSign');
+		logger.error('fn verifyAccountOwner failed in api/getMintSign');
 		ctx.body = new Resp({
 			code: 500,
-			message: 'fn verifyAccountOwner failed in api/getOperationSign',
+			message: 'fn verifyAccountOwner failed in api/getMintSign',
 			success: false,
 		});
 		return;
