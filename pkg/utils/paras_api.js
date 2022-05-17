@@ -1,5 +1,6 @@
 const request = require("request")
 const config = require('../../pkg/utils/config');
+let rp = require("request-promise")
 
 exports.getCollection = async (collectionId) => {
     const result = await request({
@@ -13,17 +14,21 @@ exports.getCollection = async (collectionId) => {
 }
 
 exports.createCollection = async (formData, auth) => {
-    const result = await request({
-        method: 'post',
-        url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
+    let options = {
+        method: 'POST',
+        url: 'https://api-v2-${config.networkId}-master.paras.id/collections',
         headers:{
             'Authorization': auth,
         },
-        data: formData
+        body: formData,
+        timeout: 10000
+    };
+    let result = await rp(options).catch(e => {
+      console.log(e);
     });
     if (result.data.status == 1) {
         return result.data.data
     }
-    return result.data
+    return false
 }
 
