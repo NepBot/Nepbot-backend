@@ -24,7 +24,7 @@ for (const file of commandFiles) {
 
 const command = client.commands.get("mint")
 command.data.addStringOption().setName(actions.outer_collection_id.split("-")[0])
-await discordUtils.addSubCommand(action.guild_id, command.data.id, command.data.toJSON())
+discordUtils.addSubCommand(action.guild_id, command.data.id, command.data.toJSON())
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
