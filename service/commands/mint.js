@@ -30,15 +30,24 @@ const execute = async interaction => {
 	const option = interaction.options.get("collection").value
 	
 	const collections = await getCollectionsByGuild(interaction.guildId)
-	const index = collections.findIndex(item => item.collection_id.find(option))
+	const index = collections.findIndex(item => item.collection_id.indexOf(option) > -1)
+	if(index == -1) {
+		interaction.reply({
+			content:'\n',
+			embeds:[new MessageEmbed().setDescription('Wrong collection name').setColor('RED')],
+			ephemeral:true,
+		});
+		return
+	}
 	console.log("3")
+	let canMint = false
 	const collectionId = collections[index].collection_id
 	const mintableRoles = await getNFTMintableRoles(collectionId)
 	console.log("4")
 	const member = await getMember(interaction.guildId, userId)
 	console.log("5")
 	
-	let canMint = false
+	
 	if (!mintableRoles) {
 		canMint = true
 	} else {
