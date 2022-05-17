@@ -27,12 +27,10 @@ const execute = async interaction => {
 	
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	console.log("1")
 	const option = interaction.options.get("collection").value
 	
 	const collections = await getCollectionsByGuild(interaction.guildId)
-	console.log(collections)
-	const index = collection.findIndex(item => item.collection_id.find(option))
+	const index = collections.findIndex(item => item.collection_id.find(option))
 	console.log("3")
 	const collectionId = collections[index].collection_id
 	const mintableRoles = await getNFTMintableRoles(collectionId)
