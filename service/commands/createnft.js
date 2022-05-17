@@ -22,8 +22,8 @@ const execute = async interaction => {
 		const nonce = Date.now();
 		const sign = await nearUtils.getSign({
 			nonce: nonce,
-			user_id: interaction.user.id,
 			guild_id: interaction.guildId,
+			user_id: interaction.user.id,
 		});
 		await userInfos.addUser({
 			user_id: interaction.user.id,
