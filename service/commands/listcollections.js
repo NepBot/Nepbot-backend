@@ -33,7 +33,6 @@ const execute = async interaction => {
             content:'\n',
             embeds:[content],
             ephemeral:true,
-            components:[action],
         });
     } else {
         interaction.reply({
