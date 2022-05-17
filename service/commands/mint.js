@@ -4,6 +4,8 @@ const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
+const { getMember } = require('../../pkg/utils/discord_utils');
 
 const content = new MessageEmbed().setDescription('Click the button below to mint NFT directly').setColor('BLUE');
 
@@ -14,13 +16,30 @@ const action = new MessageActionRow().addComponents(button);
 const data = new SlashCommandBuilder()
 	.setName('mint')
 	.setDescription('Replies the server info')
+	.addStringOption(option =>
+		option.setName("collection")
+			.setDescription('the collection you want to mint')
+			.setRequired(true));
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	console.log(interaction.options.getSubcommand())
+	console.log(interaction.options)
+	const option = interaction.options.get("collection").value
+	const collections = await getCollectionsByGuild(interaction.guildId)
+	const index = collection.findIndex(item => item.collection_id.find(option))
+	const mintableRoles = await getNFTMintableRoles(collections[index].collection_id)
+	const member = await getMember(interaction.guildId, userId)
+	let canMint = false
+	for (let role of mintableRoles) {
+		if (member._roles.includes(role)) {
+			canMint = true
+			break
+		}
+	}
+	
 
-	if (userId === ownerId) {
+	if (canMint) {
 		const nonce = Date.now();
 		const collectionId = "paras:nn-botfrontend-test-by-nftdev-nepbottestnet"
 		const sign = await nearUtils.getSign({

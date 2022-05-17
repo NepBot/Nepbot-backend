@@ -66,6 +66,11 @@ exports.getNFTMintableRoles = async (collectionId) => {
 	return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 }
 
+exports.getCollectionsByGuild = async (guildId) => {
+	const account = await this.contrat();
+	return await account.viewFunction(config.nft_contract, "get_collections_by_guild", { guild_id: guildId })
+}
+
 exports.filterTokenActions = (tokenIds, receipts) => {
 	const ret = [];
 	receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('ft_transfer') > -1);
