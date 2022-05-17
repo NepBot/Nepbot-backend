@@ -22,7 +22,6 @@ const data = new SlashCommandBuilder()
 			.setRequired(true));
 
 const execute = async interaction => {
-	try {
 		
 	
 	const { ownerId } = interaction.guild;
@@ -83,10 +82,6 @@ const execute = async interaction => {
 			ephemeral:true,
 		});
 	}
-}
-catch (e) {
-	console.log(e)
-}
 };
 
 module.exports = {
