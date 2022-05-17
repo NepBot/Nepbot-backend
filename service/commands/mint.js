@@ -19,6 +19,7 @@ const data = new SlashCommandBuilder()
 		.setName('collection')
 		.setRequired(true)
 		.setDescription('the collection you want to mint')
+	})
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
