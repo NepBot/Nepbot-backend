@@ -31,7 +31,7 @@ exports.createCollection = async (formData, auth) => {
     // return JSON.parse(result.body)
     return await new Promise((resolve, reject) => {
         formData.submit({
-            hostname: `https://api-v2-${config.nearWallet.networkId}-master.paras.id`,
+            hostname: `api-v2-${config.nearWallet.networkId}-master.paras.id`,
             port: 443,
             path: "collections",
             method: 'POST',
