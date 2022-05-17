@@ -22,8 +22,6 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-client.commands.get("mint").addStringOption(() => new SlashCommandStringOption().setName("wah"))
-
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
