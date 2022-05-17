@@ -63,8 +63,7 @@ const genParasAuthToken = async () => {
     }
 
     const msgBuf = new Uint8Array(arr)
-	const signedMsg = account.connection.signer.signMessage(msgBuf, accountId, config.nearWallet.networkId);
-	console.log(signedMsg)
+	const signedMsg = await account.connection.signer.signMessage(msgBuf, accountId, config.nearWallet.networkId);
     const pubKey = Buffer.from(signedMsg.publicKey.data).toString('hex')
     const signature = Buffer.from(signedMsg.signature).toString('hex')
     const payload = [accountId, pubKey, signature]
