@@ -50,7 +50,7 @@ const createParasCollection = async (ctx, next) => {
         formData.append('files',fileObj)
     }
     
-    const res = await createCollection(formData, await nearUtils.genParasAuthToken())
+    const res = await createCollection(formData, "ZGV2LW5lcGJvdC50ZXN0bmV0JmUwYzdkYTU5MjMzY2M2ZTAyMmQ0OWEyNjgzNDlkOTJkNzFkODhkODA1YWZmNzk4MzZhY2MyN2MxZDRkNjJlZjMmYzBkODM0ZTdhNjRjNzZlN2YxOThkOTM0MjlmMjYyNzYyZjI0ZTAzZDZlOTI0MDNkNmI2ZmU4ODE4MDY2MWMxN2ZhNDg2OTkwYmFkOWEzN2JiYzBlM2QzMGVkODQ1MDRiYjhmYTIyYmI0MzhlNDg3OGU2M2QzN2I3MzNlMDFlMDI=")//await nearUtils.genParasAuthToken())
     ctx.body = res
 }
 
