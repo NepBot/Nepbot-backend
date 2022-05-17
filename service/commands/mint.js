@@ -18,6 +18,10 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
+	console.log(interaction)
+
+	nearUtils.getNFTMintableRoles
+	
 	if (userId === ownerId) {
 		const nonce = Date.now();
 		const collectionId = "paras:1-by-171111testnet"

@@ -37,6 +37,7 @@ const verifyAccountOwner = async (account_id, data, signature) => {
 };
 
 const verifyOperationSign = async (args, account_id) => {
+	console.log(args, account_id)
 	const user_info = await userInfos.getUser({
 		user_id: args.user_id,
 		guild_id: args.guild_id,

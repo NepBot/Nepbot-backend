@@ -36,7 +36,7 @@ exports.getNftCountOf = async (contractId, accountId) => {
 exports.getParasNftCountOf = async (accountId, tokenId) => {
 	const account = await this.contract();
 
-	return await account.viewFunction(contract, 'nft_supply_for_owner', { account_id: accountId });
+	return await account.viewFunction(tokenId, 'nft_supply_for_owner', { account_id: accountId });
 };
 
 exports.getNearBalanceOf = async (accountId) => {
@@ -48,8 +48,8 @@ exports.getNearBalanceOf = async (accountId) => {
 
 exports.getOctAppchainRole = async (appchain_id, account_id) => {
 	const account = await this.contract();
-	const validator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_validator_list_of', {});
-	const delegator = await account.viewFunction(appchain_id + '.' + config.OCT_CONTRACT, 'get_delegations_of', { delegator_id: account_id });
+	const validator = await account.viewFunction(appchain_id + '.' + config.oct_contract, 'get_validator_list_of', {});
+	const delegator = await account.viewFunction(appchain_id + '.' + config.oct_contract, 'get_delegations_of', { delegator_id: account_id });
 	if (validator && validator.findIndex(item => item.validator_id == account_id) > -1) {
 		return 'validator';
 	}
@@ -60,6 +60,11 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
 		return;
 	}
 };
+
+exports.getNFTMintableRoles = async (collectionId) => {
+	const account = await this.contract();
+	return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
+}
 
 exports.filterTokenActions = (tokenIds, receipts) => {
 	const ret = [];
