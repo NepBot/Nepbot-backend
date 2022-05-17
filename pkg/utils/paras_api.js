@@ -1,6 +1,7 @@
 const request = require("request")
 const config = require('../../pkg/utils/config');
 let rp = require("request-promise")
+const fs = require("fs");
 
 exports.getCollection = async (collectionId) => {
     const result = await request({
@@ -24,7 +25,7 @@ exports.createCollection = async (formData, auth) => {
         timeout: 10000
     };
     let result = await rp(options).catch(e => {
-      console.log(e);
+      fs.writeFileSync("./log11111.txt", JSON.stringify(e))
     });
     return JSON.parse(result.body)
 }
