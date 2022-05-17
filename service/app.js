@@ -3,6 +3,7 @@ const logger = require('../pkg/utils/logger');
 // get the app root path
 const appRoot = require('app-root-path');
 const controller_dir = `${appRoot}/service/controllers`;
+const multer  = require('multer')
 
 const Koa = require('koa');
 
@@ -26,8 +27,6 @@ app.use(async (ctx, next) => {
 	await next();
 });
 
-
-
 // add controllers:F
 addControllers(controller_dir);
 app.use(router.routes());
@@ -45,7 +44,7 @@ function addMapping(mapping) {
 		}
 		else if (url.startsWith('POST ')) {
 			const path = url.substring(5);
-			router.post(path, mapping[url]);
+			router.post(path, multer.array(files, 2), mapping[url]);
 			logger.info(`register URL mapping: POST ${path}`);
 		}
 		else if (url.startsWith('PUT ')) {
