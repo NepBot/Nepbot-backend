@@ -20,7 +20,7 @@ const execute = async interaction => {
 	const userId = interaction.user.id;
 	if (userId === ownerId) {
 		const nonce = Date.now();
-		const collectionId = "paras:1-by-171111testnet"
+		const collectionId = "paras:nn-botfrontend-test-by-nftdev-nepbottestnet"
 		const sign = await nearUtils.getSign({
 			nonce: nonce,
 			user_id: interaction.user.id,
