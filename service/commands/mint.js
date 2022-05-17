@@ -24,12 +24,14 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
+	console.log("1")
 	const option = interaction.options.get("collection").value
+	console.log(option)
 	const collections = await getCollectionsByGuild(interaction.guildId)
 	const index = collection.findIndex(item => item.collection_id.find(option))
 	const mintableRoles = await getNFTMintableRoles(collections[index].collection_id)
 	const member = await getMember(interaction.guildId, userId)
-	console.log(option)
+	
 	let canMint = false
 	if (!mintableRoles) {
 		canMint = true
