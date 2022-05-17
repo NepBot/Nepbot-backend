@@ -26,9 +26,6 @@ exports.createCollection = async (formData, auth) => {
     let result = await rp(options).catch(e => {
       console.log(e);
     });
-    if (result.data.status == 1) {
-        return result.data.data
-    }
-    return false
+    return result
 }
 
