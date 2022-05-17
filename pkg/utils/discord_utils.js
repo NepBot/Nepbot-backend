@@ -24,3 +24,9 @@ exports.getRoles = (guid_id, role_id) => {
 exports.getOwnerId = (guild_id) => {
 	return client.guilds.cache.get(guild_id).ownerId;
 };
+
+exports.addSubCommand = (guildId, commandId, command) => {
+	return new Promise((resolve, reject) => {
+		rest.put(Routes.applicationCommands(config.bot_appid, guildId, commandId), { body: command })
+	})
+}

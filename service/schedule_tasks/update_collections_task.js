@@ -5,7 +5,6 @@ const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 const { getCollection } = require('../../pkg/utils/paras_api');
-const client = require('../discord_bot');
 const update_guild_task = async function(receipts) {
 	const actions = await contractUtils.filterCollectionActions(receipts);
     for (const action of actions) {
@@ -15,7 +14,8 @@ const update_guild_task = async function(receipts) {
             continue
         }
         const command = client.commands.get("mint")
-        command.addStringOption().setName(actions.outer_collection_id.split("-")[0])
+        command.data.addStringOption().setName(actions.outer_collection_id.split("-")[0])
+        await discordUtils.addSubCommand(action.guild_id, command.data.id, command.data.toJSON())
     }
 
 };
