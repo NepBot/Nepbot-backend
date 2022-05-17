@@ -54,7 +54,7 @@ const getSign = async (args) => {
 };
 
 const genParasAuthToken = async () => {
-	const accountId = config.account_id
+	const accountId = config.nft_contract
 	const near = await connect(config.nearWallet);
 	const account = await near.account(accountId);
     const arr = new Array(accountId)
