@@ -3,47 +3,14 @@ const config = require('../../pkg/utils/config');
 const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
-const httpProxy = require("http-proxy")
 
 const multiparty = require("multiparty");
-// const fs = require("fs");
+const fs = require("fs");
 const { createCollection } = require('../../pkg/utils/paras_api');
 const FormData = require('form-data');
 
-// const proxy = httpProxy.createProxyServer({
-//     //xfwd: true
-//     // other options, see https://www.npmjs.com/package/http-proxy
-// })
-
 
 const createParasCollection = async (ctx, next) => {
-
-    // const fileRecievedFromClient = req.files
-    // console.log(fileRecievedFromClient)
-
-    // console.log("=========================================")
-    // proxy.once('proxyReq', (proxyReq, req, res, options) => {
-    //     //proxyReq.setHeader('Authorization', await nearUtils.genParasAuthToken())
-    //     //console.log(proxyReq)
-    //     console.log("===================")
-    // })
-    
-    // proxy.once('proxyRes', (proxyRes, req, res) => {
-    //     //proxyRes.removeHeader('Authorization')
-    //     fs.writeFileSync("./log.txt", proxyRes)
-    // })
-    // const auth = await nearUtils.genParasAuthToken()
-    // // ctx.redirect(`https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`)
-    // // return
-    // proxy.web(ctx.req, ctx.res, {
-    //     target: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
-    //     headers: { 'Authorization': auth },
-    //     autoRewrite: true,
-    //     changeOrigin: true,
-    // }, (e) => {
-    //     console.log(e)
-    // })
-    //console.log(ctx.res)
     
     let form = new multiparty.Form();
     const {req, files} = await new Promise((resolve, reject) => {

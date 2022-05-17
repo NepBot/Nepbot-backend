@@ -13,6 +13,7 @@ exports.getCollection = async (collectionId) => {
 }
 
 exports.createCollection = async (formData, auth) => {
+    console.log(auth)
     const result = await request({
         method: 'post',
         url: `https://api-v2-${config.networkId}-master.paras.id/collections`,
