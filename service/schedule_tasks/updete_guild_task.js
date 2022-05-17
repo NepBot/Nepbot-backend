@@ -11,14 +11,14 @@ const update_guild_task = async function(receipts) {
 	const guildIds = [];
 	for (const action of actions) {
 		if (action.method_name == 'set_roles') {
-			addRoleList = addRoleList.concat(action.args);
+			addRoleList = addRoleList.concat(action.roles);
 		}
 		else if (action.method_name == 'del_role') {
-			delRoleList = delRoleList.concat(action.args);
+			delRoleList = delRoleList.concat(action.roles);
 		}
-		for (const arg of action.args) {
-			if (arg.guild_id) {
-				guildIds.push(arg.guild_id);
+		for (const role of action.roles) {
+			if (role.guild_id) {
+				guildIds.push(role.guild_id);
 			}
 		}
 	}

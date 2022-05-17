@@ -104,8 +104,8 @@ exports.filterRoleActions = (receipts) => {
 	for (receipts of receipts) {
 		const obj = {};
 		obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
-		const args_raw = new Buffer(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString();
-		obj.args = JSON.parse(JSON.parse(args_raw).args.replace(/\\/g, ''));
+		const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+		obj.roles = args.roles
 		ret.push(obj);
 	}
 	return ret;
@@ -154,3 +154,21 @@ exports.filterParasActions = (receipts) => {
 	}
 	return ret;
 };
+
+exports.filterCollectionActions = (receipts) => {
+	const ret = [];
+	receipts = receipts.filter(item =>
+		item.receipt.Action && item.receiver_id == config.nft_contract &&
+			(item.receipt.Action.actions[0].FunctionCall.method_name == 'create_collection'),
+	);
+	for (receipts of receipts) {
+		const obj = {};
+		obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
+		const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+		obj.outer_collection_id = args.outer_collection_id
+		obj.contract_type = args.contract_type
+		obj.guild_id = args.guild_id
+		ret.push(obj);
+	}
+	return ret;
+}

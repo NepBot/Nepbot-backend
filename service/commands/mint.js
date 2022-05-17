@@ -14,12 +14,7 @@ const action = new MessageActionRow().addComponents(button);
 const data = new SlashCommandBuilder()
 	.setName('mint')
 	.setDescription('Replies the server info')
-	.addIntegerOption(option => {
-		option
-		.setName('collection')
-		.setRequired(true)
-		.setDescription('the collection you want to mint')
-	})
+	.addStringOption().setName("wah")
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
