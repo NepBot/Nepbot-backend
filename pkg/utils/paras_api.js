@@ -24,7 +24,7 @@ exports.createCollection = async (formData, auth) => {
         timeout: 10000
     };
     let result = await rp(options).catch(e => {
-      console.log(e);
+      console.log(e.request.getHeader());
     });
     return JSON.parse(result.body)
 }
