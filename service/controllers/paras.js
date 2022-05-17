@@ -43,6 +43,7 @@ const createParasCollection = async (ctx, next) => {
 
     const formData = new FormData();
     Object.keys(args.args).forEach((key) => {
+        console.log(key, args.args[key])
         formData.append(key, args.args[key]);
     });
     for (let file of files) {
