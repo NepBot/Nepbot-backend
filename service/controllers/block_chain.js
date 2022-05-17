@@ -116,6 +116,7 @@ const getMintSign = async (ctx, next) => {
 	}
 
 	const timestamp = Date.now() + "000000"
+	console.log(req.account_id, timestamp, args.collection_id)
 	const sign = await nearUtils.getSign(req.account_id + timestamp + args.collection_id);
 	ctx.body = new Resp({ data: {
 			sign,
