@@ -45,7 +45,7 @@ function addMapping(mapping) {
 		}
 		else if (url.startsWith('POST ')) {
 			const path = url.substring(5);
-			router.post(path, upload.array('files', 2), mapping[url]);
+			router.post(path, mapping[url]);
 			logger.info(`register URL mapping: POST ${path}`);
 		}
 		else if (url.startsWith('PUT ')) {
