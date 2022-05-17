@@ -15,8 +15,7 @@ exports.verifyUserId = async (args, sign) => {
 	const keyPair = await keyStore.getKey(config.nearWallet.networkId, accountId);
 	const ret = verifySign({
 		nonce: userInfo.nonce,
-		user_id: args.user_id,
-		guild_id: args.guild_id,
+		...args
 	}, sign, keyPair.publicKey.toString().replace('ed25519:', ''));
 	if (!ret) {
 		return false;
