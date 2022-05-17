@@ -15,6 +15,8 @@ const data = new SlashCommandBuilder()
 	.setName('mint')
 	.setDescription('Replies the server info')
 
+data.addStringOption(new SlashCommandStringOption().setName("wah"))
+
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
