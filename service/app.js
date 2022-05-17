@@ -20,7 +20,7 @@ const app = new Koa();
 app.use(cors());
 
 // parse request body:
-app.use(bodyParser({multipart: true}));
+app.use(bodyParser());
 
 // log request URL:
 app.use(async (ctx, next) => {

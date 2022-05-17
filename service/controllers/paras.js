@@ -10,7 +10,6 @@ const multiparty = require("multiparty");
 const { createCollection } = require('../../pkg/utils/paras_api');
 const FormData = require('form-data');
 
-
 // const proxy = httpProxy.createProxyServer({
 //     //xfwd: true
 //     // other options, see https://www.npmjs.com/package/http-proxy
