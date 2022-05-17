@@ -21,13 +21,8 @@ const getUser = async (ctx, next) => {
 	ctx.body = new Resp({ data: member });
 };
 
-const getMintSign = async (ctx, next) => {
-
-}
-
 module.exports = {
 	'GET /api/getRole/:guildId': getRole,
 	'GET /api/getServer/:guildId': getServer,
 	'GET /api/getUser/:guildId/:userId': getUser,
-	'POST /api/getMintSign': getMintSign
 };

@@ -63,6 +63,12 @@ const getOperationSign = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
 	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+		logger.error('fn verifyAccountOwner failed in api/getOperationSign');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyAccountOwner failed in api/getOperationSign',
+			success: false,
+		});
 		return;
 	}
 	const nonce = await userUtils.verifyUserId(args, args.sign);
@@ -86,7 +92,34 @@ const getOperationSign = async (ctx, next) => {
 	ctx.body = new Resp({ data: sign });
 };
 
+const getMintSign = async (ctx, next) => {
+	const req = ctx.request.body;
+	const args = req.args;
+	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+		logger.error('fn verifyAccountOwner failed in api/getOperationSign');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyAccountOwner failed in api/getOperationSign',
+			success: false,
+		});
+		return;
+	}
+
+	const nonce = await userUtils.verifyUserId(args, args.sign);
+	if (!nonce) {
+		ctx.body = new Resp({
+			code: 500,
+			message: 'nonce expired',
+			success: false,
+		});
+		return;
+	}
+	const sign = await nearUtils.getSign(req.account_id + nonce + args.collection_id);
+	ctx.body = new Resp({ data: sign });
+}
+
 module.exports = {
 	'POST /api/getOwnerSign': getOwnerSign,
 	'POST /api/getOperationSign': getOperationSign,
+	'POST /api/getMintSign': getMintSign
 };
