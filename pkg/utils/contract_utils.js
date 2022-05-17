@@ -62,13 +62,25 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
 };
 
 exports.getNFTMintableRoles = async (collectionId) => {
-	const account = await this.contract();
-	return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
+	try {
+		const account = await this.contract();
+		return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
+	} catch(e) {
+		console.log(e)
+		return []
+	}
+	
 }
 
 exports.getCollectionsByGuild = async (guildId) => {
-	const account = await this.contrat();
-	return await account.viewFunction(config.nft_contract, "get_collections_by_guild", { guild_id: guildId })
+	try {
+		const account = await this.contrat();
+		return await account.viewFunction(config.nft_contract, "get_collections_by_guild", { guild_id: guildId })
+	} catch(e) {
+		console.log(e)
+		return []
+	}
+	
 }
 
 exports.filterTokenActions = (tokenIds, receipts) => {
