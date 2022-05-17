@@ -74,7 +74,7 @@ exports.getNFTMintableRoles = async (collectionId) => {
 
 exports.getCollectionsByGuild = async (guildId) => {
 	try {
-		const account = await this.contrat();
+		const account = await this.contract();
 		return await account.viewFunction(config.nft_contract, "get_collections_by_guild", { guild_id: guildId })
 	} catch(e) {
 		console.log(e)
