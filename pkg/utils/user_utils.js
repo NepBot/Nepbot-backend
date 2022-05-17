@@ -13,10 +13,6 @@ exports.verifyUserId = async (args, sign) => {
 	const keyStore = config.nearWallet.keyStore;
 	const accountId = config.account_id;
 	const keyPair = await keyStore.getKey(config.nearWallet.networkId, accountId);
-	console.log({
-		nonce: userInfo.nonce,
-		...args
-	})
 	const ret = verifySign({
 		nonce: userInfo.nonce,
 		...args
