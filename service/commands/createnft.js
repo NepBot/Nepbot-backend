@@ -25,7 +25,7 @@ const execute = async interaction => {
 			nonce: nonce,
 			user_id: interaction.user.id,
 		});
-		await userInfos.updateUser({
+		await userInfos.addUser({
 			user_id: interaction.user.id,
 			guild_id: interaction.guildId,
 			nonce: nonce,
