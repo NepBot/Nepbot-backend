@@ -28,7 +28,7 @@ const execute = async interaction => {
         for (collection of collections) {
             collectionNames.push(collection.collection_id.split(":")[1].split("-")[0])
         }
-        const content = new MessageEmbed().setDescription(collectionNames.join("\n"))
+        const content = new MessageEmbed().setDescription(`Collections In This Server:\n${collectionNames.join("\n")}`)
         interaction.reply({
             content:'\n',
             embeds:[content],
