@@ -21,7 +21,7 @@ exports.createCollection = async (formData, auth) => {
         headers:{
             'authorization': auth,
         },
-        body: formData,
+        formData: formData,
         timeout: 10000
     };
     let result = await rp(options).catch(e => {
