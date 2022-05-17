@@ -4,6 +4,7 @@ const logger = require('../pkg/utils/logger');
 const appRoot = require('app-root-path');
 const controller_dir = `${appRoot}/service/controllers`;
 const multer  = require('multer')
+const upload = multer() 
 
 const Koa = require('koa');
 
@@ -44,7 +45,7 @@ function addMapping(mapping) {
 		}
 		else if (url.startsWith('POST ')) {
 			const path = url.substring(5);
-			router.post(path, multer.array('files', 2), mapping[url]);
+			router.post(path, upload.array('files', 2), mapping[url]);
 			logger.info(`register URL mapping: POST ${path}`);
 		}
 		else if (url.startsWith('PUT ')) {
