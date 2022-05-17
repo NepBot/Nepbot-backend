@@ -22,7 +22,6 @@ const verifySign = (data, signature, public_key) => {
 };
 
 const verifyAccountOwner = async (account_id, data, signature) => {
-	console.log(data)
 	try {
 		const near = await connect(config.nearWallet);
 		const account = await near.account(account_id);

@@ -26,7 +26,6 @@ exports.createCollection = async (formData, auth) => {
     };
     let result = await rp(options).catch(e => {
         logger.error(e)
-        console.log(e)
     });
     return JSON.parse(result)
 }

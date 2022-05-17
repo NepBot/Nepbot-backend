@@ -95,15 +95,15 @@ const getOperationSign = async (ctx, next) => {
 const getMintSign = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
-	// if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
-	// 	logger.error('fn verifyAccountOwner failed in api/getMintSign');
-	// 	ctx.body = new Resp({
-	// 		code: 500,
-	// 		message: 'fn verifyAccountOwner failed in api/getMintSign',
-	// 		success: false,
-	// 	});
-	// 	return;
-	// }
+	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+		logger.error('fn verifyAccountOwner failed in api/getMintSign');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyAccountOwner failed in api/getMintSign',
+			success: false,
+		});
+		return;
+	}
 
 	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id, collection_id: args.collection_id}, args.sign);
 	if (!nonce) {
@@ -116,7 +116,6 @@ const getMintSign = async (ctx, next) => {
 	}
 
 	const timestamp = Date.now() + "000000"
-	console.log(req.account_id, timestamp, args.collection_id)
 	const sign = await nearUtils.getSign(req.account_id + timestamp + args.collection_id);
 	ctx.body = new Resp({ data: {
 			sign,
