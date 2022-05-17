@@ -31,13 +31,16 @@ const execute = async interaction => {
 	const member = await getMember(interaction.guildId, userId)
 	console.log(option)
 	let canMint = false
-	for (let role of mintableRoles) {
-		if (member._roles.includes(role)) {
-			canMint = true
-			break
+	if (!mintableRoles) {
+		canMint = true
+	} else {
+		for (let role of mintableRoles) {
+			if (member._roles.includes(role)) {
+				canMint = true
+				break
+			}
 		}
 	}
-	
 
 	if (canMint) {
 		const nonce = Date.now();
