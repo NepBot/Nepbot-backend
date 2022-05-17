@@ -2,7 +2,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const config = require('../../pkg/utils/config');
 
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 const content = new MessageEmbed().setDescription('Click the button below to mint NFT directly').setColor('BLUE');
@@ -14,7 +14,7 @@ const action = new MessageActionRow().addComponents(button);
 const data = new SlashCommandBuilder()
 	.setName('mint')
 	.setDescription('Replies the server info')
-	.addStringOption().setName("wah")
+	.addStringOption(() => new SlashCommandStringOption().setName("wah"))
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
