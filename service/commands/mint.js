@@ -43,7 +43,7 @@ const execute = async interaction => {
 	const collectionId = collections[index].collection_id
 	const mintableRoles = await getNFTMintableRoles(collectionId)
 	const member = await discordUtils.getMember(interaction.guildId, userId)
-	console.log("5")
+	console.log(mintableRoles)
 	
 	
 	if (!mintableRoles) {
