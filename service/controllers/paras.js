@@ -47,7 +47,7 @@ const createParasCollection = async (ctx, next) => {
         formData.append(key, args.args[key]);
     });
     for (let file of files) {
-        const fileObj = fs.readFileSync(file.path)
+        const fileObj = fs.createReadStream(file.path)
         formData.append('files',fileObj)
     }
     
