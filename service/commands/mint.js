@@ -2,7 +2,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const config = require('../../pkg/utils/config');
 
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, SlashCommandSubcommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 const content = new MessageEmbed().setDescription('Click the button below to mint NFT directly').setColor('BLUE');
@@ -18,7 +18,7 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	console.log(interaction.command)
+	console.log(interaction.options)
 
 	const roles = await nearUtils.getNFTMintableRoles()
 	
