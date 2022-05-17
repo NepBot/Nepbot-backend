@@ -4,6 +4,7 @@ const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
 
 // const content = new MessageEmbed().setDescription('Click the button below to enter the NFT setting page').setColor('BLUE');
 
