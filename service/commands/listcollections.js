@@ -18,6 +18,9 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
+    try{
+
+    
     const collections = await getCollectionsByGuild(interaction.guildId)
     let collectionNames = []
     if (collections.length > 0) {
@@ -38,7 +41,9 @@ const execute = async interaction => {
 			ephemeral:true,
 		});
     }
-    
+} catch (e) {
+    console.log(e)
+}
 };
 
 module.exports = {
