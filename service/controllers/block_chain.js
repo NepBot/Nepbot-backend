@@ -71,7 +71,7 @@ const getOperationSign = async (ctx, next) => {
 		});
 		return;
 	}
-	const nonce = await userUtils.verifyUserId(args, args.sign);
+	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign);
 	if (!nonce) {
 		if (args.operationSign && await nearUtils.verifyOperationSign({
 			user_id: args.user_id,
@@ -105,7 +105,7 @@ const getMintSign = async (ctx, next) => {
 		return;
 	}
 
-	const nonce = await userUtils.verifyUserId(args, args.sign);
+	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign);
 	if (!nonce) {
 		ctx.body = new Resp({
 			code: 500,

@@ -24,7 +24,7 @@ const setInfo = async (ctx, next) => {
 			return;
 		}
 		// verify user id
-		if (!await userUtils.verifyUserId(args, args.sign)) {
+		if (!await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
 			logger.error('fn verifyUserId failed in api/setInfo');
 			ctx.body = new Resp({
 				code: 500,

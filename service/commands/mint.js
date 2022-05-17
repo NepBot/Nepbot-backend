@@ -20,9 +20,11 @@ const execute = async interaction => {
 	const userId = interaction.user.id;
 	if (userId === ownerId) {
 		const nonce = Date.now();
+		const collectionId = "paras:1-by-171111testnet"
 		const sign = await nearUtils.getSign({
 			guild_id: interaction.guildId,
 			nonce: nonce,
+			collection_id: collectionId,
 			user_id: interaction.user.id,
 		});
 		await userInfos.addUser({
@@ -30,7 +32,7 @@ const execute = async interaction => {
 			guild_id: interaction.guildId,
 			nonce: nonce,
 		});
-		button.setURL(`${config.wallet_auth_url}/mint/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${sign}`);
+		button.setURL(`${config.wallet_auth_url}/mint/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&collection_id=${collectionId}&sign=${sign}`);
 		interaction.reply({
 			content:'\n',
 			embeds:[content],
