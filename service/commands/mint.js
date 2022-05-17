@@ -16,7 +16,7 @@ const action = new MessageActionRow().addComponents(button);
 // .setDescription("the collection you want to mint")
 
 const data = new SlashCommandBuilder()
-	.setName('mint')
+	.setName('mintt')
 	.setDescription('Replies the server info')
 
 const execute = async interaction => {
