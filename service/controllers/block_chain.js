@@ -105,15 +105,15 @@ const getMintSign = async (ctx, next) => {
 	// 	return;
 	// }
 
-	// const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign);
-	// if (!nonce) {
-	// 	ctx.body = new Resp({
-	// 		code: 500,
-	// 		message: 'nonce expired',
-	// 		success: false,
-	// 	});
-	// 	return;
-	// }
+	const nonce = await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign);
+	if (!nonce) {
+		ctx.body = new Resp({
+			code: 500,
+			message: 'nonce expired',
+			success: false,
+		});
+		return;
+	}
 	const sign = await nearUtils.getSign(req.account_id + nonce + args.collection_id);
 	ctx.body = new Resp({ data: sign });
 }
