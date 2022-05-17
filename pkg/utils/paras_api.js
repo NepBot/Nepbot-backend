@@ -16,7 +16,7 @@ exports.getCollection = async (collectionId) => {
 exports.createCollection = async (formData, auth) => {
     let options = {
         method: 'POST',
-        url: 'https://api-v2-${config.networkId}-master.paras.id/collections',
+        url: `https://api-v2-${config.nearWallet.networkId}-master.paras.id/collections`,
         headers:{
             'Authorization': auth,
         },
