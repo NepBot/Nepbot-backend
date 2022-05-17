@@ -7,8 +7,8 @@ const httpProxy = require("http-proxy")
 
 const multiparty = require("multiparty");
 // const fs = require("fs");
-// const { createCollection } = require('../../pkg/utils/paras_api');
-// var FormData = require('form-data');
+const { createCollection } = require('../../pkg/utils/paras_api');
+const FormData = require('form-data');
 
 
 // const proxy = httpProxy.createProxyServer({
