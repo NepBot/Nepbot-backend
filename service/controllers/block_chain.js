@@ -115,7 +115,11 @@ const getMintSign = async (ctx, next) => {
 		return;
 	}
 	const sign = await nearUtils.getSign(req.account_id + nonce + args.collection_id);
-	ctx.body = new Resp({ data: sign });
+	ctx.body = new Resp({ data: {
+			sign,
+			timestamp: nonce 
+		}
+	});
 }
 
 module.exports = {
