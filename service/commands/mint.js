@@ -5,7 +5,7 @@ const config = require('../../pkg/utils/config');
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
-const { getMember } = require('../../pkg/utils/discord_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
 
 const content = new MessageEmbed().setDescription('Click the button below to mint NFT directly').setColor('BLUE');
 
@@ -39,12 +39,10 @@ const execute = async interaction => {
 		});
 		return
 	}
-	console.log("3")
 	let canMint = false
 	const collectionId = collections[index].collection_id
 	const mintableRoles = await getNFTMintableRoles(collectionId)
-	console.log("4")
-	const member = await getMember(interaction.guildId, userId)
+	const member = await discordUtils.getMember(interaction.guildId, userId)
 	console.log("5")
 	
 	
