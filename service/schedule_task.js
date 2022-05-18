@@ -24,7 +24,7 @@ const resolveChunk = async (chunkHash) => {
 		promises.push(parasTask(chunkData.receipts));
 		await Promise.all(promises);
 	} catch (e) {
-		
+		console.log(e)
 	}
 	
 };
@@ -46,6 +46,7 @@ const resolveNewBlock = async () => {
 			block = await provider.block({ blockId: blockHeight });
 		}
 		catch (e) {
+			console.log(e)
 			continue;
 		}
 
