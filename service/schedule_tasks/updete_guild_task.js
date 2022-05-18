@@ -28,16 +28,13 @@ const update_guild_task = async function(receipts) {
 		guild_id: guildIds,
 	});
 
-	if (actions.length > 0) {
-		console.log(_userInfos)
-	}
-
 	for (const _userInfo of _userInfos) {
 		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
 		const role = [];
 		const delRole = [];
 		for (const rule of addRoleList) {
-			await userFields.findOrCreate ({
+			console.log(rule)
+			await userFields.addUserField ({
 				where: {
 					near_wallet_id: _userInfo.near_wallet_id,
 					key: rule.key_field[0],
@@ -70,7 +67,7 @@ const update_guild_task = async function(receipts) {
 			}
 			else if (rule.key_field[0] == 'near') {
 				const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-				console.log(balance)
+				console.log(balance, "===================")
 				if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 					_role && role.push(_role);
@@ -105,7 +102,7 @@ const update_guild_task = async function(receipts) {
 		}
 
 		for (const rule of delRoleList) {
-			await userFields.destory({
+			await userFields.deleteUserField({
 				where: {
 					near_wallet_id: _userInfo.near_wallet_id,
 					key: rule.key_field[0],

@@ -19,7 +19,7 @@ const paras_task = async function(receipts) {
 		}
 	}
 
-	const userTokens = await userFields.findAll({
+	const userTokens = await userFields.getUserFields({
 		where: {
 			key: 'x.paras.near',
 			near_wallet_id: accountIdList,
