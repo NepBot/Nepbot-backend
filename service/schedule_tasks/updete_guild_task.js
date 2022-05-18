@@ -11,6 +11,7 @@ const update_guild_task = async function(receipts) {
 	const guildIds = [];
 	
 	for (const action of actions) {
+		console.log(action)
 		if (action.method_name == 'set_roles') {
 			addRoleList = addRoleList.concat(action.roles);
 		}
@@ -27,7 +28,6 @@ const update_guild_task = async function(receipts) {
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
 	});
-	console.log(addRoleList)
 	for (const _userInfo of _userInfos) {
 		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
 		const role = [];
