@@ -45,7 +45,7 @@ const paras_task = async function(receipts) {
 
 
 		for (const _userInfo of _userInfos) {
-			const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
+			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
 			const guildRoles = await discordUtils.getRules(_userInfo.guild_id);
 
 			const role = [];

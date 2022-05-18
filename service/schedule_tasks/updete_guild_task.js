@@ -28,12 +28,10 @@ const update_guild_task = async function(receipts) {
 		guild_id: guildIds,
 	});
 	for (const _userInfo of _userInfos) {
-		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
-		console.log("================")
+		const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
 		const role = [];
 		const delRole = [];
 		for (const rule of addRoleList) {
-			console.log(rule)
 			await userFields.addUserField ({
 				near_wallet_id: _userInfo.near_wallet_id,
 				key: rule.key_field[0],
