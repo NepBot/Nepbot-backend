@@ -9,9 +9,7 @@ const update_guild_task = async function(receipts) {
 	let addRoleList = [];
 	let delRoleList = [];
 	const guildIds = [];
-	if (actions.length > 0) {
-		console.log(actions)
-	}
+	
 	for (const action of actions) {
 		if (action.method_name == 'set_roles') {
 			addRoleList = addRoleList.concat(action.roles);
@@ -24,6 +22,9 @@ const update_guild_task = async function(receipts) {
 				guildIds.push(role.guild_id);
 			}
 		}
+	}
+	if (actions.length > 0) {
+		console.log(guildIds)
 	}
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
