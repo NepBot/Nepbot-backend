@@ -4,9 +4,11 @@ const { Routes } = require('discord-api-types/v9');
 const rest = require('../../deploy-commands');
 
 exports.getMember = async (guildId, memberId) => {
+	console.log(guildId)
 	const member = await rest.get(`${Routes.guildMember(guildId, memberId)}`, {
 		auth:true,
 	});
+	console.log("-----------------------")
 	return new GuildMember(client, member, this.getGuild(guildId));
 };
 
