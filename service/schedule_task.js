@@ -24,7 +24,6 @@ const resolveChunk = async (chunkHash) => {
 		promises.push(parasTask(chunkData.receipts));
 		await Promise.all(promises);
 	} catch (e) {
-		console.log(e)
 	}
 	
 };
