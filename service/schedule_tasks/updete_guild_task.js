@@ -32,6 +32,9 @@ const update_guild_task = async function(receipts) {
 		const role = [];
 		const delRole = [];
 		for (const rule of addRoleList) {
+			if (!_userInfo.near_wallet_id) {
+				continue
+			}
 			await userFields.addUserField ({
 				near_wallet_id: _userInfo.near_wallet_id,
 				key: rule.key_field[0],
