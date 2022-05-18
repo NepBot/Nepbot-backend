@@ -22,7 +22,6 @@ const update_guild_task = async function(receipts) {
 				guildIds.push(role.guild_id);
 			}
 		}
-		console.log(addRoleList)
 	}
 	
 	const _userInfos = await userInfos.getUsers({
@@ -33,6 +32,7 @@ const update_guild_task = async function(receipts) {
 		const role = [];
 		const delRole = [];
 		for (const rule of addRoleList) {
+			console.log(rule)
 			await userFields.addUserField ({
 				where: {
 					near_wallet_id: _userInfo.near_wallet_id,
