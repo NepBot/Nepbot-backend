@@ -66,7 +66,6 @@ const update_guild_task = async function(receipts) {
 			}
 			else if (rule.key_field[0] == 'near') {
 				const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-				console.log(balance, "===================")
 				if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 					_role && role.push(_role);
@@ -109,10 +108,10 @@ const update_guild_task = async function(receipts) {
 		}
 
 		if (role.length) {
-			member.roles.add(role).then(logger.info).catch(console.error);
+			member.roles.add(role).then(console.log).catch(console.error);
 		}
 		if (delRole.length) {
-			member.roles.remove(delRole).then(logger.info).catch(console.error);
+			member.roles.remove(delRole).then(console.log).catch(console.error);
 		}
 	}
 };

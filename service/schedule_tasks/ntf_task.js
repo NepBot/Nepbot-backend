@@ -62,10 +62,10 @@ const nft_task = async function(receipts) {
 				}
 			}
 			if (role.length) {
-				member.roles.add(role).then(logger.info).catch(console.error);
+				member.roles.add(role).then(console.log).catch(console.error);
 			}
 			if (delRole.length) {
-				member.roles.remove(delRole).then(logger.info).catch(console.error);
+				member.roles.remove(delRole).then(console.log).catch(console.error);
 			}
 		}
 
