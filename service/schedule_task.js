@@ -29,7 +29,7 @@ const resolveChunk = async (chunkHash) => {
 	
 };
 
-let blockHeight = 90177709;
+let blockHeight = 0;
 let finalBlockHeight = 0;
 
 const resolveNewBlock = async () => {
