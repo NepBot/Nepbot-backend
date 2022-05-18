@@ -35,11 +35,9 @@ const update_guild_task = async function(receipts) {
 		for (const rule of addRoleList) {
 			console.log(rule)
 			await userFields.addUserField ({
-				where: {
-					near_wallet_id: _userInfo.near_wallet_id,
-					key: rule.key_field[0],
-					value: rule.key_field[1],
-				},
+				near_wallet_id: _userInfo.near_wallet_id,
+				key: rule.key_field[0],
+				value: rule.key_field[1],
 			});
 
 			if (rule.key_field[0] == 'token_id') {
@@ -103,11 +101,9 @@ const update_guild_task = async function(receipts) {
 
 		for (const rule of delRoleList) {
 			await userFields.deleteUserField({
-				where: {
-					near_wallet_id: _userInfo.near_wallet_id,
-					key: rule.key_field[0],
-					value: rule.key_field[1],
-				},
+				near_wallet_id: _userInfo.near_wallet_id,
+				key: rule.key_field[0],
+				value: rule.key_field[1],
 			});
 		}
 

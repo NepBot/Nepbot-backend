@@ -25,11 +25,9 @@ const token_task = async function(receipts) {
 	}
 
 	const userTokens = await userFields.getUserFields({
-		where: {
-			key: 'token_id',
-			near_wallet_id: accountIdList,
-			value: tokenList,
-		},
+		key: 'token_id',
+		near_wallet_id: accountIdList,
+		value: tokenList,
 	});
 
 	for (const userToken of userTokens) {
