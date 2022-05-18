@@ -46,7 +46,6 @@ const resolveNewBlock = async () => {
 			block = await provider.block({ blockId: blockHeight });
 		}
 		catch (e) {
-			console.log(e)
 			continue;
 		}
 
