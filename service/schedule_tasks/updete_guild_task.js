@@ -23,12 +23,14 @@ const update_guild_task = async function(receipts) {
 			}
 		}
 	}
-	if (actions.length > 0) {
-		console.log(guildIds)
-	}
+	
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
 	});
+
+	if (actions.length > 0) {
+		console.log(_userInfos)
+	}
 
 	for (const _userInfo of _userInfos) {
 		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
@@ -68,6 +70,7 @@ const update_guild_task = async function(receipts) {
 			}
 			else if (rule.key_field[0] == 'near') {
 				const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
+				console.log(balance)
 				if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 					_role && role.push(_role);
