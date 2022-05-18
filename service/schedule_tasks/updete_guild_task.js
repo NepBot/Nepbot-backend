@@ -22,6 +22,7 @@ const update_guild_task = async function(receipts) {
 				guildIds.push(role.guild_id);
 			}
 		}
+		console.log(addRoleList)
 	}
 	
 	const _userInfos = await userInfos.getUsers({
