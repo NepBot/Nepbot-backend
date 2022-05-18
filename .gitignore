@@ -1,5 +1,5 @@
-src/secret.js
-src/env.js
+.env
+.eslintrc.json
+conf/near_net.json
+logs/*
 node_modules
-2.js
-
