@@ -27,8 +27,8 @@ const update_guild_task = async function(receipts) {
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
 	});
+	console.log(addRoleList)
 	for (const _userInfo of _userInfos) {
-		console.log(_userInfo)
 		const member = await discordUtils.getMembers(_userInfo.guild_id, _userInfo.user_id);
 		const role = [];
 		const delRole = [];
