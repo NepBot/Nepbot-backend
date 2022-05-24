@@ -7,7 +7,7 @@ const logger = require("./logger");
 exports.getCollection = async (collectionId) => {
     const result = await request({
         method:"get",
-        url:`https://api-v2-${config.networkId}-master.paras.id/collections?collection_id=${collectionId}`,
+        url:`${config.paras_api}/collections?collection_id=${collectionId}`,
     })
     if (result.data.status == 1) {
         return result.data.data
@@ -27,6 +27,7 @@ exports.createCollection = async (formData, auth) => {
     let result = await rp(options).catch(e => {
         logger.error(e)
     });
+    console.log(result)
     return JSON.parse(result)
 }
 
