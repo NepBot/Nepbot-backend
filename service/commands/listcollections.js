@@ -24,7 +24,7 @@ const execute = async interaction => {
     let collectionNames = []
     if (collections.length > 0) {
         for (collection of collections) {
-            collectionNames.push(collection.collection_id.split(":")[1].split("-guild-")[0])
+            collectionNames.push(collection.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " "))
         }
         const content = new MessageEmbed().setDescription(`Collections In This Server:\n${collectionNames.join("\n")}`)
         interaction.reply({
