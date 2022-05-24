@@ -29,7 +29,7 @@ const execute = async interaction => {
 	const option = interaction.options.get("collection").value
 	
 	const collections = await getCollectionsByGuild(interaction.guildId)
-	const index = collections.findIndex(item => item.collection_id.split(":")[1].split("-")[0] == option)
+	const index = collections.findIndex(item => item.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " ") == option)
 	if(index == -1) {
 		interaction.reply({
 			content:'\n',
