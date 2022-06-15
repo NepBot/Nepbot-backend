@@ -26,6 +26,7 @@
     "mysql2": "^2.3.3",
     "near-api-js": "^0.44.2",
     "node-schedule": "^2.1.0",
+    "package.json": "^2.0.1",
     "parse-database-url": "^0.3.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
