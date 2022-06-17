@@ -10,7 +10,7 @@ const update_guild_task = async function(receipts) {
 	let addRoleList = [];
 	let delRoleList = [];
 	const guildIds = [];
-	
+
 	for (const action of actions) {
 		if (action.method_name == 'set_roles') {
 			addRoleList = addRoleList.concat(action.roles);
@@ -24,7 +24,7 @@ const update_guild_task = async function(receipts) {
 			}
 		}
 	}
-	
+
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
 	});
@@ -34,7 +34,7 @@ const update_guild_task = async function(receipts) {
 		const delRole = [];
 		for (const rule of addRoleList) {
 			if (!_userInfo.near_wallet_id) {
-				continue
+				continue;
 			}
 			await userFields.addUserField ({
 				near_wallet_id: _userInfo.near_wallet_id,
