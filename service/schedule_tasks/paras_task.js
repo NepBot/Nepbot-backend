@@ -1,5 +1,6 @@
 const contractUtils = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
+const parasUtils = require('../../pkg/utils/paras_api');
 const logger = require('../../pkg/utils/logger');
 const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
@@ -13,7 +14,7 @@ const paras_task = async function(receipts) {
 		accountIdList.push(action.sender_id);
 		accountIdList.push(action.receiver_id);
 		const fractions = action.token_id.split(':');
-		const tokenSeries = await contractUtils.getTokenSeries(fractions[0]);
+		const tokenSeries = await parasUtils.getTokenSeries(fractions[0]);
 		if (tokenSeries.metadata.collection_id) {
 			collectionList.push(tokenSeries.metadata.collection_id);
 		}
@@ -40,7 +41,7 @@ const paras_task = async function(receipts) {
 			newAmount = await contractUtils.getNftCountOf(userToken.value, userToken.near_wallet_id);
 		}
 		else {
-			newAmount = await contractUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
+			newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
 		}
 
 
