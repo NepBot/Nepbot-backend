@@ -46,7 +46,6 @@ exports.getTokenSeries = async (tokenSeriesId) => {
 }
 
 exports.getTokenPerOwnerCount = async (collectionId, ownerId) => {
-    console.log(collectionId, ownerId)
     return await new Promise((resolve, reject) => {
         request(`${config.PARAS_API}/token?collection_id=${collectionId}&owner_id=${ownerId}`, function (error, response, body) {
             if (!error && response.statusCode == 200) {
