@@ -4,6 +4,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const userUtils = require('../../pkg/utils/user_utils');
 const contractUtils = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
+const parasUtils = require('../../pkg/utils/paras_api');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
@@ -142,7 +143,7 @@ const setInfo = async (ctx, next) => {
 		}
 
 		for (const rule of rulesMap.paras) {
-			const tokenAmount = await contractUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
+			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
 
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
