@@ -1,6 +1,7 @@
 const contractUtils = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const parasUtils = require('../../pkg/utils/paras_api');
+const config = require('../../pkg/utils/config');
 const logger = require('../../pkg/utils/logger');
 const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
@@ -21,13 +22,13 @@ const paras_task = async function(receipts) {
 	}
 
 	const userTokens = await userFields.getUserFields({
-		key: 'x.paras.near',
+		key: config.paras_token,
 		near_wallet_id: accountIdList,
 		value: collectionList,
 	});
 
 	for (const userToken of userTokens) {
-		const roles = await contractUtils.getRulesByField('x.paras.near', userToken.value);
+		const roles = await contractUtils.getRulesByField(config.paras_token, userToken.value);
 		const guild_ids = [];
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
@@ -52,7 +53,7 @@ const paras_task = async function(receipts) {
 			const role = [];
 			const delRole = [];
 			for (const { fields, role_id, key_field } of guildRoles) {
-				if (key_field[0] != 'x.paras.near' || key_field[1] != userToken.value) {
+				if (key_field[0] != config.paras_token || key_field[1] != userToken.value) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
