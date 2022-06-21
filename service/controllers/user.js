@@ -169,7 +169,7 @@ const setInfo = async (ctx, next) => {
 		logger.error(error);
 		ctx.body = new Resp({
 			code: 500,
-			message: 'backend inner error',
+			message: `backend inner error ${error}`,
 			success: false,
 		});
 	}
