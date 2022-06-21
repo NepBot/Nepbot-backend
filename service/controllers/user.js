@@ -145,7 +145,6 @@ const setInfo = async (ctx, next) => {
 
 		for (const rule of rulesMap.paras) {
 			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
-			console.log(tokenAmount)
 
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
@@ -167,11 +166,7 @@ const setInfo = async (ctx, next) => {
 	}
 	catch (error) {
 		logger.error(error);
-		ctx.body = new Resp({
-			code: 500,
-			message: `backend inner error ${error}`,
-			success: false,
-		});
+		ctx.body = new Resp({});
 	}
 };
 
