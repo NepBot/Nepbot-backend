@@ -12,5 +12,6 @@
   "oct_contract": "registry.test_oct.testnet",
   "near_indexer": "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer",
   "paras_api": "https://api-v2-mainnet.paras.id",
+  "paras_token": "x.paras.near",
   "wallet_auth_url":"https://testnet.nepbot.org"
 }

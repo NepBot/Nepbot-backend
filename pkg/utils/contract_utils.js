@@ -159,7 +159,7 @@ exports.filterNftActions = (contractIds, receipts) => {
 
 exports.filterParasActions = (receipts) => {
 	const ret = [];
-	receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == 'x.paras.near' && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
+	receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras_token && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
 	for (receipts of receipts) {
 		const obj = {};
 		obj.sender_id = receipts.predecessor_id;

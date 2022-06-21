@@ -5,6 +5,7 @@ const userUtils = require('../../pkg/utils/user_utils');
 const contractUtils = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const parasUtils = require('../../pkg/utils/paras_api');
+const config = require('../../pkg/utils/config')
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
@@ -79,7 +80,7 @@ const setInfo = async (ctx, next) => {
 			else if (rule.key_field[0] == 'nft_contract_id') {
 				rulesMap.nft.push(rule);
 			}
-			else if (rule.key_field[0] == 'x.paras.near') {
+			else if (rule.key_field[0] == config.paras_token) {
 				rulesMap.paras.push(rule);
 			}
 			await userFields.addUserField({
