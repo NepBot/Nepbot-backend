@@ -4,6 +4,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const logger = require('../../pkg/utils/logger');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
+const config = require('../../pkg/utils/config');
 const BN = require('bn.js');
 const token_task = async function(receipts) {
 	const allFieldList = await contractUtils.getFieldList();
@@ -31,8 +32,13 @@ const token_task = async function(receipts) {
 	});
 
 	for (const userToken of userTokens) {
-		const newAmount = await nearUtils.getBalanceOf(userToken.value, userToken.near_wallet_id);
-		const roles = await nearUtils.getRulesByField('token_id', userToken.value);
+		let stakedParas = new BN('0');
+		if (userToken.value === config.paras.token_contract) {
+			stakedParas = await contractUtils.getStakedParas(userToken.near_wallet_id);
+		}
+		const newAmount = await contractUtils.getBalanceOf(userToken.value, userToken.near_wallet_id);
+		const total = newAmount.add(stakedParas);
+		const roles = await contractUtils.getRulesByField('token_id', userToken.value);
 		const guild_ids = [];
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
@@ -45,7 +51,7 @@ const token_task = async function(receipts) {
 		});
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = await discordUtils.getRules(_userInfo.guild_id);
+			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
 
 			const role = [];
 			const delRole = [];
@@ -53,11 +59,11 @@ const token_task = async function(receipts) {
 				if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
 					continue;
 				}
-				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+				if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
 					_role && role.push(_role);
 				}
-				if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+				if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
 					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
 					_role && delRole.push(_role);
 				}

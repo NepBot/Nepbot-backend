@@ -1,5 +1,6 @@
 const { connect, WalletConnection, providers } = require('near-api-js');
 const config = require('./config');
+const BN = require('bn.js');
 const contract = async () => {
 	// connect to NEAR
 	const near = await connect(config.nearWallet);
@@ -159,7 +160,7 @@ exports.filterNftActions = (contractIds, receipts) => {
 
 exports.filterParasActions = (receipts) => {
 	const ret = [];
-	receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras_token && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
+	receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
 	for (receipts of receipts) {
 		const obj = {};
 		obj.sender_id = receipts.predecessor_id;
@@ -187,4 +188,30 @@ exports.filterCollectionActions = (receipts) => {
 		ret.push(obj);
 	}
 	return ret;
-}
+};
+
+/**
+ * get the staking balance for specifying user
+ * @param accountId
+ * @returns return the total staking balance in string format
+ */
+exports.getStakingBalance = async (accountId) => {
+	const stakingDeposits = await fetch(`${config.indexer_service_url}/staking-deposits/${accountId}`)
+		.then((r) => r.json());
+	let stakedBalance = new BN('0');
+	stakingDeposits.forEach(({ deposit }) => {
+		stakedBalance = stakedBalance.add(new BN(deposit));
+	});
+	return stakedBalance.toString();
+};
+
+/**
+ * get the staking balance on paras for specifying user
+ * @param accountId
+ * @returns return the total staking balance in string format
+ */
+exports.getStakedParas = async (accountId) => {
+	const account = await this.contract();
+	const data = await account.viewFunction(config.paras.stake_contract, 'list_user_seeds', { account_id: accountId }).then((r) => r[config.paras.token_contract]);
+	return new BN(data);
+};

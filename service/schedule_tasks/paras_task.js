@@ -22,13 +22,13 @@ const paras_task = async function(receipts) {
 	}
 
 	const userTokens = await userFields.getUserFields({
-		key: config.paras_token,
+		key: config.paras.nft_contract,
 		near_wallet_id: accountIdList,
 		value: collectionList,
 	});
 
 	for (const userToken of userTokens) {
-		const roles = await contractUtils.getRulesByField(config.paras_token, userToken.value);
+		const roles = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
 		const guild_ids = [];
 		roles.map(item => {
 			guild_ids.push(item.guild_id);
@@ -48,12 +48,12 @@ const paras_task = async function(receipts) {
 
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = await discordUtils.getRules(_userInfo.guild_id);
+			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
 
 			const role = [];
 			const delRole = [];
 			for (const { fields, role_id, key_field } of guildRoles) {
-				if (key_field[0] != config.paras_token || key_field[1] != userToken.value) {
+				if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {

@@ -2,8 +2,8 @@ const config = require('./config');
 const { connect, WalletConnection } = require('near-api-js');
 const tweetnacl = require('tweetnacl');
 const bs58 = require('bs58');
-const Base64 = require('js-base64')
-const js_sha256 = require('js-sha256')
+const Base64 = require('js-base64');
+const js_sha256 = require('js-sha256');
 const userInfos = require('../models/object/user_infos');
 const logger = require('./logger');
 
@@ -54,27 +54,27 @@ const getSign = async (args) => {
 };
 
 const genParasAuthToken = async () => {
-	const accountId = config.nft_contract
+	const accountId = config.nft_contract;
 	const near = await connect(config.nearWallet);
 	const account = await near.account(accountId);
-    const arr = new Array(accountId)
-    for (var i = 0; i < accountId.length; i++) {
-        arr[i] = accountId.charCodeAt(i)
-    }
+	const arr = new Array(accountId);
+	for (let i = 0; i < accountId.length; i++) {
+		arr[i] = accountId.charCodeAt(i);
+	}
 
-    const msgBuf = new Uint8Array(arr)
+	const msgBuf = new Uint8Array(arr);
 	const signedMsg = await account.connection.signer.signMessage(msgBuf, accountId, config.nearWallet.networkId);
-    const pubKey = Buffer.from(signedMsg.publicKey.data).toString('hex')
-    const signature = Buffer.from(signedMsg.signature).toString('hex')
-    const payload = [accountId, pubKey, signature]
+	const pubKey = Buffer.from(signedMsg.publicKey.data).toString('hex');
+	const signature = Buffer.from(signedMsg.signature).toString('hex');
+	const payload = [accountId, pubKey, signature];
 
-    return Base64.encode(payload.join('&'))
-}
+	return Base64.encode(payload.join('&'));
+};
 
 module.exports = {
 	verifySign,
 	verifyAccountOwner,
 	verifyOperationSign,
 	getSign,
-	genParasAuthToken
+	genParasAuthToken,
 };

@@ -80,7 +80,7 @@ const setInfo = async (ctx, next) => {
 			else if (rule.key_field[0] == 'nft_contract_id') {
 				rulesMap.nft.push(rule);
 			}
-			else if (rule.key_field[0] == config.paras_token) {
+			else if (rule.key_field[0] == config.paras.nft_contract) {
 				rulesMap.paras.push(rule);
 			}
 			await userFields.addUserField({

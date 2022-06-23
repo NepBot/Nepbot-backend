@@ -7,11 +7,17 @@
   },
   "port": 3000,
   "rule_contract": "app.nepbot.testnet",
+  "nft_contract": "nft.nepbot.testnet",
   "linkdrop": "linkdrop6.bhc8521.testnet",
   "account_id": "sign.nepbot.testnet",
   "oct_contract": "registry.test_oct.testnet",
   "near_indexer": "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer",
-  "paras_api": "https://api-v2-mainnet.paras.id",
-  "paras_token": "x.paras.near",
-  "wallet_auth_url":"https://testnet.nepbot.org"
+  "wallet_auth_url":"https://testnet.nepbot.org",
+  "indexer_service_url":"https://testnet-api.kitwallet.app",
+  "paras": {
+    "api":"https://api-v3-marketplace-testnet.paras.id",
+    "nft_contract": "x.paras.near",
+    "stake_contract":"dev-1641987418790-52566958498708",
+    "token_contract":"dev-1631277489384-75412609538902"
+  }
 }

@@ -7,8 +7,9 @@ const logger = require('../../pkg/utils/logger');
 
 const embed = new MessageEmbed()
 	.setColor('#0099ff')
-	.setTitle('Near Wallet Authorization')
-	.setDescription('Click the button below to complete the near wallet authorization operation');
+	.setTitle('Verify your on-chain assets')
+	.setDescription(`Click the button below to complete the near wallet authorization operation.\n
+	This link is only valid for 5 mins. If the link expires, please use the command again to get a new link.`);
 
 const button = new MessageButton()
 	.setLabel('Connect Near Wallet')
@@ -19,7 +20,7 @@ const action = new MessageActionRow()
 
 const data = new SlashCommandBuilder()
 	.setName('verify')
-	.setDescription('Replies the server info');
+	.setDescription('Connect your NEAR wallet to verify your on-chain assets on Near protocol.');
 
 const execute = async interaction => {
 	const nonce = Date.now();
