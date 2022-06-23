@@ -1,44 +1,31 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const config = require('../../pkg/utils/config');
-const nearUtils = require('../../pkg/utils/near_utils');
-const userInfos = require('../../pkg/models/object/user_infos');
+// get the app root path
+const appRoot = require('app-root-path');
+const commands = `${ appRoot }/service/commands`;
+const actions = `${ appRoot }/service/discord_actions/interactionCreate`;
 const logger = require('../../pkg/utils/logger');
-
-const embed = new MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle('Near Wallet Authorization')
-	.setDescription('Click the button below to complete the near wallet authorization operation');
-
-const button = new MessageButton()
-	.setLabel('Connect Near Wallet')
-	.setStyle('LINK');
-
-const action = new MessageActionRow()
-	.addComponents(button);
 
 const execute = async interaction => {
 	if (interaction.isButton()) {
-		const nonce = Date.now();
-		const userId = interaction.user.id;
-		const signature = await nearUtils.getSign({
-			nonce: nonce,
-			user_id: userId,
-			guild_id: interaction.guildId,
-		});
-		// Set the url
-		button.setURL(`${config.wallet_auth_url}/verify/?user_id=${userId}&guild_id=${interaction.guildId}&sign=${signature}`);
-
-		await userInfos.addUser({
-			user_id: userId,
-			guild_id: interaction.guildId,
-			nonce: nonce,
-		});
-		// store data into mysql
-		logger.debug('saving user info...');
-		// replay message to discord user
-		embed.setDescription(`Hello <@${userId}>.\n
-			Please find the button below for completing the near wallet authorization operation`);
-		await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+		const buttonInfo = interaction.customId.split('.');
+		/**
+		 * The buttonInfo on above which reference to the customId in discord_actions dir when setting button start with command, it will run the command in the commands dir.
+		 * It is important that don't forget to verify the customId in discord_actions same with the file in commands dir.
+		 * Like command.verify, it means this action is a command and already write in the commands dir named verify.js
+		 */
+		if (buttonInfo[0] === 'command') {
+			const commandFile = require(`${ commands }/${ buttonInfo[1] }.js`);
+			commandFile.execute(interaction);
+		}
+		/**
+		* If there is a action that is not a command, then you can add this action in the discord_actions/interactionCreate.
+		* Please don't forget to set the customId start with "action" and use a "." to sepreate the action when set a button.
+		* Like action.name, it means this action is not a command and it can't find in the command file, so you should creat this action in discord_actions/interactionCreate.
+		*/
+		else if (buttonInfo[0] === 'action') {
+			const actionFile = require(`${ actions }/${ buttonInfo[1] }.js`);
+			actionFile.execute(interaction);
+		}
+		logger.info(`${interaction.user.tag} in #${interaction.channel.name} triggered an button interaction with ${buttonInfo[0]}.${ buttonInfo[1] }`);
 		return;
 	}
 	logger.info(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
