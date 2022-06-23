@@ -8,7 +8,7 @@ const embed = new MessageEmbed()
   3. Confirm your Discord account and Server, and choose a Near wallet to verify.\n
   4. Connect to your wallet with limited permissions, and the page will be redirected to Discord.\n
   5. Successfully verified!\n 
-  This is a read-only connection. Do not share your private keys. We will never ask for your seed phrase. We will never DM you.`);
+  *This is a read-only connection. Do not share your private keys. We will never ask for your seed phrase. We will never DM you.*`);
 
 const button = new MessageButton()
 	.setCustomId('command.verify')
