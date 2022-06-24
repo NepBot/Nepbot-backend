@@ -16,9 +16,9 @@ app.listen(config.port, () => {
 	logger.info(`app listening at http://127.0.0.1:${config.port}/api`);
 });
 
-// // Run schedule task
-// const task = require('./service/schedule_task');
-// task.scheduleTask();
+// Run schedule task
+const task = require('./service/schedule_task');
+task.scheduleTask();
 
 // Run discord bot
 const client = require('./service/discord_bot');
