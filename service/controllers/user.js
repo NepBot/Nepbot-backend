@@ -97,13 +97,13 @@ const setInfo = async (ctx, next) => {
 				stakedParas = await contractUtils.getStakedParas(req.account_id);
 			}
 			const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], req.account_id);
-			const tokenAmount = new BN(newAmount).add(stakedParas).toString();
+			const tokenAmount = new BN(newAmount).add(stakedParas);
 
-			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+			if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && role.push(_role);
 			}
-			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+			if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && delRole.push(_role);
 			}
@@ -128,11 +128,11 @@ const setInfo = async (ctx, next) => {
 			const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
 			const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
-			if (!member._roles.includes(rule.role_id) && new BN(totalBalance).cmp(new BN(rule.fields.balance)) != -1) {
+			if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && role.push(_role);
 			}
-			if (member._roles.includes(rule.role_id) && new BN(totalBalance).cmp(new BN(rule.fields.balance)) == -1) {
+			if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && delRole.push(_role);
 			}
