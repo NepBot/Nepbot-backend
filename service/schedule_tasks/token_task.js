@@ -37,7 +37,7 @@ const token_task = async function(receipts) {
 			stakedParas = await contractUtils.getStakedParas(userToken.near_wallet_id);
 		}
 		const newAmount = await contractUtils.getBalanceOf(userToken.value, userToken.near_wallet_id);
-		const total = newAmount.add(stakedParas);
+		const total = new BN(newAmount).add(stakedParas);
 		const roles = await contractUtils.getRulesByField('token_id', userToken.value);
 		const guild_ids = [];
 		roles.map(item => {
