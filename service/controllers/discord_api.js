@@ -21,8 +21,19 @@ const getUser = async (ctx, next) => {
 	ctx.body = new Resp({ data: member });
 };
 
+const getConnectedAccount = async (ctx, next) => {
+	const guildId = ctx.params.guildId;
+	const userId = ctx.params.userId;
+	const userInfo = await userInfos.getUser({
+		guild_id: interaction.guildId,
+		user_id: userId,
+	});
+	ctx.body = new Resp({data: userInfo.near_wallet_id})
+}
+
 module.exports = {
 	'GET /api/getRole/:guildId': getRole,
 	'GET /api/getServer/:guildId': getServer,
 	'GET /api/getUser/:guildId/:userId': getUser,
+	'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount
 };
