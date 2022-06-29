@@ -45,6 +45,6 @@ const getConnectedAccount = async (ctx, next) => {
 module.exports = {
 	'GET /api/getRole/:guildId': getRole,
 	'GET /api/getServer/:guildId': getServer,
-	'GET /api/getUser/:guildId/:userId': getUser,
+	'GET /api/getUser/:guildId/:userId/:sign': getUser,
 	'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount
 };
