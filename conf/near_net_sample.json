@@ -16,7 +16,7 @@
   "indexer_service_url":"https://testnet-api.kitwallet.app",
   "paras": {
     "api":"https://api-v3-marketplace-testnet.paras.id",
-    "nft_contract": "x.paras.near",
+    "nft_contract": "paras-v2-token.testnet",
     "stake_contract":"dev-1641987418790-52566958498708",
     "token_contract":"dev-1631277489384-75412609538902"
   }
