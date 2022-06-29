@@ -2,6 +2,8 @@ const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
+const logger = require('../../pkg/utils/logger');
+
 
 const getRole = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
