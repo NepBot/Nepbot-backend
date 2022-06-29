@@ -25,7 +25,7 @@ const getConnectedAccount = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
 	const userInfo = await userInfos.getUser({
-		guild_id: interaction.guildId,
+		guild_id: guildId,
 		user_id: userId,
 	});
 	ctx.body = new Resp({data: userInfo.near_wallet_id})
