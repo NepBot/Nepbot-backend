@@ -1,6 +1,7 @@
 const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
+const userUtils = require('../../pkg/utils/user_utils');
 
 const getRole = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
@@ -17,6 +18,16 @@ const getServer = async (ctx, next) => {
 const getUser = async (ctx, next) => {
 	const guildId = ctx.params.guildId;
 	const userId = ctx.params.userId;
+	const sign = ctx.params.sign;
+	if (!await userUtils.verifyUserId({user_id: userId, guild_id: guildId}, sign)) {
+		logger.error('fn verifyUserId failed in api/setInfo');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyUserId failed in api/getOwnerSign',
+			success: false,
+		});
+		return;
+	}
 	const member = await discordUtils.getMember(guildId, userId);
 	ctx.body = new Resp({ data: member });
 };
