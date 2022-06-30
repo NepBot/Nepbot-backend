@@ -29,9 +29,7 @@ const getTxnByRule = async (ctx, next) => {
 	const params = ctx.params;
 	logger.info(`revice request by access 'api/getTxByRule': ${JSON.stringify(params)}`);
 	ctx.body = new Resp({
-		data: {
-			txn: await indexer_utils.getTxn(params),
-		},
+		data: await indexer_utils.getTxn(params),
 	});
 };
 
