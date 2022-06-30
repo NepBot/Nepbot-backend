@@ -4,12 +4,17 @@ const config = require('./config');
 
 const getTxn = async (guildId) => {
 	const client = await nearIndexerPool.connect();
-	const sqlStr = `SELECT b.transaction_hash, b.args -> 'args_json' -> 'roles' AS roles FROM
-  (SELECT transaction_hash FROM transactions WHERE receiver_account_id = '${ config.rule_contract }') AS a 
-  LEFT JOIN transaction_actions AS b ON a.transaction_hash = b.transaction_hash 
-  WHERE 
-  	position(b.args -> 'args_json' in ${guildId}) > -1
-  ORDER BY b.args -> 'args_json' -> 'timestamp' desc`;
+	const sqlStr = `
+  SELECT
+	DISTINCT(args -> 'args_json' -> 'roles') AS roles, originated_from_transaction_hash AS transaction_hash
+  FROM
+	action_receipt_actions
+  RIGHT JOIN receipts ON receipts.receipt_id = action_receipt_actions.receipt_id 
+  WHERE
+	receipt_receiver_account_id = '${config.rule_contract}' and
+	args ->> 'method_name' = 'set_roles' and
+	args -> 'args_json' -> 'roles' -> 0 ->> 'guild_id' = '${guildId}'
+  ORDER BY args -> 'args_json' -> 'timestamp' desc`;
 	const res = await client.query(sqlStr);
 	await client.release();
 	return res.rows
