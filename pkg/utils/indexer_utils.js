@@ -7,10 +7,13 @@ const getTxn = async args => {
 	const sqlStr = `SELECT b.transaction_hash, b.args -> 'args_json' -> 'roles' AS roles FROM
   (SELECT transaction_hash FROM transactions WHERE receiver_account_id = '${ config.rule_contract }') AS a 
   LEFT JOIN transaction_actions AS b ON a.transaction_hash = b.transaction_hash 
-  WHERE b.args -> 'args_json' -> 'roles' IS NOT null
+  WHERE 
+  	strpos(b.args, ${args.role_id}) > -1 and 
+	strpos(b.args, ${args.guild_id}) > -1 and
   ORDER BY b.args -> 'args_json' -> 'timestamp' desc`;
 	const res = await client.query(sqlStr);
 	await client.release();
+	console.log(res.rows)
 	for (const _row of res.rows) {
 		for (const _role of _row.roles) {
 			if (_role.role_id === args.role_id && _role.guild_id === args.guild_id) {
