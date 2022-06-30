@@ -8,7 +8,7 @@ exports.verifyUserId = async (args, sign) => {
 		return false
 	}
 	const nonce = Date.now();
-	await userInfo.update({
+	await userInfos.updateUser({
 		user_id: args.user_id,
 		guild_id: args.guild_id,
 		nonce: nonce,
