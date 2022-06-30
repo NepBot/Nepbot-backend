@@ -12,9 +12,9 @@ const indexer_utils = require('../../pkg/utils/indexer_utils');
 
 /**
  * based on the request return txn
- * @api /api/get-txn-by-rule
- * @method Post
- * @param role_id, guild_id, key_field
+ * @api /api/getTxByGuild
+ * @method Get
+ * @param guild_id
  * @example {
  *   "role_id":"988755310351093760",
  *   "guild_id":"940255224256409611",
@@ -25,14 +25,14 @@ const indexer_utils = require('../../pkg/utils/indexer_utils');
  *}
  * @returns txn
  */
-const getTxnByRule = async (ctx, next) => {
-	const params = ctx.params;
-	logger.info(`revice request by access 'api/getTxByRule': ${JSON.stringify(params)}`);
+const getTxnByGuild = async (ctx, next) => {
+	const guildId = ctx.params.guildId;
+	logger.info(`revice request by access 'api/getTxByGuild': ${guildId}`);
 	ctx.body = new Resp({
-		data: await indexer_utils.getTxn(params),
+		data: await indexer_utils.getTxn(guildId),
 	});
 };
 
 module.exports = {
-	'GET /api/getTxByRule': getTxnByRule,
+	'GET /api/getTxByGuild/:guildId': getTxnByGuild,
 };
