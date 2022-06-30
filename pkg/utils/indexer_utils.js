@@ -8,8 +8,7 @@ const getTxn = async args => {
   (SELECT transaction_hash FROM transactions WHERE receiver_account_id = '${ config.rule_contract }') AS a 
   LEFT JOIN transaction_actions AS b ON a.transaction_hash = b.transaction_hash 
   WHERE 
-  	strpos(b.args, ${args.role_id}) > -1 and 
-	strpos(b.args, ${args.guild_id}) > -1 and
+	strpos(b.args, ${args.guild_id}) > -1
   ORDER BY b.args -> 'args_json' -> 'timestamp' desc`;
 	const res = await client.query(sqlStr);
 	await client.release();
