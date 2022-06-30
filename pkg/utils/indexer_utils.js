@@ -12,18 +12,7 @@ const getTxn = async args => {
   ORDER BY b.args -> 'args_json' -> 'timestamp' desc`;
 	const res = await client.query(sqlStr);
 	await client.release();
-	console.log(res.rows)
-	for (const _row of res.rows) {
-		for (const _role of _row.roles) {
-			if (_role.role_id === args.role_id && _role.guild_id === args.guild_id) {
-				for (let i = 0; i < _role.key_field.length; i++) {
-					if (_role.key_field[i] === args.key_field[i]) {
-						return _row.transaction_hash;
-					}
-				}
-			}
-		}
-	}
+	return res.rows
 };
 module.exports = {
 	getTxn,
