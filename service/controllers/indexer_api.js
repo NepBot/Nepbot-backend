@@ -26,11 +26,11 @@ const indexer_utils = require('../../pkg/utils/indexer_utils');
  * @returns txn
  */
 const getTxnByRule = async (ctx, next) => {
-	const req = ctx.request.body;
-	logger.info(`revice request by access 'api/getTxByRule': ${JSON.stringify(req)}`);
+	const params = ctx.params;
+	logger.info(`revice request by access 'api/getTxByRule': ${JSON.stringify(params)}`);
 	ctx.body = new Resp({
 		data: {
-			txn: await indexer_utils.getTxn(req),
+			txn: await indexer_utils.getTxn(params),
 		},
 	});
 };
