@@ -27,7 +27,7 @@ const indexer_utils = require('../../pkg/utils/indexer_utils');
  */
 const getTxnByRule = async (ctx, next) => {
 	const req = ctx.request.body;
-	logger.info(`revice request by access 'api/get-txn-by-rule': ${JSON.stringify(req)}`);
+	logger.info(`revice request by access 'api/getTxByRule': ${JSON.stringify(req)}`);
 	ctx.body = new Resp({
 		data: {
 			txn: await indexer_utils.getTxn(req),
@@ -36,5 +36,5 @@ const getTxnByRule = async (ctx, next) => {
 };
 
 module.exports = {
-	'POST /api/get-txn-by-rule': getTxnByRule,
+	'GET /api/getTxByRule': getTxnByRule,
 };

@@ -63,5 +63,5 @@ const pingParasAPI = async (ctx, next) => {
 
 module.exports = {
 	'POST /api/createParasCollection': createParasCollection,
-	'GET /api/ping-paras-api': pingParasAPI,
+	'GET /api/pingParasApi': pingParasAPI,
 };
