@@ -6,7 +6,7 @@ const getTxn = async (guildId) => {
 	const client = await nearIndexerPool.connect();
 	const sqlStr = `
   SELECT
-	args -> 'args_json' -> 'roles' AS roles, originated_from_transaction_hash AS transaction_hash
+  	DISTINCT args -> 'args_json' -> 'roles' AS roles, args -> 'args_json' -> 'timestamp' AS timestamp , originated_from_transaction_hash AS transaction_hash
   FROM
 	action_receipt_actions
   RIGHT JOIN receipts ON receipts.receipt_id = action_receipt_actions.receipt_id 
