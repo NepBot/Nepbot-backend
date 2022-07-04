@@ -182,7 +182,7 @@ const setInfo = async (ctx, next) => {
 		
 	}
 
-	for (let role in roles) {
+	for (let role of roles) {
 		try {
 			await member.roles.add(role)
 		} catch (e) {
@@ -190,7 +190,7 @@ const setInfo = async (ctx, next) => {
 		}
 	}
 
-	for (let role in delRoles) {
+	for (let role of delRoles) {
 		try {
 			await member.roles.remove(role)
 		} catch (e) {
