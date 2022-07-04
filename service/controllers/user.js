@@ -145,6 +145,7 @@ const setInfo = async (ctx, next) => {
 			}
 
 	}
+	console.log(roles)
 
 	for (const rule of rulesMap.nft) {
 		try {
