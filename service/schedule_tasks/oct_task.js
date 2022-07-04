@@ -52,22 +52,17 @@ const oct_task = async function(receipts) {
 					_role && delRoles.push(_role);
 				}
 			}
-			for (let role in roles) {
-				try {
-					await member.roles.add(role)
-				} catch (e) {
-					continue
-				}
+
+			if (roles.length > 0) {
+				await member.roles.add(roles)
 			}
-	
-			for (let role in delRoles) {
-				try {
-					await member.roles.remove(role)
-				} catch (e) {
-					continue
-				}
+
+			if (delRoles.length > 0) {
+				await member.roles.remove(delRoles)
+			}
 				
-			}
+				
+
 		}
 	}
 };
