@@ -89,8 +89,8 @@ const setInfo = async (ctx, next) => {
 				value: rule.key_field[1],
 			});
 		}
-		const role = [];
-		const delRole = [];
+		const roles = [];
+		const delRoles = [];
 		for (const rule of rulesMap.token) {
 			let stakedParas = new BN('0');
 			if (rule.key_field[1] === config.paras.token_contract) {
@@ -101,11 +101,11 @@ const setInfo = async (ctx, next) => {
 
 			if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
@@ -114,11 +114,11 @@ const setInfo = async (ctx, next) => {
 
 			if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
@@ -130,11 +130,11 @@ const setInfo = async (ctx, next) => {
 
 			if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
@@ -142,11 +142,11 @@ const setInfo = async (ctx, next) => {
 			const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], req.account_id);
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils. getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
@@ -155,19 +155,29 @@ const setInfo = async (ctx, next) => {
 
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
-		if (role.length) {
-			member.roles.add(role).then(console.log).catch(console.error);
+		for (let role in roles) {
+			try {
+				await member.roles.add(role)
+			} catch (e) {
+				continue
+			}
 		}
-		if (delRole.length) {
-			member.roles.remove(delRole).then(console.log).catch(console.error);
+
+		for (let role in delRoles) {
+			try {
+				await member.roles.remove(role)
+			} catch (e) {
+				continue
+			}
+			
 		}
 		ctx.body = new Resp({});
 	}

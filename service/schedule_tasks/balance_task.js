@@ -36,27 +36,37 @@ const balance_task = async function(receipts) {
 
 	for (const _userInfo of _userInfos) {
 		const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-		const role = [];
-		const delRole = [];
+		const roles = [];
+		const delRoles = [];
 		for (const rule of guildMap[_userInfo.guild_id]) {
 			const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
 			const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
 			const totalBalance = new BN(balance).add(new BN(stakingBalance));
 			if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && role.push(_role);
+				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRole.push(_role);
+				_role && delRoles.push(_role);
 			}
 		}
 
-		if (role.length) {
-			member.roles.add(role).then(console.log).catch(console.error);
+		for (let role in roles) {
+			try {
+				await member.roles.add(role)
+			} catch (e) {
+				continue
+			}
 		}
-		if (delRole.length) {
-			member.roles.remove(delRole).then(console.log).catch(console.error);
+
+		for (let role in delRoles) {
+			try {
+				await member.roles.remove(role)
+			} catch (e) {
+				continue
+			}
+			
 		}
 	}
 };
