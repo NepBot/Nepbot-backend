@@ -91,98 +91,75 @@ const setInfo = async (ctx, next) => {
 	const roles = [];
 	const delRoles = [];
 	for (const rule of rulesMap.token) {
-		try {
-			let stakedParas = new BN('0');
-			if (rule.key_field[1] === config.paras.token_contract) {
-				stakedParas = await contractUtils.getStakedParas(req.account_id);
-			}
-			const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], req.account_id);
-			const tokenAmount = new BN(newAmount).add(stakedParas);
-
-			if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && roles.push(_role);
-			}
-			if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRoles.push(_role);
-			}
-		} catch (e) {
-			continue
+		let stakedParas = new BN('0');
+		if (rule.key_field[1] === config.paras.token_contract) {
+			stakedParas = await contractUtils.getStakedParas(req.account_id);
 		}
-		
+		const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], req.account_id);
+		const tokenAmount = new BN(newAmount).add(stakedParas);
+
+		if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && roles.push(_role);
+		}
+		if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && delRoles.push(_role);
+		}
 	}
 
 	for (const rule of rulesMap.oct) {
-		try {
-			const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], req.account_id);
+		const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], req.account_id);
 
-			if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && roles.push(_role);
-			}
-			if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRoles.push(_role);
-			}
-		} catch (e) {
-			continue
+		if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && roles.push(_role);
+		}
+		if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && delRoles.push(_role);
 		}
 	}
 
 	for (const rule of rulesMap.balance) {
-		try {
-			const balance = await contractUtils.getNearBalanceOf(req.account_id);
-			const stakingBalance = await contractUtils.getStakingBalance(req.account_id);
-			const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
-			if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && roles.push(_role);
-			}
-			if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRoles.push(_role);
-			}
+		const balance = await contractUtils.getNearBalanceOf(req.account_id);
+		const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
+		const totalBalance = new BN(balance).add(new BN(stakingBalance));
+
+		if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && roles.push(_role);
 		}
-		catch (e) {
-			continue
+		if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && delRoles.push(_role);
 		}
 	}
 
 	for (const rule of rulesMap.nft) {
-		try {
-			const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], req.account_id);
-			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-				const _role = discordUtils. getRoles(rule.guild_id, rule.role_id);
-				_role && roles.push(_role);
-			}
-			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRoles.push(_role);
-			}
-		} catch (e) {
-			continue
+		const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], req.account_id);
+		if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+			const _role = discordUtils. getRoles(rule.guild_id, rule.role_id);
+			_role && roles.push(_role);
 		}
-		
+		if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && delRoles.push(_role);
+		}
 	}
 
 	for (const rule of rulesMap.paras) {
-		try {
-			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
+		const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id);
 
-			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && roles.push(_role);
-			}
-			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-				_role && delRoles.push(_role);
-			}
-		} catch (e) {
-			continue
+		if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && roles.push(_role);
 		}
-		
+		if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+			const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+			_role && delRoles.push(_role);
+		}
 	}
 
 	for (let role in roles) {
