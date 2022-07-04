@@ -131,6 +131,7 @@ const setInfo = async (ctx, next) => {
 	}
 
 	for (const rule of rulesMap.balance) {
+		try {
 			const balance = await contractUtils.getNearBalanceOf(req.account_id);
 			const stakingBalance = await contractUtils.getStakingBalance(req.account_id);
 			const totalBalance = new BN(balance).add(new BN(stakingBalance));
@@ -143,9 +144,11 @@ const setInfo = async (ctx, next) => {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && delRoles.push(_role);
 			}
+		} catch (e) {
+			continue
+		}
 
 	}
-	console.log(roles)
 
 	for (const rule of rulesMap.nft) {
 		try {
