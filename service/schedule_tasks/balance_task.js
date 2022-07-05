@@ -40,11 +40,13 @@ const balance_task = async function(receipts) {
 		const delRole = [];
 		for (const rule of guildMap[_userInfo.guild_id]) {
 			const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-			if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
+			const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
+			const totalBalance = new BN(balance).add(new BN(stakingBalance));
+			if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && role.push(_role);
 			}
-			if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
+			if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && delRole.push(_role);
 			}

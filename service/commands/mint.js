@@ -7,7 +7,10 @@ const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 
-const content = new MessageEmbed().setDescription('Click the button below to mint NFT directly').setColor('BLUE');
+const content = new MessageEmbed()
+	.setDescription(`Click the button below to mint NFT directly.\n
+	This link is only valid for 5 mins. If the link expires, please use the command again to get a new link.`)
+	.setColor('BLUE');
 
 const button = new MessageButton().setStyle('LINK').setLabel('Mint NFT');
 
@@ -15,42 +18,43 @@ const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
 	.setName('mint')
-	.setDescription('Replies the server info')
+	.setDescription('Mint an NFT from an NFT collection in this server.')
 	.addStringOption(option =>
-		option.setName("collection")
+		option.setName('collection')
 			.setDescription('the collection you want to mint')
 			.setRequired(true));
 
 const execute = async interaction => {
-		
-	
+
+
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-	const option = interaction.options.get("collection").value
-	
-	const collections = await getCollectionsByGuild(interaction.guildId)
-	const index = collections.findIndex(item => item.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " ") == option)
-	if(index == -1) {
+	const option = interaction.options.get('collection').value;
+
+	const collections = await getCollectionsByGuild(interaction.guildId);
+	const index = collections.findIndex(item => item.collection_id.split(':')[1].split('-guild-')[0].replaceAll('-', ' ') == option);
+	if (index == -1) {
 		interaction.reply({
 			content:'\n',
 			embeds:[new MessageEmbed().setDescription('Wrong collection name').setColor('RED')],
 			ephemeral:true,
 		});
-		return
+		return;
 	}
-	let canMint = false
-	const collectionId = collections[index].collection_id
-	const mintableRoles = await getNFTMintableRoles(collectionId)
-	const member = await discordUtils.getMember(interaction.guildId, userId)
-	
-	
+	let canMint = false;
+	const collectionId = collections[index].collection_id;
+	const mintableRoles = await getNFTMintableRoles(collectionId);
+	const member = await discordUtils.getMember(interaction.guildId, userId);
+
+
 	if (!mintableRoles) {
-		canMint = true
-	} else {
-		for (let role of mintableRoles) {
+		canMint = true;
+	}
+	else {
+		for (const role of mintableRoles) {
 			if (member._roles.includes(role)) {
-				canMint = true
-				break
+				canMint = true;
+				break;
 			}
 		}
 	}
@@ -78,7 +82,7 @@ const execute = async interaction => {
 	else {
 		interaction.reply({
 			content:'\n',
-			embeds:[new MessageEmbed().setDescription('You do not have permission to operate this command').setColor('RED')],
+			embeds:[new MessageEmbed().setDescription('This command can only be used by server owner.').setColor('RED')],
 			ephemeral:true,
 		});
 	}

@@ -14,31 +14,32 @@ const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/
 
 const data = new SlashCommandBuilder()
 	.setName('listcollections')
-	.setDescription('Replies the server info');
+	.setDescription('List existing NFT collections for this server.');
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
 
-    const collections = await getCollectionsByGuild(interaction.guildId)
-    let collectionNames = []
-    if (collections.length > 0) {
-        for (collection of collections) {
-            collectionNames.push(collection.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " "))
-        }
-        const content = new MessageEmbed().setDescription(`Collections In This Server:\n${collectionNames.join("\n")}`)
-        interaction.reply({
-            content:'\n',
-            embeds:[content],
-            ephemeral:true,
-        });
-    } else {
-        interaction.reply({
+	const collections = await getCollectionsByGuild(interaction.guildId);
+	const collectionNames = [];
+	if (collections.length > 0) {
+		for (collections of collections) {
+			collectionNames.push(collections.collection_id.split(':')[1].split('-guild-')[0].replaceAll('-', ' '));
+		}
+		const content = new MessageEmbed().setDescription(`Collections In This Server:\n${collectionNames.join('\n')}`);
+		interaction.reply({
+			content:'\n',
+			embeds:[content],
+			ephemeral:true,
+		});
+	}
+	else {
+		interaction.reply({
 			content:'\n',
 			embeds:[new MessageEmbed().setDescription('No Collection').setColor('RED')],
 			ephemeral:true,
 		});
-    }
+	}
 };
 
 module.exports = {

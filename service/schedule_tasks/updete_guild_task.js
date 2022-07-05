@@ -11,7 +11,7 @@ const update_guild_task = async function(receipts) {
 	let addRoleList = [];
 	let delRoleList = [];
 	const guildIds = [];
-	
+
 	for (const action of actions) {
 		if (action.method_name == 'set_roles') {
 			addRoleList = addRoleList.concat(action.roles);
@@ -25,7 +25,7 @@ const update_guild_task = async function(receipts) {
 			}
 		}
 	}
-	
+
 	const _userInfos = await userInfos.getUsers({
 		guild_id: guildIds,
 	});
@@ -35,7 +35,7 @@ const update_guild_task = async function(receipts) {
 		const delRole = [];
 		for (const rule of addRoleList) {
 			if (!_userInfo.near_wallet_id) {
-				continue
+				continue;
 			}
 			await userFields.addUserField ({
 				near_wallet_id: _userInfo.near_wallet_id,
@@ -88,7 +88,7 @@ const update_guild_task = async function(receipts) {
 					_role && delRole.push(_role);
 				}
 			}
-			else if (rule.key_field[0] == config.paras_token) {
+			else if (rule.key_field[0] == config.paras.nft_contract) {
 				const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
 				if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);

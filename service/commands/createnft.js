@@ -5,7 +5,10 @@ const config = require('../../pkg/utils/config');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
-const content = new MessageEmbed().setDescription('Click the button below to enter the NFT setting page').setColor('BLUE');
+const content = new MessageEmbed()
+	.setDescription(`Click the button below to enter the NFT setting page.\n
+	This link is only valid for 5 mins. If the link expires, please use the command again to get a new link.`)
+	.setColor('BLUE');
 
 const button = new MessageButton().setStyle('LINK').setLabel('Create NFT Collection');
 
@@ -13,7 +16,7 @@ const action = new MessageActionRow().addComponents(button);
 
 const data = new SlashCommandBuilder()
 	.setName('createnft')
-	.setDescription('Replies the server info');
+	.setDescription('Create a NFT collection or add collectibles to existing collections');
 
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
@@ -41,7 +44,7 @@ const execute = async interaction => {
 	else {
 		interaction.reply({
 			content:'\n',
-			embeds:[new MessageEmbed().setDescription('You do not have permission to operate this command').setColor('RED')],
+			embeds:[new MessageEmbed().setDescription('This command can only be used by server owner.').setColor('RED')],
 			ephemeral:true,
 		});
 	}
