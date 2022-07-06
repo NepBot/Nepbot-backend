@@ -49,14 +49,12 @@ const execute = async interaction => {
 	const mintCountLimit = collections[index].mint_count_limit;
 
 	if (collection.series_count == 0) {
-		if (!user.near_wallet_id) {
-			interaction.reply({
-				content:'\n',
-				embeds:[new MessageEmbed().setDescription(`This is an empty collection`).setColor('RED')],
-				ephemeral:true,
-			});
-			return;
-		}
+		interaction.reply({
+			content:'\n',
+			embeds:[new MessageEmbed().setDescription(`This is an empty collection`).setColor('RED')],
+			ephemeral:true,
+		});
+		return;
 	}
 
 	const series = await getCollectionSeries(collectionId)
