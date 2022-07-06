@@ -26,7 +26,6 @@ const getTxn = async (guildId) => {
 
 const getParasTokenPerOwnerCount = async (collectionId, ownerId) => {
 	const client = await nearIndexerPool.connect();
-	console.log(config.paras.nft_contract, config.nft_contract, ownerId, collectionId)
 	const sqlStr = `
 	SELECT
 		COUNT(receipts.receipt_id)
