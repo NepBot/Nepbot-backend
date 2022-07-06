@@ -1,6 +1,7 @@
 const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const parasUtils = require('../../pkg/utils/paras_api');
+const indexerUtils = require('../../pkg/utils/indexer_utils');
 const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
@@ -42,9 +43,10 @@ const execute = async interaction => {
 		return;
 	}
 	// check the mint_count_limit in contract
+	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
 	if (mintCountLimit != null) {
-		const alreadyMintCount = await parasUtils.getTokenPerOwnerCount(config.account_id);
+		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, userId);
 		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
 		if (restMintNum <= 0) {
 			interaction.reply({
@@ -57,7 +59,6 @@ const execute = async interaction => {
 	}
 
 	let canMint = false;
-	const collectionId = collections[index].collection_id;
 	const mintableRoles = await getNFTMintableRoles(collectionId);
 	const member = await discordUtils.getMember(interaction.guildId, userId);
 
