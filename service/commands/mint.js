@@ -47,7 +47,11 @@ const execute = async interaction => {
 	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
 	if (mintCountLimit != null) {
-		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, userId);
+		const user = userInfos.getUser({
+			guild_id: interaction.guildId,
+			user_id: userId
+		})
+		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, user.near_wallet_id);
 		console.log(alreadyMintCount, "=======================================")
 		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
 		if (restMintNum <= 0) {
