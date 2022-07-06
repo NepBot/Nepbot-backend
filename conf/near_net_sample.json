@@ -6,8 +6,8 @@
     "helperUrl": "https://helper.testnet.near.org"
   },
   "port": 3000,
-  "rule_contract": "app.nepbot.testnet",
-  "nft_contract": "nft.nepbot.testnet",
+  "rule_contract": "app.dev-nepbot.testnet",
+  "nft_contract": "nft.dev-nepbot.testnet",
   "linkdrop": "linkdrop6.bhc8521.testnet",
   "account_id": "sign.nepbot.testnet",
   "oct_contract": "registry.test_oct.testnet",

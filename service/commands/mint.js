@@ -1,5 +1,6 @@
 const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
+const parasUtils = require('../../pkg/utils/paras_api');
 const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
@@ -26,7 +27,6 @@ const data = new SlashCommandBuilder()
 
 const execute = async interaction => {
 
-
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
 	const option = interaction.options.get('collection').value;
@@ -41,6 +41,21 @@ const execute = async interaction => {
 		});
 		return;
 	}
+	// check the mint_count_limit in contract
+	const mintCountLimit = collections[index].mint_count_limit;
+	if (mintCountLimit != null) {
+		const alreadyMintCount = await parasUtils.getTokenPerOwnerCount(config.account_id);
+		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
+		if (restMintNum <= 0) {
+			interaction.reply({
+				content:'\n',
+				embeds:[new MessageEmbed().setDescription(`You can't mint more than ${ restMintNum } of this collection`).setColor('RED')],
+				ephemeral:true,
+			});
+			return;
+		}
+	}
+
 	let canMint = false;
 	const collectionId = collections[index].collection_id;
 	const mintableRoles = await getNFTMintableRoles(collectionId);
