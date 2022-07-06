@@ -64,7 +64,7 @@ const execute = async interaction => {
 		if (restMintNum <= 0 ) {
 			interaction.reply({
 				content:'\n',
-				embeds:[new MessageEmbed().setDescription(`You can't mint more than ${ restMintNum } of this collection`).setColor('RED')],
+				embeds:[new MessageEmbed().setDescription(`Exceed minting limit of this collection`).setColor('RED')],
 				ephemeral:true,
 			});
 			return;
