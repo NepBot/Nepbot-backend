@@ -6,7 +6,7 @@ const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
+const { getNFTMintableRoles, getCollectionsByGuild, getCollectionSeries } = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 
 const content = new MessageEmbed()
@@ -44,8 +44,35 @@ const execute = async interaction => {
 	}
 
 	// check the mint_count_limit in contract
+	const collection = collections[index]
 	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
+
+	if (collection.series_count == 0) {
+		if (!user.near_wallet_id) {
+			interaction.reply({
+				content:'\n',
+				embeds:[new MessageEmbed().setDescription(`This is an empty collection`).setColor('RED')],
+				ephemeral:true,
+			});
+			return;
+		}
+	}
+
+	const series = await getCollectionSeries(collectionId)
+	let left_count = 0
+	for (s of series) {
+		left_count += s.copies - s.minted_count
+	}
+	if (left_count == 0) {
+		interaction.reply({
+			content:'\n',
+			embeds:[new MessageEmbed().setDescription(`Nothing left`).setColor('RED')],
+			ephemeral:true,
+		});
+		return;
+	}
+
 	if (mintCountLimit != null) {
 		const user = await userInfos.getUser({
 			guild_id: interaction.guildId,
@@ -74,7 +101,7 @@ const execute = async interaction => {
 	}
 
 	let canMint = false;
-	const mintableRoles = await getNFTMintableRoles(collectionId);
+	const mintableRoles = collection.mintable_roles
 	const member = await discordUtils.getMember(interaction.guildId, userId);
 
 

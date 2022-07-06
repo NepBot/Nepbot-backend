@@ -62,11 +62,11 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
 	}
 };
 
-exports.getNFTMintableRoles = async (collectionId) => {
+exports.getCollectionSeries = async (collectionId) => {
 	try {
 		const account = await this.contract();
-		const collection = await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
-		return collection.mintable_roles;
+		const series = await account.viewFunction(config.nft_contract, 'get_token_metadata', { collection_id: collectionId });
+		return series;
 	} catch(e) {
 		return [];
 	}
