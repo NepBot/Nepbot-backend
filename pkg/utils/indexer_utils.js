@@ -2,11 +2,11 @@ const nearIndexerPool = require('../models/db_driver/postgre_driver');
 const logger = require('./logger');
 const config = require('./config');
 
-const client = await nearIndexerPool.connect();
-//await client.release();
+
+
 
 const getTxn = async (guildId) => {
-	
+	const client = await nearIndexerPool.connect();
 	const sqlStr = `
 	SELECT
 		DISTINCT args -> 'args_json' -> 'roles' AS roles, args -> 'args_json' -> 'timestamp' AS timestamp , originated_from_transaction_hash AS transaction_hash
@@ -20,10 +20,12 @@ const getTxn = async (guildId) => {
 	ORDER BY args -> 'args_json' -> 'timestamp' desc`;
 
 	const res = await client.query(sqlStr);
+	client.release();
 	return res.rows
 };
 
 const getParasTokenPerOwnerCount = async (collectionId, ownerId) => {
+	const client = await nearIndexerPool.connect();
 	const sqlStr = `
 	SELECT
 		COUNT(receipts.receipt_id)
@@ -41,6 +43,7 @@ const getParasTokenPerOwnerCount = async (collectionId, ownerId) => {
       	execution_outcomes.status != 'FAILURE'
 	`
 	const res = await client.query(sqlStr);
+	client.release();
 	return res.rows[0].count
 }
 
