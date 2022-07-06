@@ -25,26 +25,31 @@ const getTxn = async (guildId) => {
 };
 
 const getParasTokenPerOwnerCount = async (collectionId, ownerId) => {
-	const client = await nearIndexerPool.connect();
-	const sqlStr = `
-	SELECT
-		COUNT(receipts.receipt_id)
-	FROM
-		receipts
-	RIGHT JOIN action_receipt_actions ON receipts.receipt_id = action_receipt_actions.receipt_id
-	RIGHT JOIN execution_outcomes ON receipts.receipt_id = execution_outcomes.receipt_id
-	LEFT JOIN transaction_actions ON transaction_actions.transaction_hash = receipts.originated_from_transaction_hash
-	WHERE
-		action_receipt_actions.receipt_receiver_account_id = '${config.paras.nft_contract}' and
-		action_receipt_actions.receipt_predecessor_account_id = '${config.nft_contract}' and
-		action_receipt_actions.args -> 'method_name' = 'nft_mint' and
-		action_receipt_actions.args -> 'args_json' ->> 'receiver_id' = '${ownerId}' and
-		transaction_actions.args -> 'args_json' ->> 'collection_id' = '${collectionId}' and
-      	execution_outcomes.status != 'FAILURE'
-	`
-	const res = await client.query(sqlStr);
-	client.release();
-	return res.rows[0].count
+	try {
+		const client = await nearIndexerPool.connect();
+		const sqlStr = `
+		SELECT
+			COUNT(receipts.receipt_id)
+		FROM
+			receipts
+		RIGHT JOIN action_receipt_actions ON receipts.receipt_id = action_receipt_actions.receipt_id
+		RIGHT JOIN execution_outcomes ON receipts.receipt_id = execution_outcomes.receipt_id
+		LEFT JOIN transaction_actions ON transaction_actions.transaction_hash = receipts.originated_from_transaction_hash
+		WHERE
+			action_receipt_actions.receipt_receiver_account_id = '${config.paras.nft_contract}' and
+			action_receipt_actions.receipt_predecessor_account_id = '${config.nft_contract}' and
+			action_receipt_actions.args -> 'method_name' = 'nft_mint' and
+			action_receipt_actions.args -> 'args_json' ->> 'receiver_id' = '${ownerId}' and
+			transaction_actions.args -> 'args_json' ->> 'collection_id' = '${collectionId}' and
+			execution_outcomes.status != 'FAILURE'
+		`
+		const res = await client.query(sqlStr);
+		client.release();
+		return res.rows[0].count
+	} catch(e) {
+		console.log(e)
+	}
+	
 }
 
 
