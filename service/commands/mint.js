@@ -42,6 +42,7 @@ const execute = async interaction => {
 		});
 		return;
 	}
+	console.log("===========================================")
 	// check the mint_count_limit in contract
 	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
