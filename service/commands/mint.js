@@ -60,6 +60,7 @@ const execute = async interaction => {
 			return;
 		}
 		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, user.near_wallet_id);
+		console.log(alreadyMintCount)
 		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
 		if (restMintNum <= 0 ) {
 			interaction.reply({
