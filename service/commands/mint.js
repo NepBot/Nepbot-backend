@@ -51,10 +51,18 @@ const execute = async interaction => {
 			guild_id: interaction.guildId,
 			user_id: userId
 		})
+		if (!user.near_wallet_id) {
+			interaction.reply({
+				content:'\n',
+				embeds:[new MessageEmbed().setDescription(`Verify your Near wallet first`).setColor('RED')],
+				ephemeral:true,
+			});
+			return;
+		}
 		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, user.near_wallet_id);
 		console.log(alreadyMintCount, "=======================================")
 		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
-		if (restMintNum <= 0) {
+		if (restMintNum <= 0 ) {
 			interaction.reply({
 				content:'\n',
 				embeds:[new MessageEmbed().setDescription(`You can't mint more than ${ restMintNum } of this collection`).setColor('RED')],
@@ -62,6 +70,7 @@ const execute = async interaction => {
 			});
 			return;
 		}
+		
 	}
 
 	let canMint = false;
