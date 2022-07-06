@@ -25,6 +25,7 @@ const getTxn = async (guildId) => {
 };
 
 const getParasTokenPerOwnerCount = async (collectionId, ownerId) => {
+	console.log(collectionId, ownerId)
 	try {
 		const client = await nearIndexerPool.connect();
 		const sqlStr = `

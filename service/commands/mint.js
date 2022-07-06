@@ -47,9 +47,7 @@ const execute = async interaction => {
 	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
 	if (mintCountLimit != null) {
-		console.log("===========================================")
 		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, userId);
-		console.log("-------------------------------------------")
 		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
 		if (restMintNum <= 0) {
 			interaction.reply({
