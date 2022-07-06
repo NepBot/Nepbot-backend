@@ -19,7 +19,7 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-
+	console.log("==========================================")
 	const collections = await getCollectionsByGuild(interaction.guildId);
 	const collectionNames = [];
 	if (collections.length > 0) {
