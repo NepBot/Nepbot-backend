@@ -65,23 +65,21 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
 exports.getNFTMintableRoles = async (collectionId) => {
 	try {
 		const account = await this.contract();
-		const collection = await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId })
+		const collection = await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 		return collection.mintable_roles;
 	} catch(e) {
-		return []
+		return [];
 	}
-	
-}
+};
 
 exports.getCollectionsByGuild = async (guildId) => {
 	try {
 		const account = await this.contract();
-		return await account.viewFunction(config.nft_contract, "get_collections_by_guild", { guild_id: guildId })
+		return await account.viewFunction(config.nft_contract, 'get_collections_by_guild', { guild_id: guildId });
 	} catch(e) {
 		return []
 	}
-	
-}
+};
 
 exports.filterTokenActions = (tokenIds, receipts) => {
 	const ret = [];
@@ -214,4 +212,25 @@ exports.getStakedParas = async (accountId) => {
 	const account = await this.contract();
 	const data = await account.viewFunction(config.paras.stake_contract, 'list_user_seeds', { account_id: accountId }).then((r) => r[config.paras.token_contract]);
 	return new BN(data);
+};
+
+/**
+ * get the collection info from nepbot contract
+ * @param collectionId
+ * @returns return collection info
+ * CollectionInfo { 
+            collection_id,
+            outer_collection_id: collection.outer_collection_id,
+            contract_type: collection.contract_type, 
+            guild_id: collection.guild_id, 
+            creator_id: collection.creator_id, 
+            mintable_roles: collection.mintable_roles, 
+            royalty: collection.royalty,
+            price: collection.price.into(),
+            mint_count_limit: collection.mint_count_limit
+        }
+ */
+exports.getCollectionInfo = async (collectionId) => {
+	const account = await this.contract();
+	return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 };
