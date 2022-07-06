@@ -51,6 +51,7 @@ const execute = async interaction => {
 			guild_id: interaction.guildId,
 			user_id: userId
 		})
+		console.log(user)
 		if (!user.near_wallet_id) {
 			interaction.reply({
 				content:'\n',
