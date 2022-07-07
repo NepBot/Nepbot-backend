@@ -27,9 +27,9 @@ const createnftAction = new MessageActionRow()
 
 const execute = async guild => {
 	// create server owner channle
-	const owner = await guild.fetchOwner();
-	const ownerName = owner.user.username;
-	const channelName = `${ ownerName }-private`;
+	//const owner = await guild.fetchOwner();
+	//const ownerName = owner.user.username;
+	const channelName = `nepbot-settings`;
 	const channel = await guild.channels.create(channelName,
 		{ permissionOverwrites: [
 			{
