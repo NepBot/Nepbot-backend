@@ -6,7 +6,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 const content = new MessageEmbed()
-	.setDescription(`Click the button below to enter the setting rules page.\n
+	.setDescription(`Click the button below to enter the setrule page.\n
 	This link is only valid for 5 mins. If the link expires, please use the command again to get a new link.`)
 	.setColor('BLUE');
 

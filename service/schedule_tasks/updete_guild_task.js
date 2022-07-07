@@ -31,8 +31,8 @@ const update_guild_task = async function(receipts) {
 	});
 	for (const _userInfo of _userInfos) {
 		const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-		const role = [];
-		const delRole = [];
+		const roles = [];
+		const delRoles = [];
 		for (const rule of addRoleList) {
 			if (!_userInfo.near_wallet_id) {
 				continue;
@@ -47,11 +47,11 @@ const update_guild_task = async function(receipts) {
 				const tokenAmount = await contractUtils.getBalanceOf(rule.key_field[1], _userInfo.near_wallet_id);
 				if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
 			else if (rule.key_field[0] == 'appchain_id') {
@@ -59,44 +59,44 @@ const update_guild_task = async function(receipts) {
 
 				if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
 			else if (rule.key_field[0] == 'near') {
 				const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
 				if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
 			else if (rule.key_field[0] == 'nft_contract_id') {
 				const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], _userInfo.near_wallet_id);
 				if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
 			else if (rule.key_field[0] == config.paras.nft_contract) {
 				const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
 				if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
 		}
@@ -109,11 +109,21 @@ const update_guild_task = async function(receipts) {
 			});
 		}
 
-		if (role.length) {
-			member.roles.add(role).then(console.log).catch(console.error);
+		for (let role of roles) {
+			try {
+				await member.roles.add(role)
+			} catch (e) {
+				continue
+			}
 		}
-		if (delRole.length) {
-			member.roles.remove(delRole).then(console.log).catch(console.error);
+
+		for (let role of delRoles) {
+			try {
+				await member.roles.remove(role)
+			} catch (e) {
+				continue
+			}
+			
 		}
 	}
 };

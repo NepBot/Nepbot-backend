@@ -1,3 +1,4 @@
+const discordUtils = require('../../../pkg/utils/discord_utils');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 
 const embed = new MessageEmbed()
@@ -19,7 +20,8 @@ const action = new MessageActionRow()
 	.addComponents(button);
 
 const execute = async guild => {
-	const channel = await guild.channels.create('nepbot-join',
+	const channelName = 'nepbot-join';
+	const channel = await guild.channels.create(channelName,
 		{ permissionOverwrites: [
 			{
 				id: guild.roles.everyone,

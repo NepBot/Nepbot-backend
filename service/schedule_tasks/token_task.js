@@ -53,26 +53,36 @@ const token_task = async function(receipts) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
 			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
 
-			const role = [];
-			const delRole = [];
+			const roles = [];
+			const delRoles = [];
 			for (const { fields, role_id, key_field } of guildRoles) {
 				if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && role.push(_role);
+					_role && roles.push(_role);
 				}
 				if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
 					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && delRole.push(_role);
+					_role && delRoles.push(_role);
 				}
 			}
-			if (role.length) {
-				member.roles.add(role).then(console.log).catch(console.error);
+			for (let role of roles) {
+				try {
+					await member.roles.add(role)
+				} catch (e) {
+					continue
+				}
 			}
-			if (delRole.length) {
-				member.roles.remove(delRole).then(console.log).catch(console.error);
+	
+			for (let role of delRoles) {
+				try {
+					await member.roles.remove(role)
+				} catch (e) {
+					continue
+				}
+				
 			}
 		}
 	}

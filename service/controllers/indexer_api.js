@@ -15,14 +15,7 @@ const indexer_utils = require('../../pkg/utils/indexer_utils');
  * @api /api/getTxByGuild
  * @method Get
  * @param guild_id
- * @example {
- *   "role_id":"988755310351093760",
- *   "guild_id":"940255224256409611",
- *   "key_field": [
- *		"paras-token-v2.testnet",
- *		"2dverse-test-by-agitarsatestnet"
- *	]
- *}
+ * @example { "guild_id":"940255224256409611" }
  * @returns txn
  */
 const getTxnByGuild = async (ctx, next) => {
