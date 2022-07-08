@@ -12,7 +12,7 @@ const embed = new MessageEmbed()
   *This is a read-only connection. Do not share your private keys. We will never ask for your seed phrase. We will never DM you.*`);
 
 const button = new MessageButton()
-	.setCustomId('command.verify')
+	.setCustomId('verify')
 	.setLabel('Verify')
 	.setStyle('SECONDARY');
 
