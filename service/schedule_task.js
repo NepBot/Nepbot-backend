@@ -30,8 +30,10 @@ const resolveChunk = async (chunkHash) => {
 let blockHeight = 0;
 let finalBlockHeight = 0;
 
-const resolveNewBlock = async () => {
-	logger.debug(`fetched block height: ${blockHeight}`);
+const resolveNewBlock = async (showLog=false) => {
+	if (showLog) {
+		logger.info(`fetched block height: ${blockHeight}`);
+	}
 	const newestBlock = await provider.block({ finality: 'optimistic' });
 	finalBlockHeight = newestBlock.header.height;
 	if (blockHeight == 0) {
