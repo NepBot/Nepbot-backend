@@ -184,14 +184,12 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
-	console.log(roles)
 	for (let role of roles) {
-		// try {
-	 	await member.roles.add(role)
-		// } catch (e) {
-		
-		// 	continue
-		// }
+		try {
+			await member.roles.add(role)
+		} catch (e) {
+			continue
+		}
 	}
 
 	for (let role of delRoles) {
