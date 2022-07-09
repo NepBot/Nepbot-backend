@@ -1,3 +1,5 @@
+const discordUtils = require('../../../pkg/utils/discord_utils');
+const config = require('../../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 const setruleEmbed = new MessageEmbed()
 	.setDescription(`Click the button below to generate a setting rule link button .\n
@@ -29,9 +31,17 @@ const createnftAction = new MessageActionRow()
 
 const execute = async guild => {
 	// create server owner channle
-	const owner = await guild.fetchOwner();
-	const ownerName = owner.user.username;
-	const channelName = `${ ownerName }-private`;
+	const channelName = 'nepbot-settings';
+	if (discordUtils.isChannelExists(guild, channelName)) {
+		const channelInGuild = guild.channels.cache.find(channel => channel.name === channelName);
+		const messages = await channelInGuild.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
+		for (const _value of messages.values()) {
+			_value.delete();
+		}
+		await channelInGuild.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
+		await channelInGuild.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
+		return;
+	}
 	const channel = await guild.channels.create(channelName,
 		{ permissionOverwrites: [
 			{

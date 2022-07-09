@@ -1,4 +1,6 @@
 const discordUtils = require('../../../pkg/utils/discord_utils');
+const config = require('../../../pkg/utils/config');
+const logger = require('../../../pkg/utils/logger');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 
 const embed = new MessageEmbed()
@@ -21,6 +23,15 @@ const action = new MessageActionRow()
 
 const execute = async guild => {
 	const channelName = 'nepbot-join';
+	if (discordUtils.isChannelExists(guild, channelName)) {
+		const channelInGuild = guild.channels.cache.find(channel => channel.name === channelName);
+		const messages = await channelInGuild.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
+		for (const _value of messages.values()) {
+			_value.delete();
+		}
+		await channelInGuild.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+		return;
+	}
 	const channel = await guild.channels.create(channelName,
 		{ permissionOverwrites: [
 			{
