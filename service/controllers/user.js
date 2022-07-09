@@ -188,7 +188,6 @@ const setInfo = async (ctx, next) => {
 		try {
 			await member.roles.add(role)
 		} catch (e) {
-			console.log(e)
 			continue
 		}
 	}
