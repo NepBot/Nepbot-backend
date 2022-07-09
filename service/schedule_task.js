@@ -32,7 +32,7 @@ let finalBlockHeight = 0;
 
 const resolveNewBlock = async (showLog = false) => {
 	if (showLog) {
-		console.log(`fetched block height: ${blockHeight}`);
+		logger.info(`fetched block height: ${blockHeight}`);
 	}
 	const newestBlock = await provider.block({ finality: 'optimistic' });
 	finalBlockHeight = newestBlock.header.height;
@@ -58,7 +58,7 @@ const resolveNewBlock = async (showLog = false) => {
 module.exports.scheduleTask = function(fromBlockHeight = 0) {
 	if (fromBlockHeight > 0) {
 		blockHeight = fromBlockHeight
-		resolveNewBlock();
+		resolveNewBlock(true);
 	} else {
 		schedule.scheduleJob('*/1 * * * * *', function() {
 			resolveNewBlock();
