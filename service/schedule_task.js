@@ -32,7 +32,7 @@ let finalBlockHeight = 0;
 
 const resolveNewBlock = async (showLog = false) => {
 	if (showLog) {
-		logger.info(`fetched block height: ${blockHeight}`);
+		console.log(`fetched block height: ${blockHeight}`);
 	}
 	const newestBlock = await provider.block({ finality: 'optimistic' });
 	finalBlockHeight = newestBlock.header.height;
