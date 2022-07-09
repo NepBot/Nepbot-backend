@@ -19,12 +19,12 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
 	const { ownerId } = interaction.guild;
 	const userId = interaction.user.id;
-
+	
 	const collections = await getCollectionsByGuild(interaction.guildId);
 	const collectionNames = [];
 	if (collections.length > 0) {
-		for (collections of collections) {
-			collectionNames.push(collections.collection_id.split(':')[1].split('-guild-')[0].replaceAll('-', ' '));
+		for (collection of collections) {
+			collectionNames.push(collection.collection_id.split(':')[1].split('-guild-')[0].replaceAll('-', ' '));
 		}
 		const content = new MessageEmbed().setDescription(`Collections In This Server:\n${collectionNames.join('\n')}`);
 		interaction.reply({

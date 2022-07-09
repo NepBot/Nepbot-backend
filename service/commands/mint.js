@@ -1,11 +1,12 @@
 const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const parasUtils = require('../../pkg/utils/paras_api');
+const indexerUtils = require('../../pkg/utils/indexer_utils');
 const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { getNFTMintableRoles, getCollectionsByGuild } = require('../../pkg/utils/contract_utils');
+const { getNFTMintableRoles, getCollectionsByGuild, getCollectionSeries } = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 
 const content = new MessageEmbed()
@@ -41,24 +42,64 @@ const execute = async interaction => {
 		});
 		return;
 	}
+
 	// check the mint_count_limit in contract
+	const collection = collections[index]
+	const collectionId = collections[index].collection_id
 	const mintCountLimit = collections[index].mint_count_limit;
+
+	if (collection.series_count == 0) {
+		interaction.reply({
+			content:'\n',
+			embeds:[new MessageEmbed().setDescription(`This is an empty collection`).setColor('RED')],
+			ephemeral:true,
+		});
+		return;
+	}
+
+	const series = await getCollectionSeries(collectionId)
+	let left_count = 0
+	for (s of series) {
+		left_count += s.copies - s.minted_count
+	}
+	if (left_count == 0) {
+		interaction.reply({
+			content:'\n',
+			embeds:[new MessageEmbed().setDescription(`Nothing left`).setColor('RED')],
+			ephemeral:true,
+		});
+		return;
+	}
+
 	if (mintCountLimit != null) {
-		const alreadyMintCount = await parasUtils.getTokenPerOwnerCount(config.account_id);
-		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
-		if (restMintNum <= 0) {
+		const user = await userInfos.getUser({
+			guild_id: interaction.guildId,
+			user_id: userId
+		})
+		if (!user.near_wallet_id) {
 			interaction.reply({
 				content:'\n',
-				embeds:[new MessageEmbed().setDescription(`You can't mint more than ${ restMintNum } of this collection`).setColor('RED')],
+				embeds:[new MessageEmbed().setDescription(`Verify your Near wallet first`).setColor('RED')],
 				ephemeral:true,
 			});
 			return;
 		}
+		const alreadyMintCount = await indexerUtils.getParasTokenPerOwnerCount(collectionId, user.near_wallet_id);
+		console.log(alreadyMintCount)
+		const restMintNum = parseInt(mintCountLimit) - alreadyMintCount;
+		if (restMintNum <= 0 ) {
+			interaction.reply({
+				content:'\n',
+				embeds:[new MessageEmbed().setDescription(`Exceed minting limit of this collection`).setColor('RED')],
+				ephemeral:true,
+			});
+			return;
+		}
+		
 	}
 
 	let canMint = false;
-	const collectionId = collections[index].collection_id;
-	const mintableRoles = await getNFTMintableRoles(collectionId);
+	const mintableRoles = collection.mintable_roles
 	const member = await discordUtils.getMember(interaction.guildId, userId);
 
 

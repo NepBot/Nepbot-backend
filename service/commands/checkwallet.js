@@ -3,7 +3,7 @@ const userInfos = require('../../pkg/models/object/user_infos');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const data = new SlashCommandBuilder()
 	.setName('checkwallet')
-	.setDescription('Show the user near wallet list who establish connection with this server.');
+	.setDescription('Show the NEAR wallet currently connected to your account.');
 
 const execute = async interaction => {
 	const userId = interaction.user.id;

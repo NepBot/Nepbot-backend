@@ -1,11 +1,12 @@
+
 const discordUtils = require('../../../pkg/utils/discord_utils');
 const config = require('../../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 const setruleEmbed = new MessageEmbed()
-	.setDescription(`Click the button below to generate a setting rule link button .\n
-The link will be expired in 5 mins.\n
-If the link expires, please click the button again to get a new one.`)
-	.setColor('BLUE');
+	.setTitle('Set Rule For Roles')
+	.setDescription(`Click the button below to generate a link to the setrule page.`)
+	.setColor('PURPLE');
 
 const setruleButton = new MessageButton()
 	.setCustomId('command.setrule')
@@ -16,10 +17,9 @@ const setruleAction = new MessageActionRow()
 	.addComponents(setruleButton);
 
 const createnftEmbed = new MessageEmbed()
-	.setDescription(`Click the button below to generate a NFT setting link button.\n
-	The link will expired in 5 mins.\n
-  If the link expires, please click the button again to get a new one.`)
-	.setColor('BLUE');
+	.setTitle('Manage NFT Collection')
+	.setDescription(`Click the button below to generate a link to the NFT collection page.\n`)
+	.setColor('PURPLE');
 
 const createnftButton = new MessageButton()
 	.setCustomId('command.createnft')
