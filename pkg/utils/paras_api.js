@@ -46,7 +46,7 @@ exports.getTokenSeries = async (tokenSeriesId) => {
 };
 
 exports.getTokenPerOwnerCount = async (collectionId, ownerId) => {
-	const len = await new Promise((resolve, reject) => {
+	return await new Promise((resolve, reject) => {
 		request(`${config.paras.api}/token?collection_id=${collectionId}&owner_id=${ownerId}`, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				const res = JSON.parse(body);
