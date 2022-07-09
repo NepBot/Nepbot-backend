@@ -52,6 +52,10 @@ const resolveNewBlock = async (showLog = false) => {
 		for (const chunk of block.chunks) {
 			promises.push(resolveChunk(chunk.chunk_hash));
 		}
+		
+		if (showLog) {
+			console.log(`fetched block height: ${blockHeight}`);
+		}
 	}
 	await Promise.all(promises);
 };
