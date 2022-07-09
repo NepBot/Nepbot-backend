@@ -1,6 +1,5 @@
 const discordUtils = require('../../../pkg/utils/discord_utils');
 const config = require('../../../pkg/utils/config');
-const logger = require('../../../pkg/utils/logger');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 
 const embed = new MessageEmbed()
@@ -14,7 +13,7 @@ const embed = new MessageEmbed()
   *This is a read-only connection. Do not share your private keys. We will never ask for your seed phrase. We will never DM you.*`);
 
 const button = new MessageButton()
-	.setCustomId('verify')
+	.setCustomId('command.verify')
 	.setLabel('Verify')
 	.setStyle('SECONDARY');
 
