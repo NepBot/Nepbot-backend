@@ -27,7 +27,6 @@ const resolveChunk = async (chunkHash) => {
 	}
 	
 };
-
 let blockHeight = 0;
 let finalBlockHeight = 0;
 
@@ -54,8 +53,14 @@ const resolveNewBlock = async () => {
 	}
 	await Promise.all(promises);
 };
-module.exports.scheduleTask = function() {
-	schedule.scheduleJob('*/1 * * * * *', function() {
+module.exports.scheduleTask = function(fromBlockHeight = 0) {
+	if (fromBlockHeight > 0) {
+		blockHeight = fromBlockHeight
 		resolveNewBlock();
-	});
+	} else {
+		schedule.scheduleJob('*/1 * * * * *', function() {
+			resolveNewBlock();
+		});
+	}
+	
 };
