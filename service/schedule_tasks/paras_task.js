@@ -11,9 +11,6 @@ const paras_task = async function(receipts) {
 	const actions = await contractUtils.filterParasActions(receipts);
 	const accountIdList = [];
 	const collectionList = [];
-	if (actions.length > 0) {
-		console.log(actions.length, "action length")
-	}
 	
 	for (const action of actions) {
 		accountIdList.push(action.sender_id);
@@ -41,17 +38,8 @@ const paras_task = async function(receipts) {
 			guild_id: guild_ids,
 			near_wallet_id: userToken.near_wallet_id,
 		});
-		let newAmount = 0;
-		if (!userToken.value || userToken.value == '') {
-			newAmount = await contractUtils.getNftCountOf(userToken.value, userToken.near_wallet_id);
-		}
-		else {
-			newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
-		}
-
-		if (_userInfos.length > 0) {
-			console.log(_userInfos.length, "userinfo length")
-		}
+		let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
+		console.log(userTOken.near_wallet_id, newAmount)
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
