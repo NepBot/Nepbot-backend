@@ -11,6 +11,7 @@ const paras_task = async function(receipts) {
 	const actions = await contractUtils.filterParasActions(receipts);
 	const accountIdList = [];
 	const collectionList = [];
+	console.log(actions.length, "action length")
 	for (const action of actions) {
 		accountIdList.push(action.sender_id);
 		accountIdList.push(action.receiver_id);
@@ -45,7 +46,7 @@ const paras_task = async function(receipts) {
 			newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
 		}
 
-
+		console.log(_userInfos.length, "userinfo length")
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
 			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
@@ -69,6 +70,7 @@ const paras_task = async function(receipts) {
 				try {
 					await member.roles.add(role)
 				} catch (e) {
+					console.log(e)
 					continue
 				}
 			}
