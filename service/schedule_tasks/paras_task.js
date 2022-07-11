@@ -39,6 +39,7 @@ const paras_task = async function(receipts) {
 			near_wallet_id: userToken.near_wallet_id,
 		});
 		let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
+		console.log(userTOken.near_wallet_id, newAmount)
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
