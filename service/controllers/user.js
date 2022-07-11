@@ -184,7 +184,6 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
-
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
