@@ -7,21 +7,7 @@ const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 
-const paras_task = async function(receipts) {
-	const actions = await contractUtils.filterParasActions(receipts);
-	const accountIdList = [];
-	const collectionList = [];
-	
-	for (const action of actions) {
-		accountIdList.push(action.sender_id);
-		accountIdList.push(action.receiver_id);
-		const fractions = action.token_id.split(':');
-		const tokenSeries = await parasUtils.getTokenSeries(fractions[0]);
-		if (tokenSeries.metadata.collection_id) {
-			collectionList.push(tokenSeries.metadata.collection_id);
-		}
-	}
-
+const delayTask = async function(accountIdList, collectionList) {
 	const userTokens = await userFields.getUserFields({
 		key: config.paras.nft_contract,
 		near_wallet_id: accountIdList,
@@ -39,7 +25,6 @@ const paras_task = async function(receipts) {
 			near_wallet_id: userToken.near_wallet_id,
 		});
 		let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
-		console.log(userToken.near_wallet_id, newAmount)
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
@@ -81,6 +66,24 @@ const paras_task = async function(receipts) {
 
 
 	}
+}
+
+const paras_task = async function(receipts) {
+	const actions = await contractUtils.filterParasActions(receipts);
+	const accountIdList = [];
+	const collectionList = [];
+	
+	for (const action of actions) {
+		accountIdList.push(action.sender_id);
+		accountIdList.push(action.receiver_id);
+		const fractions = action.token_id.split(':');
+		const tokenSeries = await parasUtils.getTokenSeries(fractions[0]);
+		if (tokenSeries.metadata.collection_id) {
+			collectionList.push(tokenSeries.metadata.collection_id);
+		}
+	}
+
+	setTimeout(() => delayTask(accountIdList, collectionList), 1000 * 60)
 };
 
 module.exports = paras_task;

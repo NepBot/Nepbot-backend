@@ -33,7 +33,7 @@ exports.createCollection = async (formData, auth) => {
 
 exports.getTokenSeries = async (tokenSeriesId) => {
 	const res = await new Promise((resolve, reject) => {
-		request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=x.paras.near&__limit=1`, function(error, response, body) {
+		request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=${config.paras.nft_contract}&__limit=1`, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				resolve(JSON.parse(body));
 			}
