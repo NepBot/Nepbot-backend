@@ -33,7 +33,7 @@ exports.addSubCommand = (guildId, commandId, command) => {
 };
 
 exports.getBotGuildChannel = (guildId) => {
-	const res = client.channels.cache.find(channel => channel.guildId == guildId)
+	const res = client.channels.cache.find(channel => channel.name == "nepbot-joinnn")
 	console.log(client.channels.cache.values())
 	return res
 }
