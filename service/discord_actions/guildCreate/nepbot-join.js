@@ -22,9 +22,8 @@ const action = new MessageActionRow()
 
 const execute = async guild => {
 	const channelName = 'nepbot-join';
-	console.log(guild)
 	const guildChannel = guild.channels.cache.find(channel => {
-		return channel.application_id === config.bot_appid
+		return channel.applicationId === config.bot_appid
 	})
 	console.log(guildChannel)
 	if (guildChannel) {
