@@ -208,7 +208,6 @@ const disconnectAccount = async (ctx, next) => {
 	logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(args)}`);
 	// verify user account
 	// verify user id
-	console.log(args)
 	if (!await userUtils.verifyUserSign({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
 		logger.error('fn verifyUserId failed in api/disconnectAccount');
 		ctx.body = new Resp({

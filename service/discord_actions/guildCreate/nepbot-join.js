@@ -26,6 +26,7 @@ const execute = async guild => {
 		return channel.name === channelName
 	})
 	console.log(guildChannel)
+	console.log(guildChannel.ownerId)
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
