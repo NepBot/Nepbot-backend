@@ -34,6 +34,8 @@ exports.addSubCommand = (guildId, commandId, command) => {
 
 exports.getBotGuildChannel = (guildId) => {
 	const res = client.channels.cache.find(channel => channel.name == "nepbot-joinnn")
-	console.log(res)
+	for (channel of client.channels.cache.values()) {
+		console.log(channel)
+	}
 	return res
 }

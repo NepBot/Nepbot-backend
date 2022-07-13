@@ -42,15 +42,15 @@ const execute = async guild => {
 		await guildChannel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
 		return;
 	}
-	const channel = await guild.channels.create(channelName,
-		{ permissionOverwrites: [
-			{
-				id: guild.roles.everyone,
-				deny: [Permissions.FLAGS.VIEW_CHANNEL],
-			},
-		] });
-	await channel.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
-	await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
+	// const channel = await guild.channels.create(channelName,
+	// 	{ permissionOverwrites: [
+	// 		{
+	// 			id: guild.roles.everyone,
+	// 			deny: [Permissions.FLAGS.VIEW_CHANNEL],
+	// 		},
+	// 	] });
+	// await channel.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
+	// await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
 };
 module.exports = {
 	execute,
