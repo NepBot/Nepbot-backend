@@ -22,11 +22,13 @@ const action = new MessageActionRow()
 
 const execute = async guild => {
 	const channelName = 'nepbot-join';
-	const guildChannel = discordUtils.getBotGuildChannel(guild.id)
-	// const guildChannel = guild.channels.cache.find(channel => {
-	// 	return channel.name === channelName
-	// })
-	//console.log(guild.channels.cache.values())
+	const botUser = discordUtils.getBotUser()
+	const guildChannel = guild.channels.cache.find(channel => {
+		channel.permissionOverwrites.cache.find(permission => 
+			permission.id == guild.roles.botRoleFor(botUser)
+		)
+	})
+	console.log(guildChannel)
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
@@ -35,15 +37,19 @@ const execute = async guild => {
 		await guildChannel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 		return;
 	}
-	// const channel = await guild.channels.create(channelName,
-	// 	{ permissionOverwrites: [
-	// 		{
-	// 			id: guild.roles.everyone,
-	// 			allow: [Permissions.FLAGS.VIEW_CHANNEL],
-	// 			deny: [Permissions.FLAGS.SEND_MESSAGES],
-	// 		},
-	// 	] });
-	// await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+	const channel = await guild.channels.create(channelName,
+		{ permissionOverwrites: [
+			{
+				id: guild.roles.everyone,
+				allow: [Permissions.FLAGS.VIEW_CHANNEL],
+				deny: [Permissions.FLAGS.SEND_MESSAGES],
+			},
+			{
+				id: guild.roles.botRoleFor(botUser),
+				allow: [Permissions.FLAGS.ADMINISTRATOR]
+			}
+		] });
+	await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 };
 module.exports = {
 	execute,
