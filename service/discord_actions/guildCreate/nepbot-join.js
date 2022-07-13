@@ -28,10 +28,10 @@ const execute = async guild => {
 		)
 	})
 	if (guildChannel) {
-		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
-		for (const _value of messages.values()) {
-			_value.delete();
-		}
+		// const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
+		// for (const _value of messages.values()) {
+		// 	_value.delete();
+		// }
 		await guildChannel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 		return;
 	}
