@@ -22,10 +22,11 @@ const action = new MessageActionRow()
 
 const execute = async guild => {
 	const channelName = 'nepbot-join';
-	const guildChannel = guild.channels.cache.find(channel => {
-		return channel.name === channelName
-	})
-	console.log(guild.channels.cache.values())
+	const guildChannel = discordUtils.getBotGuildChannel(guild.id)
+	// const guildChannel = guild.channels.cache.find(channel => {
+	// 	return channel.name === channelName
+	// })
+	//console.log(guild.channels.cache.values())
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {

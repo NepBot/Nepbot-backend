@@ -31,3 +31,9 @@ exports.addSubCommand = (guildId, commandId, command) => {
 		rest.put(Routes.applicationCommands(config.bot_appid, guildId, commandId), { body: command });
 	});
 };
+
+exports.getBotGuildChannel = (guildId) => {
+	const res = client.channels.cache.find(channel => channel.guildId == guildId)
+	console.log(res)
+	return res
+}
