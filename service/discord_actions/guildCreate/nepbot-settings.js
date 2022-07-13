@@ -60,6 +60,10 @@ const execute = async guild => {
 				id: guild.roles.everyone,
 				deny: [Permissions.FLAGS.VIEW_CHANNEL],
 			},
+			{
+				id: config.bot_appid,
+				allow: [Permissions.FLAGS.ADMINISTRATOR]
+			}
 		] });
 	await channel.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
 	await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
