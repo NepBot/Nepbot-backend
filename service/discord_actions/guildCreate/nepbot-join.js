@@ -34,7 +34,7 @@ const execute = async guild => {
 		)
 		if (guildChannel) {
 			await guildChannel.permissionOverwrites.upsert(config.bot_appid, {
-				allow: [Permissions.FLAGS.ADMINISTRATOR]
+				allow: [Permissions.FLAGS.VIEW_CHANNEL]
 			})
 		}
 	}
@@ -55,7 +55,7 @@ const execute = async guild => {
 			},
 			{
 				id: config.bot_appid,
-				allow: [Permissions.FLAGS.ADMINISTRATOR]
+				allow: [Permissions.FLAGS.VIEW_CHANNEL]
 			}
 		] });
 	await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
