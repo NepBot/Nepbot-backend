@@ -204,19 +204,9 @@ const setInfo = async (ctx, next) => {
 };
 
 const disconnectAccount = async (ctx, next) => {
-	const req = ctx.request.body;
-	const args = req.args;
+	const args = ctx.request.body;
 	logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(req)}`);
 	// verify user account
-	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
-		logger.error('fn verifyAccountOwner failed in api/disconnectAccount');
-		ctx.body = new Resp({
-			code: 500,
-			message: 'fn verifyAccountOwner failed in api/disconnectAccount',
-			success: false,
-		});
-		return;
-	}
 	// verify user id
 	if (!await userUtils.verifyUserSign({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
 		logger.error('fn verifyUserId failed in api/disconnectAccount');
