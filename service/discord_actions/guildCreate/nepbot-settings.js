@@ -31,11 +31,8 @@ const execute = async guild => {
 	// create server owner channle
 	const channelName = 'nepbot-settings';
 	const guildChannel = guild.channels.cache.find(channel => {
-		return channel.permissionOverwrites.findIndex(permission => 
-			permission.deny.findIndex(deny => deny == Permissions.FLAGS.VIEW_CHANNEL) > -1
-		) > -1 && channel.app_id === config.bot_appid
+		return  channel.app_id === config.bot_appid
 	})
-	console.log(guildChannel)
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
