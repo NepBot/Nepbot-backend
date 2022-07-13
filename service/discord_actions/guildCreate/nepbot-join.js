@@ -23,6 +23,7 @@ const action = new MessageActionRow()
 const execute = async guild => {
 	const channelName = 'nepbot-join';
 	const botUser = discordUtils.getBotUser()
+	console.log(botUser)
 	const guildChannel = guild.channels.cache.find(channel => {
 		channel.permissionOverwrites.cache.find(permission => 
 			permission.id == guild.roles.botRoleFor(botUser)
