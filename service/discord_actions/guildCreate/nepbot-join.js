@@ -25,7 +25,7 @@ const execute = async guild => {
 	let guildChannel = guild.channels.cache.find(channel => 
 		channel.permissionOverwrites.cache.find(permission => 
 			permission.id == config.bot_appid &&
-			permission.allow.findIndex(item => item == Permissions.FLAGS.VIEW_CHANNEL) > -1
+			permission.allow.find(item => item == Permissions.FLAGS.VIEW_CHANNEL)
 		)
 	)
 	if (!guildChannel) {
