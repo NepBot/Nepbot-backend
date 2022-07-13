@@ -30,9 +30,21 @@ const createnftAction = new MessageActionRow()
 const execute = async guild => {
 	// create server owner channle
 	const channelName = 'nepbot-settings';
-	const guildChannel = guild.channels.cache.find(channel => {
-		return  channel.app_id === config.bot_appid
-	})
+	let guildChannel = guild.channels.cache.find(channel => 
+		channel.permissionOverwrites.cache.find(permission => 
+			permission.id == config.bot_appid
+		)
+	)
+	if (!guildChannel) {
+		guildChannel = guild.channels.cache.find(channel => 
+			channel.name == channelName
+		)
+		if (guildChannel) {
+			await guildChannel.permissionOverwrites.upsert(config.bot_appid, {
+				allow: [Permissions.FLAGS.ADMINISTRATOR]
+			})
+		}
+	}
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
@@ -42,15 +54,15 @@ const execute = async guild => {
 		await guildChannel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
 		return;
 	}
-	// const channel = await guild.channels.create(channelName,
-	// 	{ permissionOverwrites: [
-	// 		{
-	// 			id: guild.roles.everyone,
-	// 			deny: [Permissions.FLAGS.VIEW_CHANNEL],
-	// 		},
-	// 	] });
-	// await channel.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
-	// await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
+	const channel = await guild.channels.create(channelName,
+		{ permissionOverwrites: [
+			{
+				id: guild.roles.everyone,
+				deny: [Permissions.FLAGS.VIEW_CHANNEL],
+			},
+		] });
+	await channel.send({ content: '\n', ephemeral:true, embeds:[setruleEmbed], components: [setruleAction] });
+	await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
 };
 module.exports = {
 	execute,
