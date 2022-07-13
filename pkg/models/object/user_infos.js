@@ -61,3 +61,12 @@ exports.updateUser = async (data) => {
 		},
 	});
 };
+
+exports.deleteUser = async (data) => {
+	return await UserFields.destroy({
+		where: {
+			user_id:data?.user_id,
+			guild_id:data?.guild_id,
+		},
+	});
+};
