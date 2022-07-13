@@ -27,6 +27,11 @@ const execute = async guild => {
 			permission.id == config.bot_appid
 		)
 	})
+	for (channel of guild.channels.cache.values()) {
+		for (permission of channel.permissionOverwrites.cache.values()) {
+			console.log(permission)
+		}
+	}
 	if (guildChannel) {
 		// const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		// for (const _value of messages.values()) {
