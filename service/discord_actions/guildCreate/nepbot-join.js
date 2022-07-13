@@ -32,22 +32,23 @@ const execute = async guild => {
 		// for (const _value of messages.values()) {
 		// 	_value.delete();
 		// }
+		console.log(guildChannel)
 		await guildChannel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 		return;
 	}
-	const channel = await guild.channels.create(channelName,
-		{ permissionOverwrites: [
-			{
-				id: guild.roles.everyone,
-				allow: [Permissions.FLAGS.VIEW_CHANNEL],
-				deny: [Permissions.FLAGS.SEND_MESSAGES],
-			},
-			{
-				id: config.bot_appid,
-				allow: [Permissions.FLAGS.ADMINISTRATOR]
-			}
-		] });
-	await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+	// const channel = await guild.channels.create(channelName,
+	// 	{ permissionOverwrites: [
+	// 		{
+	// 			id: guild.roles.everyone,
+	// 			allow: [Permissions.FLAGS.VIEW_CHANNEL],
+	// 			deny: [Permissions.FLAGS.SEND_MESSAGES],
+	// 		},
+	// 		{
+	// 			id: config.bot_appid,
+	// 			allow: [Permissions.FLAGS.ADMINISTRATOR]
+	// 		}
+	// 	] });
+	// await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
 };
 module.exports = {
 	execute,
