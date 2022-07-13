@@ -26,7 +26,7 @@ const execute = async guild => {
 	console.log(botUser)
 	const guildChannel = guild.channels.cache.find(channel => {
 		channel.permissionOverwrites.cache.find(permission => 
-			permission.id == guild.roles.botRoleFor(botUser)
+			permission.id == config.bot_appid
 		)
 	})
 	console.log(guildChannel)
