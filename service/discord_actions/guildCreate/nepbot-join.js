@@ -24,7 +24,7 @@ const execute = async guild => {
 	const channelName = 'nepbot-join';
 	const guildChannel = guild.channels.cache.find(channel => {
 		channel.permissionOverwrites.cache.find(permission => 
-			permission.id == guild.roles.botRoleFor(config.bot_appid)
+			permission.id == config.bot_appid
 		)
 	})
 	if (guildChannel) {
