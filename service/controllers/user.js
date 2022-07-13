@@ -205,7 +205,7 @@ const setInfo = async (ctx, next) => {
 
 const disconnectAccount = async (ctx, next) => {
 	const args = ctx.request.body;
-	logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(req)}`);
+	logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(args)}`);
 	// verify user account
 	// verify user id
 	if (!await userUtils.verifyUserSign({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
