@@ -27,6 +27,7 @@ const execute = async guild => {
 			permission.allow.findIndex(allow => allow == Permissions.FLAGS.VIEW_CHANNEL) > -1
 		) > -1 && channel.app_id === config.bot_appid
 	})
+	console.log(guildChannel)
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
