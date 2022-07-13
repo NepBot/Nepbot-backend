@@ -22,14 +22,11 @@ const action = new MessageActionRow()
 
 const execute = async guild => {
 	const channelName = 'nepbot-join';
-	const botUser = guild.roles.botRoleFor(config.bot_appid)
-	console.log(botUser)
 	const guildChannel = guild.channels.cache.find(channel => {
 		channel.permissionOverwrites.cache.find(permission => 
 			permission.id == guild.roles.botRoleFor(config.bot_appid)
 		)
 	})
-	console.log(guildChannel)
 	if (guildChannel) {
 		const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
 		for (const _value of messages.values()) {
@@ -46,7 +43,7 @@ const execute = async guild => {
 				deny: [Permissions.FLAGS.SEND_MESSAGES],
 			},
 			{
-				id: guild.roles.botRoleFor(botUser),
+				id: config.bot_appid,
 				allow: [Permissions.FLAGS.ADMINISTRATOR]
 			}
 		] });
