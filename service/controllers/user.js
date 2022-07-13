@@ -219,9 +219,10 @@ const disconnectAccount = async (ctx, next) => {
 		return;
 	}
 
-	await userInfos.deleteUser({
+	await userInfos.updateUser({
 		user_id: args.user_id, 
-		guild_id: args.guild_id
+		guild_id: args.guild_id,
+		near_wallet_id: null
 	})
 	ctx.body = new Resp({});
 }
