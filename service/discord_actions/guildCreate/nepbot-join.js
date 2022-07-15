@@ -4,7 +4,7 @@ const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('
 
 const embed = new MessageEmbed()
 	.setColor('#0099ff')
-	.setTitle('Verify your on-chain assets and your ass')
+	.setTitle('Verify your on-chain assets')
 	.setDescription(`1. Click the button below.\n
   2. Click on "Verify".\n
   3. Confirm your Discord account and Server, and choose a Near wallet to verify.\n
@@ -14,7 +14,7 @@ const embed = new MessageEmbed()
 
 const button = new MessageButton()
 	.setCustomId('command.verify')
-	.setLabel('Verif')
+	.setLabel('Verify')
 	.setStyle('SECONDARY');
 
 const action = new MessageActionRow()
