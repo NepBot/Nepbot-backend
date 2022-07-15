@@ -14,7 +14,7 @@ const embed = new MessageEmbed()
 
 const button = new MessageButton()
 	.setCustomId('command.verify')
-	.setLabel('Verify')
+	.setLabel('Verif')
 	.setStyle('SECONDARY');
 
 const action = new MessageActionRow()
