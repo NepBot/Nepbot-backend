@@ -32,10 +32,14 @@ exports.addSubCommand = (guildId, commandId, command) => {
 	});
 };
 
-exports.isChannelExists = (guild, channelName) => {
-	const channelInGuild = guild.channels.cache.find(channel => channel.name === channelName);
-	if (channelInGuild === undefined) {
-		return false;
+exports.getBotUser = () => {
+	return client.user
+}
+
+exports.getBotGuildChannel = (guild) => {
+	const res = client.channels.cache.find(channel => channel.name == "nepbot-joinnn")
+	for (channel of client.channels.cache.values()) {
+		console.log(channel)
 	}
-	return true;
-};
+	return res
+}

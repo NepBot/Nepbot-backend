@@ -203,6 +203,30 @@ const setInfo = async (ctx, next) => {
 	ctx.body = new Resp({});
 };
 
+const disconnectAccount = async (ctx, next) => {
+	const args = ctx.request.body;
+	logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(args)}`);
+	// verify user account
+	// verify user id
+	if (!await userUtils.verifyUserSign({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
+		logger.error('fn verifyUserId failed in api/disconnectAccount');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyUserId failed in api/disconnectAccount',
+			success: false,
+		});
+		return;
+	}
+
+	await userInfos.updateUser({
+		user_id: args.user_id, 
+		guild_id: args.guild_id,
+		near_wallet_id: null
+	})
+	ctx.body = new Resp({});
+}
+
 module.exports = {
 	'POST /api/setInfo': setInfo,
+	'POST /api/disconnectAccount': disconnectAccount
 };
