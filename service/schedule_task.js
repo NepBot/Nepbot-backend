@@ -8,6 +8,7 @@ const octTask = require('./schedule_tasks/oct_task');
 const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
 const updeteGuildTask = require('./schedule_tasks/updete_guild_task');
+const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { providers } = require('near-api-js');
 
 const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
@@ -22,6 +23,7 @@ const resolveChunk = async (chunkHash) => {
     promises.push(octTask(chunkData.receipts));
     promises.push(ntfTask(chunkData.receipts));
     promises.push(parasTask(chunkData.receipts));
+    promises.push(astrodaoTask(chunkData.receipts));
     await Promise.all(promises);
   }
   catch (e) {
