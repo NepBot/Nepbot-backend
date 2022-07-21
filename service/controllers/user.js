@@ -8,6 +8,7 @@ const parasUtils = require('../../pkg/utils/paras_api');
 const config = require('../../pkg/utils/config')
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
+const astrodaoUtils = require('../../pkg/utils/astrodao_utils');
 const BN = require('bn.js');
 
 const setInfo = async (ctx, next) => {
@@ -65,6 +66,7 @@ const setInfo = async (ctx, next) => {
     balance: [],
     nft: [],
     paras: [],
+    astrodao:[],
   };
   for (const rule of rules) {
     if (rule.key_field[0] == 'token_id') {
@@ -81,6 +83,9 @@ const setInfo = async (ctx, next) => {
     }
     else if (rule.key_field[0] == config.paras.nft_contract) {
       rulesMap.paras.push(rule);
+    }
+    else if (rule.key_field[0] == 'astrodao_id') {
+      rulesMap.astrodao.push(rule);
     }
     await userFields.addUserField({
       near_wallet_id: req.account_id,
@@ -109,7 +114,7 @@ const setInfo = async (ctx, next) => {
       }
     }
     catch (e) {
-      continue
+      continue;
     }
 
   }
@@ -128,7 +133,7 @@ const setInfo = async (ctx, next) => {
       }
     }
     catch (e) {
-      continue
+      continue;
     }
   }
 
@@ -148,9 +153,8 @@ const setInfo = async (ctx, next) => {
       }
     }
     catch (e) {
-      continue
+      continue;
     }
-
   }
 
   for (const rule of rulesMap.nft) {
@@ -166,7 +170,7 @@ const setInfo = async (ctx, next) => {
       }
     }
     catch (e) {
-      continue
+      continue;
     }
 
   }
@@ -185,26 +189,43 @@ const setInfo = async (ctx, next) => {
       }
     }
     catch (e) {
-      continue
+      continue;
     }
+  }
 
+  for (const rule of rulesMap.astrodao) {
+    try {
+      const _result = await astrodaoUtils.isMemberInOrganization(rule.key_field[1], req.account_id);
+
+      if (!member._roles.includes(rule.role_id) && _result) {
+        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+        _role && roles.push(_role);
+      }
+      if (member._roles.includes(rule.role_id) && _result) {
+        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+        _role && delRoles.push(_role);
+      }
+    }
+    catch (e) {
+      continue;
+    }
   }
 
   for (const role of roles) {
     try {
-      await member.roles.add(role)
+      await member.roles.add(role);
     }
     catch (e) {
-      continue
+      continue;
     }
   }
 
   for (const role of delRoles) {
     try {
-      await member.roles.remove(role)
+      await member.roles.remove(role);
     }
     catch (e) {
-      continue
+      continue;
     }
 
   }

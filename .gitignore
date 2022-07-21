@@ -3,3 +3,4 @@
 conf/near_net.json
 logs/*
 node_modules
+.vscode

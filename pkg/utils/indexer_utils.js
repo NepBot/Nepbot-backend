@@ -2,9 +2,6 @@ const nearIndexerPool = require('../models/db_driver/postgre_driver');
 const logger = require('./logger');
 const config = require('./config');
 
-
-
-
 const getTxn = async (guildId) => {
 	const client = await nearIndexerPool.connect();
 	const sqlStr = `
