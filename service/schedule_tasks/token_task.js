@@ -7,12 +7,12 @@ const userFields = require('../../pkg/models/object/user_fields');
 const config = require('../../pkg/utils/config');
 const BN = require('bn.js');
 const token_task = async function(receipts) {
-	const allFieldList = await contractUtils.getFieldList();
+	const allFieldList = await userFields.getUserFields({
+		key: 'token_id',
+	});
 	const allTokenList = [];
 	for (const field of allFieldList) {
-		if (field[0] == 'token_id') {
-			allTokenList.push(field[1]);
-		}
+		allTokenList.push(field.value);
 	}
 	const actions = await contractUtils.filterTokenActions(allTokenList, receipts);
 
@@ -51,7 +51,7 @@ const token_task = async function(receipts) {
 		});
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
+			const guildRoles = roles.filter(role => role.guild_id == _userInfo.guild_id)
 
 			const roles = [];
 			const delRoles = [];

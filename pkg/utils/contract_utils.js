@@ -190,21 +190,25 @@ exports.filterCollectionActions = (receipts) => {
   return ret;
 };
 
-exports.filterAstroDaoMemberActions = async (receipts) => {
+exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
   const account = await this.contract();
   const ret = [];
   receipts = receipts.filter(item =>
     item.receipt.Action &&
-    item.receiver_id.substring(item.receiver_id.indexOf('.') + 1) == config.astrodao.contract &&
+    daoIds.findIndex(daoId => daoId == item.receiver_id) > -1 &&
     item.receipt.Action.actions[0].FunctionCall.method_name == 'act_proposal');
   for (receipts of receipts) {
     const obj = {};
-    obj.organization = receipts.receiver_id;
+    obj.daoId = receipts.receiver_id;
     const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+    if (!args.action.VoteApprove && !args.action.Finalize) {
+      continue
+    }
     const proposalResult = await account.viewFunction(receipts.receiver_id, 'get_proposal', { 'id': args.id })
-      .then((r) => r.description.split('$$$$$$$$')[1] == 'ProposeRemoveMember' &&
-      r.status == 'Approved');
-    obj.member_id = proposalResult.kind.RemoveMemberFromRole.member_id;
+    if (!(proposalResult.kind.AddMemberFromRole || proposalResult.kind.RemoveMemberFromRole)) {
+      continue
+    }
+    obj.kind = proposalResult.kind;
     ret.push(obj);
   }
   return ret;
