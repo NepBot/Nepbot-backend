@@ -33,7 +33,7 @@
     "pg-hstore": "^2.3.4",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "sequelize": "^6.19.0"
+    "sequelize": "^6.21.3"
   },
   "devDependencies": {
     "eslint": "^8.14.0"
