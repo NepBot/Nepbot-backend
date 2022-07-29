@@ -42,6 +42,7 @@ const execute = async interaction => {
 	logger.debug('saving user info...');
 	// replay message to discord user
 	const msg = await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+	console.log(msg)
 	discordUtils.setReply(msg, interaction.user.id, interaction.guildId)
 };
 
