@@ -4,6 +4,7 @@ const config = require('../../pkg/utils/config');
 const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const logger = require('../../pkg/utils/logger');
+const discordUtils = require('../../pkg/utils/discord_utils');
 
 const embed = new MessageEmbed()
 	.setColor('#0099ff')
@@ -40,7 +41,8 @@ const execute = async interaction => {
 	// store data into mysql
 	logger.debug('saving user info...');
 	// replay message to discord user
-	await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+	const msg = await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+	discordUtils.setReply(msg, interaction.user.id, interaction.guildId)
 };
 
 module.exports = {

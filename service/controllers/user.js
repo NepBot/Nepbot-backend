@@ -10,6 +10,11 @@ const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
 
+const embed = new MessageEmbed()
+	.setColor('#0099ff')
+	.setTitle('Verify success')
+	.setDescription(``);
+
 const setInfo = async (ctx, next) => {
 	const req = ctx.request.body;
 	const args = req.args;
@@ -200,6 +205,12 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
+
+	const msg = discordUtils.getReply(args.user_id, args.guild_id)
+	if (msg) {
+		await msg.edit({embed:[embed]})
+	}
+
 	ctx.body = new Resp({});
 };
 

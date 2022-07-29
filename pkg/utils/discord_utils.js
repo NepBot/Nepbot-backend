@@ -4,6 +4,8 @@ const { Routes } = require('discord-api-types/v9');
 const rest = require('../../deploy-commands');
 const config = require('./config');
 
+const replies = {}
+
 exports.getMember = async (guildId, memberId) => {
 	const member = await rest.get(`${Routes.guildMember(guildId, memberId)}`, {
 		auth:true,
@@ -42,4 +44,25 @@ exports.getBotGuildChannel = (guild) => {
 		console.log(channel)
 	}
 	return res
+}
+
+clearReplies = () => {
+	for (let key in replies) {
+		const reply = replies[key]
+		if (Date.now() - reply.timestamp > 300 * 1000) {
+			delete replies[key]
+		}
+	}
+}
+
+exports.getReply = (userId, guildId) => {
+	return replies[String(userId) + String(guildId)].msg
+}
+
+exports.setReply = (msg, userId, guildId) => {
+	clearReplies()
+	replies[String(userId) + String(guildId)] = {
+		msg: msg,
+		timestamp: Date.now()
+	}
 }
