@@ -9,6 +9,7 @@ const config = require('../../pkg/utils/config')
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
 const BN = require('bn.js');
+const { MessageEmbed } = require('discord.js');
 
 const embed = new MessageEmbed()
 	.setColor('#0099ff')
