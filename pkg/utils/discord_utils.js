@@ -65,4 +65,5 @@ exports.setInteraction = (interaction) => {
 		interaction: interaction,
 		timestamp: Date.now()
 	}
+	console.log(interaction)
 }

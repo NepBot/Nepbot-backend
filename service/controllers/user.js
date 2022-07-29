@@ -208,6 +208,7 @@ const setInfo = async (ctx, next) => {
 	}
 
 	const interaction = discordUtils.getInteraction(args.user_id, args.guild_id)
+	console.log(interaction)
 	if (interaction) {
 		
 		await interaction.editReply({embed:[embed]})
