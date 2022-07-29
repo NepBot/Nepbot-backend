@@ -209,6 +209,7 @@ const setInfo = async (ctx, next) => {
 
 	const msg = discordUtils.getReply(args.user_id, args.guild_id)
 	if (msg) {
+		console.log(msg)
 		await msg.edit({embed:[embed]})
 	}
 
