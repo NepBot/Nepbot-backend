@@ -207,11 +207,10 @@ const setInfo = async (ctx, next) => {
 		
 	}
 
-	const msg = discordUtils.getReply(args.user_id, args.guild_id)
-	console.log(msg)
-	if (msg) {
+	const interaction = discordUtils.getInteraction(args.user_id, args.guild_id)
+	if (interaction) {
 		
-		await msg.edit({embed:[embed]})
+		await interaction.editReply({embed:[embed]})
 	}
 
 	ctx.body = new Resp({});

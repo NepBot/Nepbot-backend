@@ -55,15 +55,14 @@ clearReplies = () => {
 	}
 }
 
-exports.getReply = (userId, guildId) => {
-	return replies[String(userId) + String(guildId)].msg
+exports.getInteraction = (userId, guildId) => {
+	return replies[String(userId) + String(guildId)].interaction
 }
 
-exports.setReply = (msg, userId, guildId) => {
+exports.setInteraction = (interaction) => {
 	clearReplies()
-	replies[String(userId) + String(guildId)] = {
-		msg: msg,
+	replies[String(interaction.user.id) + String(interaction.guildId)] = {
+		interaction: interaction,
 		timestamp: Date.now()
 	}
-	console.log(msg)
 }
