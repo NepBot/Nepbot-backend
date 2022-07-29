@@ -65,4 +65,5 @@ exports.setReply = (msg, userId, guildId) => {
 		msg: msg,
 		timestamp: Date.now()
 	}
+	console.log(replies)
 }
