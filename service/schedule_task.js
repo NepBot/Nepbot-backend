@@ -17,12 +17,12 @@ const resolveChunk = async (chunkHash) => {
   try {
     const chunkData = await provider.chunk(chunkHash);
     const promises = [];
-    promises.push(updeteGuildTask(chunkData.receipts));
-    promises.push(tokenTask(chunkData.receipts));
-    promises.push(balanceTask(chunkData.receipts));
-    promises.push(octTask(chunkData.receipts));
-    promises.push(ntfTask(chunkData.receipts));
-    promises.push(parasTask(chunkData.receipts));
+    // promises.push(updeteGuildTask(chunkData.receipts));
+    // promises.push(tokenTask(chunkData.receipts));
+    // promises.push(balanceTask(chunkData.receipts));
+    // promises.push(octTask(chunkData.receipts));
+    // promises.push(ntfTask(chunkData.receipts));
+    // promises.push(parasTask(chunkData.receipts));
     promises.push(astrodaoTask(chunkData.receipts));
     await Promise.all(promises);
   }

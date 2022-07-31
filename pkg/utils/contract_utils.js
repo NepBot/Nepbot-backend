@@ -1,6 +1,7 @@
 const { connect, WalletConnection, providers } = require('near-api-js');
 const config = require('./config');
 const BN = require('bn.js');
+const logger = require('./logger');
 const contract = async () => {
   // connect to NEAR
   const near = await connect(config.nearWallet);
@@ -199,17 +200,18 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
     item.receipt.Action.actions[0].FunctionCall.method_name == 'act_proposal');
   for (receipts of receipts) {
     const obj = {};
-    obj.daoId = receipts.receiver_id;
+    obj.dao_id = receipts.receiver_id;
     const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    if (!args.action.VoteApprove && !args.action.Finalize) {
-      continue
-    }
-    const proposalResult = await account.viewFunction(receipts.receiver_id, 'get_proposal', { 'id': args.id })
-    if (!(proposalResult.kind.AddMemberFromRole || proposalResult.kind.RemoveMemberFromRole)) {
-      continue
+    const proposalResult = await account.viewFunction(receipts.receiver_id, 'get_proposal', { 'id': args.id });
+    if (!('AddMemberFromRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
+      continue;
     }
     obj.kind = proposalResult.kind;
+    // obj = {dao_id: "xxxxxxxxx.sputnikv2.testnet", kind: {RemoveMemberFromRole: { member_id: 'member_id', role: 'council' }}}
     ret.push(obj);
+  }
+  if (ret.length > 0) {
+    logger.info(`ret: ${ ret }`);
   }
   return ret;
 };
