@@ -190,6 +190,9 @@ exports.setUser = async (args, accountId) => {
 		
 	}
 
+	console.log(roles)
+	console.log(delRoles)
+
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
