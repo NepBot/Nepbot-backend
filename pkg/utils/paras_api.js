@@ -32,22 +32,22 @@ exports.createCollection = async (formData, auth) => {
 };
 
 exports.getTokenSeries = async (tokenSeriesId) => {
-  const res = await new Promise((resolve, reject) => {
-    request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=x.paras.near&__limit=1`, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        resolve(JSON.parse(body));
-      }
-      reject(error);
-    });
-  });
-  if (res.data.results) {
-    return res.data.results[0];
-  }
+	const res = await new Promise((resolve, reject) => {
+		request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=${config.paras.nft_contract}&__limit=1`, function(error, response, body) {
+			if (!error && response.statusCode == 200) {
+				resolve(JSON.parse(body));
+			}
+			reject(error);
+		});
+	});
+	if (res.data.results) {
+		return res.data.results[0];
+	}
 };
 
-exports.getTokenPerOwnerCount = async (collectionId, ownerId) => {
+exports.getTokenPerOwnerCount = async (collectionId, ownerId, limit) => {
 	return await new Promise((resolve, reject) => {
-		request(`${config.paras.api}/token?collection_id=${collectionId}&owner_id=${ownerId}`, function(error, response, body) {
+		request(`${config.paras.api}/token?collection_id=${collectionId}&owner_id=${ownerId}&exclude_total_burn=true&__limit=${limit}`, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				const res = JSON.parse(body);
 				resolve(res.data.results.length);

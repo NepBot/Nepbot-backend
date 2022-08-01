@@ -33,9 +33,9 @@ const resolveChunk = async (chunkHash) => {
 let blockHeight = 0;
 let finalBlockHeight = 0;
 
-const resolveNewBlock = async (showLog=false) => {
+const resolveNewBlock = async (showLog = false) => {
 	if (showLog) {
-		logger.info(`fetched block height: ${blockHeight}`);
+		console.log(`fetched block height: ${blockHeight}`);
 	}
 	const newestBlock = await provider.block({ finality: 'optimistic' });
 	finalBlockHeight = newestBlock.header.height;
@@ -44,11 +44,15 @@ const resolveNewBlock = async (showLog=false) => {
 	}
 	const promises = [];
 	for (;blockHeight <= finalBlockHeight; blockHeight++) {
+		if (showLog) {
+			console.log(`fetched block height: ${blockHeight}`);
+		}
 		let block = {};
 		try {
 			block = await provider.block({ blockId: blockHeight });
 		}
 		catch (e) {
+			console.log(e)
 			continue;
 		}
 
@@ -61,7 +65,7 @@ const resolveNewBlock = async (showLog=false) => {
 module.exports.scheduleTask = function(fromBlockHeight = 0) {
 	if (fromBlockHeight > 0) {
 		blockHeight = fromBlockHeight
-		resolveNewBlock();
+		resolveNewBlock(true);
 	} else {
 		schedule.scheduleJob('*/1 * * * * *', function() {
 			resolveNewBlock();
