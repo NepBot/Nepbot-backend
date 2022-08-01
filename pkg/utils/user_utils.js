@@ -184,6 +184,7 @@ exports.setUser = async (args, accountId) => {
 				_role && delRoles.push(_role);
 			}
 		} catch (e) {
+			console.log(e)
 			continue
 		}
 		
