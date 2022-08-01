@@ -15,16 +15,11 @@ exports.getGuild = (guild_id) => {
 	return client.guilds.cache.get(guild_id);
 };
 
-exports.getRoles = async (guild_id, role_id) => {
-	// if (role_id) {
-	// 	return client.guilds.cache.get(guild_id).roles.cache.get(role_id);
-	// }
-	// return client.guilds.cache.get(guild_id).roles.cache;
-
-	const guild = await rest.get(`${Routes.guildRole(guild_id, role_id)}`, {
-		auth:true,
-	});
-	return guild
+exports.getRoles = (guild_id, role_id) => {
+	if (role_id) {
+		return client.guilds.cache.get(guild_id).roles.cache.get(role_id);
+	}
+	return client.guilds.cache.get(guild_id).roles.cache;
 };
 
 exports.getOwnerId = (guild_id) => {
