@@ -194,6 +194,7 @@ exports.setUser = async (args, accountId) => {
 		try {
 			await member.roles.add(role)
 		} catch (e) {
+			console.log(e)
 			continue
 		}
 	}
@@ -202,6 +203,7 @@ exports.setUser = async (args, accountId) => {
 		try {
 			await member.roles.remove(role)
 		} catch (e) {
+			console.log(e)
 			continue
 		}
 		
