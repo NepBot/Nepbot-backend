@@ -167,7 +167,6 @@ exports.setUser = async (args, accountId) => {
 				_role && delRoles.push(_role);
 			}
 		} catch (e) {
-			logger.error(e)
 			continue
 		}
 		
@@ -190,14 +189,11 @@ exports.setUser = async (args, accountId) => {
 		
 	}
 
-	console.log(roles)
-	console.log(delRoles)
-
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
 		} catch (e) {
-			logger.error(e)
+			console.log(e)
 			continue
 		}
 	}
@@ -206,7 +202,7 @@ exports.setUser = async (args, accountId) => {
 		try {
 			await member.roles.remove(role)
 		} catch (e) {
-			logger.error(e)
+			console.log(e)
 			continue
 		}
 		
