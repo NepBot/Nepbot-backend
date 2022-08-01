@@ -23,3 +23,5 @@ task.scheduleTask();
 // Run discord bot
 const client = require('./service/discord_bot');
 client.login(config.bot_token);
+
+require('./check_error.js')
