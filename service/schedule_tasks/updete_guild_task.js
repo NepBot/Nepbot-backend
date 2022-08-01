@@ -99,6 +99,16 @@ const update_guild_task = async function(receipts) {
 					_role && delRoles.push(_role);
 				}
 			}
+			else if (rule.key_field[0] == 'astrodao_id') {
+				if (!member._roles.includes(rule.role_id) && contractUtils.checkAstrodaoRole(rule.key_field[1], )) {
+					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+					_role && roles.push(_role);
+				}
+				if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+					_role && delRoles.push(_role);
+				}
+			}
 		}
 
 		for (const rule of delRoleList) {

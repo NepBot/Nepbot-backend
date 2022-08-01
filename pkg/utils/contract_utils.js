@@ -262,3 +262,14 @@ exports.getCollectionInfo = async (collectionId) => {
   const account = await this.contract();
   return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 };
+
+exports.getAstrodaoPolicy = async (contractId) => {
+  
+  return await account.viewFunction(config.nft_contract, 'get_policy', { collection_id: collectionId });
+}
+
+exports.checkAstrodaoRole = async (contractId, role, accountId) => {
+  const account = await this.contract();
+  const res = await account.viewFunction(contractId, 'get_policy', {});
+  console.log(res)
+}

@@ -14,7 +14,6 @@ exports.getMember = async (guildId, memberId) => {
 };
 
 exports.getGuild = (guild_id) => {
-  console.log("============================")
   return client.guilds.cache.get(guild_id);
 };
 
