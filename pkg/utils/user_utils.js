@@ -92,7 +92,6 @@ exports.setUser = async (args, accountId) => {
 			value: rule.key_field[1],
 		});
 	}
-	console.log(rulesMap)
 	const roles = [];
 	const delRoles = [];
 	for (const rule of rulesMap.token) {
@@ -175,7 +174,6 @@ exports.setUser = async (args, accountId) => {
 	for (const rule of rulesMap.paras) {
 		try {
 			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId);
-			console.log(tokenAmount)
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && roles.push(_role);
@@ -190,11 +188,12 @@ exports.setUser = async (args, accountId) => {
 		}
 		
 	}
+	console.log(roles)
+	console.log(delRoles)
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
 		} catch (e) {
-			console.log(e)
 			continue
 		}
 	}
@@ -203,7 +202,6 @@ exports.setUser = async (args, accountId) => {
 		try {
 			await member.roles.remove(role)
 		} catch (e) {
-			console.log(e)
 			continue
 		}
 		
