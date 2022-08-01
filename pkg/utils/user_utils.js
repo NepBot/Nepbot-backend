@@ -177,7 +177,7 @@ exports.setUser = async (args, accountId) => {
 			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				console.log("========================================")
-				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
+				const _role = await discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && roles.push(_role);
 			}
 			if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
