@@ -184,15 +184,10 @@ exports.setUser = async (args, accountId) => {
 				_role && delRoles.push(_role);
 			}
 		} catch (e) {
-			console.log(e)
 			continue
 		}
 		
 	}
-
-	console.log(member._roles.includes("988179226396086302"))
-	console.log(roles)
-	console.log(delRoles)
 
 	for (let role of roles) {
 		try {
