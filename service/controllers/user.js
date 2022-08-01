@@ -72,7 +72,7 @@ const setInfo = async (ctx, next) => {
 		balance: [],
 		nft: [],
 		paras: [],
-		astrpdao: []
+		astrodao: []
 	};
 	for (const rule of rules) {
 		if (rule.key_field[0] == 'token_id') {
