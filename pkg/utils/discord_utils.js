@@ -15,11 +15,12 @@ exports.getGuild = (guild_id) => {
 	return client.guilds.cache.get(guild_id);
 };
 
-exports.getRoles = (guid_id, role_id) => {
+exports.getRoles = (guild_id, role_id) => {
+  console.log(guild_id, role_id)
 	if (role_id) {
-		return client.guilds.cache.get(guid_id).roles.cache.get(role_id);
+		return client.guilds.cache.get(guild_id).roles.cache.get(role_id);
 	}
-	return client.guilds.cache.get(guid_id).roles.cache;
+	return client.guilds.cache.get(guild_id).roles.cache;
 };
 
 exports.getOwnerId = (guild_id) => {
