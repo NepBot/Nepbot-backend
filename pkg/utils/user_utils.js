@@ -1,12 +1,7 @@
 const config = require('./config');
 const userInfos = require('../models/object/user_infos');
-const userFields = require('../models/object/user_fields');
 const logger = require('./logger');
 const { verifySign } = require('./near_utils');
-const contractUtils = require('./contract_utils');
-const discordUtils = require('./discord_utils');
-const parasUtils = require('./paras_api');
-const BN = require('bn.js');
 
 exports.verifyUserId = async (args, sign) => {
 	if (!(await this.verifyUserSign(args, sign))) {
