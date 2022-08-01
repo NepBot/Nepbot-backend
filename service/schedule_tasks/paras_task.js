@@ -64,15 +64,6 @@ const delayTask = async function(accountIdList, collectionList) {
 				
 			}
 		}
-
-      for (const role of delRoles) {
-        try {
-          await member.roles.remove(role);
-        }
-        catch (e) {
-          continue;
-        }
-
 	}
 }
 
