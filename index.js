@@ -10,6 +10,8 @@ require('./pkg/models/db_driver/mysql_driver');
 // Sync models to mysql
 require('./pkg/utils/sync_models');
 
+require('./check_error.js')
+
 // Run backend app
 const app = require('./service/app');
 app.listen(config.port, () => {
