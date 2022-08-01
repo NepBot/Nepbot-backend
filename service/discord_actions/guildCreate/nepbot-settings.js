@@ -2,30 +2,30 @@ const discordUtils = require('../../../pkg/utils/discord_utils');
 const config = require('../../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 const setruleEmbed = new MessageEmbed()
-	.setTitle('Set Rule For Roles')
-	.setDescription('Click the button below to generate a link to the setrule page.')
-	.setColor('PURPLE');
+  .setTitle('Set Rule For Roles')
+  .setDescription('Click the button below to generate a link to the setrule page.')
+  .setColor('PURPLE');
 
 const setruleButton = new MessageButton()
-	.setCustomId('command.setrule')
-	.setLabel('Set Rule')
-	.setStyle('SECONDARY');
+  .setCustomId('command.setrule')
+  .setLabel('Set Rule')
+  .setStyle('SECONDARY');
 
 const setruleAction = new MessageActionRow()
-	.addComponents(setruleButton);
+  .addComponents(setruleButton);
 
 const createnftEmbed = new MessageEmbed()
-	.setTitle('Manage NFT Collection')
-	.setDescription('Click the button below to generate a link to the NFT collection page.')
-	.setColor('PURPLE');
+  .setTitle('Manage NFT Collection')
+  .setDescription('Click the button below to generate a link to the NFT collection page.')
+  .setColor('PURPLE');
 
 const createnftButton = new MessageButton()
-	.setCustomId('command.createnft')
-	.setLabel('Create NFT Collection')
-	.setStyle('SECONDARY');
+  .setCustomId('command.createnft')
+  .setLabel('Create NFT Collection')
+  .setStyle('SECONDARY');
 
 const createnftAction = new MessageActionRow()
-	.addComponents(createnftButton);
+  .addComponents(createnftButton);
 
 const execute = async guild => {
 	// create server owner channle
@@ -70,5 +70,5 @@ const execute = async guild => {
 	await channel.send({ content: '\n', ephemeral:true, embeds:[createnftEmbed], components: [createnftAction] });
 };
 module.exports = {
-	execute,
+  execute,
 };

@@ -8,24 +8,27 @@ const octTask = require('./schedule_tasks/oct_task');
 const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
 const updeteGuildTask = require('./schedule_tasks/updete_guild_task');
+const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { providers } = require('near-api-js');
 
 const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
 
 const resolveChunk = async (chunkHash) => {
-	try {
-		const chunkData = await provider.chunk(chunkHash);
-		const promises = [];
-		promises.push(updeteGuildTask(chunkData.receipts));
-		promises.push(tokenTask(chunkData.receipts));
-		promises.push(balanceTask(chunkData.receipts));
-		promises.push(octTask(chunkData.receipts));
-		promises.push(ntfTask(chunkData.receipts));
-		promises.push(parasTask(chunkData.receipts));
-		await Promise.all(promises);
-	} catch (e) {
-	}
-	
+  try {
+    const chunkData = await provider.chunk(chunkHash);
+    const promises = [];
+    promises.push(updeteGuildTask(chunkData.receipts));
+    promises.push(tokenTask(chunkData.receipts));
+    promises.push(balanceTask(chunkData.receipts));
+    promises.push(octTask(chunkData.receipts));
+    promises.push(ntfTask(chunkData.receipts));
+    promises.push(parasTask(chunkData.receipts));
+    promises.push(astrodaoTask(chunkData.receipts));
+    await Promise.all(promises);
+  }
+  catch (e) {
+  }
+
 };
 let blockHeight = 0;
 let finalBlockHeight = 0;
@@ -49,11 +52,11 @@ const resolveNewBlock = async (showLog=false) => {
 			continue;
 		}
 
-		for (const chunk of block.chunks) {
-			promises.push(resolveChunk(chunk.chunk_hash));
-		}
-	}
-	await Promise.all(promises);
+    for (const chunk of block.chunks) {
+      promises.push(resolveChunk(chunk.chunk_hash));
+    }
+  }
+  await Promise.all(promises);
 };
 module.exports.scheduleTask = function(fromBlockHeight = 0) {
 	if (fromBlockHeight > 0) {

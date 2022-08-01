@@ -10,15 +10,15 @@ const actionFiles = fs.readdirSync(actions_dir).filter(file => file.endsWith('.j
 
 const execute = async guild => {
 
-	for (const file of actionFiles) {
-		const action = require(`${actions_dir}/${file}`);
-		logger.info(`execute the actions in ${actions_dir}/${file}`);
-		await action.execute(guild);
-	}
+  for (const file of actionFiles) {
+    const action = require(`${actions_dir}/${file}`);
+    logger.info(`execute the actions in ${actions_dir}/${file}`);
+    await action.execute(guild);
+  }
 };
 
 module.exports = {
-	name: 'guildCreate',
-	execute,
+  name: 'guildCreate',
+  execute,
 };
 
