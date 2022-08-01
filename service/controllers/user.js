@@ -4,12 +4,6 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const userUtils = require('../../pkg/utils/user_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 
-const { MessageEmbed } = require('discord.js');
-
-const embed = new MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle('Verify success')
-	.setDescription(``);
 
 const setInfo = async (ctx, next) => {
 	const req = ctx.request.body;
@@ -36,7 +30,7 @@ const setInfo = async (ctx, next) => {
 		return;
 	}
 
-	await setUser(args, req)
+	await userUtils.setUser(args, req.account_id)
 
 	ctx.body = new Resp({});
 };
