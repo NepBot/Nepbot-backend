@@ -167,6 +167,7 @@ const setUser = async (args, req) => {
 		
 	}
 
+	console.log(member._roles.includes("988179226396086302"))
 	console.log(roles)
 	console.log(delRoles)
 
