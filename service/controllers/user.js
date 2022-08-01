@@ -2,7 +2,19 @@ const logger = require('../../pkg/utils/logger');
 const Resp = require('../../pkg/models/object/response');
 const nearUtils = require('../../pkg/utils/near_utils');
 const userUtils = require('../../pkg/utils/user_utils');
+const contractUtils = require('../../pkg/utils/contract_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
+const parasUtils = require('../../pkg/utils/paras_api');
+const config = require('../../pkg/utils/config')
 const userInfos = require('../../pkg/models/object/user_infos');
+const userFields = require('../../pkg/models/object/user_fields');
+const BN = require('bn.js');
+const { MessageEmbed } = require('discord.js');
+
+const embed = new MessageEmbed()
+	.setColor('#0099ff')
+	.setTitle('Verify success')
+	.setDescription(``);
 
 const setInfo = async (ctx, next) => {
 	const req = ctx.request.body;
@@ -164,6 +176,7 @@ const setInfo = async (ctx, next) => {
 	for (const rule of rulesMap.paras) {
 		try {
 			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id, rule.fields.token_amount);
+
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && roles.push(_role);
@@ -173,13 +186,10 @@ const setInfo = async (ctx, next) => {
 				_role && delRoles.push(_role);
 			}
 		} catch (e) {
-			console.log(e)
 			continue
 		}
 		
 	}
-	console.log(roles)
-	console.log(delRoles)
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
@@ -196,7 +206,7 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
-	
+
 	ctx.body = new Resp({});
 };
 
