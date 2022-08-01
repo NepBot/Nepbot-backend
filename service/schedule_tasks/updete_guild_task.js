@@ -89,7 +89,7 @@ const update_guild_task = async function(receipts) {
 				}
 			}
 			else if (rule.key_field[0] == config.paras.nft_contract) {
-				const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
+				const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.token_amount);
 				if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 					_role && roles.push(_role);

@@ -24,7 +24,7 @@ const delayTask = async function(accountIdList, collectionList) {
 			guild_id: guild_ids,
 			near_wallet_id: userToken.near_wallet_id,
 		});
-		let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id);
+		
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
@@ -36,6 +36,7 @@ const delayTask = async function(accountIdList, collectionList) {
 				if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
 					continue;
 				}
+				let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
 				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
 					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
 					_role && roles.push(_role);

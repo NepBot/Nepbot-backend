@@ -173,11 +173,7 @@ exports.setUser = async (args, accountId) => {
 
 	for (const rule of rulesMap.paras) {
 		try {
-			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId);
-			if (rule.role_id == "988179226396086302") {
-				console.log(tokenAmount, rule.fields.token_amount)
-			}
-			
+			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && roles.push(_role);
