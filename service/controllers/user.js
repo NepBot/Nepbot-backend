@@ -58,14 +58,7 @@ const disconnectAccount = async (ctx, next) => {
 	ctx.body = new Resp({});
 }
 
-const testSetInfo = async (ctx, next) => {
-	const req = ctx.request.body;
-	await userUtils.setUser({guild_id: req.guild_id, user_id: req.user_id}, req.account_id)
-	ctx.body = new Resp({});
-}
-
 module.exports = {
 	'POST /api/setInfo': setInfo,
 	'POST /api/disconnectAccount': disconnectAccount,
-	'POST /api/testSetInfo': testSetInfo
 };
