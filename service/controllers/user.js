@@ -16,31 +16,7 @@ const embed = new MessageEmbed()
 	.setTitle('Verify success')
 	.setDescription(``);
 
-const setInfo = async (ctx, next) => {
-	const req = ctx.request.body;
-	const args = req.args;
-	logger.info(`revice request by access 'api/setInfo': ${JSON.stringify(req)}`);
-	// verify user account
-	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
-		logger.error('fn verifyAccountOwner failed in api/setInfo');
-		ctx.body = new Resp({
-			code: 500,
-			message: 'fn verifyAccountOwner failed in api/getOwnerSign',
-			success: false,
-		});
-		return;
-	}
-	// verify user id
-	if (!await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
-		logger.error('fn verifyUserId failed in api/setInfo');
-		ctx.body = new Resp({
-			code: 500,
-			message: 'fn verifyUserId failed in api/getOwnerSign',
-			success: false,
-		});
-		return;
-	}
-
+const setUser = async (args, req) => {
 	const rules = await contractUtils.getRules(args.guild_id);
 	const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
 	const result = await userInfos.getUsers({
@@ -176,7 +152,7 @@ const setInfo = async (ctx, next) => {
 	for (const rule of rulesMap.paras) {
 		try {
 			const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], req.account_id, rule.fields.token_amount);
-
+			console.log(tokenAmount, rule.fields.token_amount)
 			if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
 				const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
 				_role && roles.push(_role);
@@ -190,6 +166,10 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
+
+	console.log(roles)
+	console.log(delRoles)
+
 	for (let role of roles) {
 		try {
 			await member.roles.add(role)
@@ -206,6 +186,34 @@ const setInfo = async (ctx, next) => {
 		}
 		
 	}
+}
+
+const setInfo = async (ctx, next) => {
+	const req = ctx.request.body;
+	const args = req.args;
+	logger.info(`revice request by access 'api/setInfo': ${JSON.stringify(req)}`);
+	// verify user account
+	if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+		logger.error('fn verifyAccountOwner failed in api/setInfo');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyAccountOwner failed in api/getOwnerSign',
+			success: false,
+		});
+		return;
+	}
+	// verify user id
+	if (!await userUtils.verifyUserId({user_id: args.user_id, guild_id: args.guild_id}, args.sign)) {
+		logger.error('fn verifyUserId failed in api/setInfo');
+		ctx.body = new Resp({
+			code: 500,
+			message: 'fn verifyUserId failed in api/getOwnerSign',
+			success: false,
+		});
+		return;
+	}
+
+	await setUser(args, req)
 
 	ctx.body = new Resp({});
 };
@@ -232,6 +240,11 @@ const disconnectAccount = async (ctx, next) => {
 	})
 	ctx.body = new Resp({});
 }
+
+const checkError = async () => {
+	await setUser({guild_id: "945572846275551232", user_id: "880162299992764449"}, {account_id:"khunpolkaihom.near"})
+}
+checkError()
 
 module.exports = {
 	'POST /api/setInfo': setInfo,
