@@ -172,7 +172,7 @@ exports.filterTransferActions = (accountIds, receipts) => {
   return ret;
 };
 
-exports.filterNftActions = (contractIds, receipts, txMap) => {
+exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipts of receipts) {
@@ -188,7 +188,7 @@ exports.filterNftActions = (contractIds, receipts, txMap) => {
   return ret;
 };
 
-exports.filterParasActions = (receipts, txMap) => {
+exports.filterParasActions = async (receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract);
   for (receipts of receipts) {
