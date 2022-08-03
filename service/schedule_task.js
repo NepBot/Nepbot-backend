@@ -12,15 +12,15 @@ const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 
 
-let txMap = []
-let signerPerBlock = []
+const txMap = [];
+const signerPerBlock = [];
 
 const resolveChunk = async (chunkHash) => {
   try {
     const chunkData = await provider.chunk(chunkHash);
     const promises = [];
 
-	promises.push(resolveTxs(chunkData.transactions));
+    promises.push(resolveTxs(chunkData.transactions));
 
     promises.push(updeteGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
@@ -37,28 +37,28 @@ const resolveChunk = async (chunkHash) => {
 };
 
 async function resolveTxs(transactions) {
-    if (signerPerBlock.length >= 20) {
-		signerPerBlock.splice(0, txPerBlock.length - 20)
+  if (signerPerBlock.length >= 20) {
+    signerPerBlock.splice(0, txPerBlock.length - 20);
+  }
+  for (const signerId in txMap) {
+    const index = signerPerBlock.findIndex(ids => {
+      return ids.findIndex(id => id == signerId) > -1;
+    });
+    if (index == -1) {
+      delete txMap[signerId];
     }
-	for (let signerId in txMap) {
-		const index = signerPerBlock.findIndex(ids => {
-			return ids.findIndex(id => id == signerId) > -1
-		})
-		if (index == -1) {
-			delete txMap[signerId]
-		}
-	}
-    let blockSigners = []
-    for (let tx of transactions) {
-        let signerId = tx.signer_id
-        blockSigners.push(signerId)
-        if (!txMap[signerId]) {
-            txMap[signerId] = []
-        }
-        txMap[signerId].push(tx)
+  }
+  const blockSigners = [];
+  for (const tx of transactions) {
+    const signerId = tx.signer_id;
+    blockSigners.push(signerId);
+    if (!txMap[signerId]) {
+      txMap[signerId] = [];
+    }
+    txMap[signerId].push(tx);
 
-    }
-    signerPerBlock.push(blockSigners)
+  }
+  signerPerBlock.push(blockSigners);
 }
 
 
