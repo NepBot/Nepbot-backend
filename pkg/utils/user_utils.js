@@ -7,6 +7,7 @@ const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
 const astrodaoUtils = require('../../pkg/utils/astrodao_utils');
 const BN = require('bn.js');
+const { verifySign } = require('./near_utils');
 
 
 exports.verifyUserId = async (args, sign) => {
