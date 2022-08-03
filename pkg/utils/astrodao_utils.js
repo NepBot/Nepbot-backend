@@ -2,19 +2,25 @@ const axios = require('axios');
 const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 
-const getMembers = async (daoId) => {
-  const members = await axios
-    .get(`${config.astrodao.api}/${daoId}/members`)
+const getMemberInfo = async (daoId) => {
+  const memberInfo = await axios
+    .get(`${config.astrodao.api}/${daoId}`)
     .then(res => {
       return res.data;
     })
     .catch(error => {
       logger.error(error);
     });
-  return members;
+  return memberInfo;
 };
 
-exports.isMemberInOrganization = async (daoId, accountId) => {
-  const members = await getMembers(daoId);
-  return members.some(item => item.accountId === accountId);
+exports.isMemberHaveRole = async (daoId, accountId, roleInDao) => {
+  const data = await getMemberInfo(daoId);
+  for (const role of data.policy.roles) {
+    if (role.name == roleInDao && role.accountIds.some(item => item === accountId)) {
+      return true;
+    }
+  }
+  return false;
 };
+//this.isMemberHaveRole('jacktest.sputnikv2.testnet', 'jacktest2.testnet', 'community').then(console.log);
