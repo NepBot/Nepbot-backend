@@ -103,5 +103,4 @@ module.exports.scheduleTask = function(fromBlockHeight = 0) {
 			resolveNewBlock();
 		});
 	}
-	
 };

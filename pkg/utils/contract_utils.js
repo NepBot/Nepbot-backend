@@ -238,7 +238,7 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
     obj.dao_id = receipts.receiver_id;
     const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
     const proposalResult = await account.viewFunction(receipts.receiver_id, 'get_proposal', { 'id': args.id });
-    if (!('AddMemberFromRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
+    if (!('AddMemberToRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
       continue;
     }
     obj.kind = proposalResult.kind;
@@ -246,9 +246,9 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
     ret.push(obj);
   }
   if (ret.length > 0) {
-    logger.info(`ret: ${ ret }`);
+    logger.debug(`ret: ${ JSON.stringify(ret) }`);
+    return ret;
   }
-  return ret;
 };
 
 /**

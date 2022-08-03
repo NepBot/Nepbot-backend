@@ -3,8 +3,7 @@ const { GuildMember } = require('discord.js');
 const { Routes } = require('discord-api-types/v9');
 const rest = require('../../deploy-commands');
 const config = require('./config');
-
-const replies = {}
+const replies = {};
 
 exports.getMember = async (guildId, memberId) => {
   const member = await rest.get(`${Routes.guildMember(guildId, memberId)}`, {
@@ -35,34 +34,39 @@ exports.addSubCommand = (guildId, commandId, command) => {
 };
 
 exports.getBotUser = () => {
-	return client.user
-}
+  return client.user;
+};
 
 exports.getBotGuildChannel = (guild) => {
-	const res = client.channels.cache.find(channel => channel.name == "nepbot-joinnn")
-	for (channel of client.channels.cache.values()) {
-		console.log(channel)
-	}
-	return res
-}
+  const res = client.channels.cache.find(channel => channel.name == 'nepbot-joinnn');
+  for (channel of client.channels.cache.values()) {
+    console.log(channel);
+  }
+  return res;
+};
 
 clearReplies = () => {
-	for (let key in replies) {
-		const reply = replies[key]
-		if (Date.now() - reply.timestamp > 300 * 1000) {
-			delete replies[key]
-		}
-	}
-}
+  for (const key in replies) {
+    const reply = replies[key];
+    if (Date.now() - reply.timestamp > 300 * 1000) {
+      delete replies[key];
+    }
+  }
+};
 
 exports.getInteraction = (userId, guildId) => {
-	return replies[String(userId) + String(guildId)].interaction
-}
+  return replies[String(userId) + String(guildId)].interaction;
+};
 
 exports.setInteraction = (interaction) => {
-	clearReplies()
-	replies[String(interaction.user.id) + String(interaction.guildId)] = {
-		interaction: interaction,
-		timestamp: Date.now()
-	}
-}
+  clearReplies();
+  replies[String(interaction.user.id) + String(interaction.guildId)] = {
+    interaction: interaction,
+    timestamp: Date.now(),
+  };
+};
+
+exports.getMemberInGuild = async (guildId, userId) => {
+  const guild = this.getGuild(guildId);
+  return await guild.members.fetch(userId);
+};
