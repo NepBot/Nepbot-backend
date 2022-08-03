@@ -85,6 +85,7 @@ exports.getCollectionsByGuild = async (guildId) => {
 };
 
 async function parseEvents(receipt, txMap, eventType) {
+  console.log(txMap)
   let txDigests = txMap[receipt.receipt.Action.signer_id]
   if (!txDigests || !txDigests[txDigest.length - 1]) {
     return []
@@ -96,6 +97,7 @@ async function parseEvents(receipt, txMap, eventType) {
       break
     }
   }
+  console.log()
   let ret = []
   for (let outcome of tx.receipts_outcome) {
     const events = outcome.outcome.logs.filter(log => {
@@ -175,8 +177,10 @@ exports.filterTransferActions = (accountIds, receipts) => {
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
+  console.log(receipts)
   for (receipts of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
+    console.log(events)
     for (let event of events) {
       const obj = {};
       obj.sender_id = event.data.old_owner_id;
