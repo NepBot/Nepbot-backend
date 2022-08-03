@@ -84,6 +84,35 @@ exports.getCollectionsByGuild = async (guildId) => {
   }
 };
 
+async function parseEvents(receipt, txMap, eventType) {
+  console.log(txMap)
+  let txDigests = txMap[receipt.receipt.Action.signer_id]
+  if (!txDigests || !txDigests[txDigest.length - 1]) {
+    return []
+  }
+  let tx = {}
+  for (let txDigest of txDigests) {
+    tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
+    if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
+      break
+    }
+  }
+  console.log()
+  let ret = []
+  for (let outcome of tx.receipts_outcome) {
+    const events = outcome.outcome.logs.filter(log => {
+      try {
+        const logObj = JSON.parse(log)
+        return logObj.EVENT_JSON && logObj.EVENT_JSON.event == eventType
+      } catch (e) {
+        return false
+      }
+    })
+    ret = ret.concat(events)
+  }
+  return ret
+}
+
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('ft_transfer') > -1);
@@ -145,30 +174,36 @@ exports.filterTransferActions = (accountIds, receipts) => {
   return ret;
 };
 
-exports.filterNftActions = (contractIds, receipts) => {
+exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
-  receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
+  receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
+  console.log(receipts)
   for (receipts of receipts) {
-    const obj = {};
-    obj.sender_id = receipts.predecessor_id;
-    obj.contract_id = receipts.receiver_id;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.receiver_id = args.receiver_id;
-    ret.push(obj);
+    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    console.log(events)
+    for (let event of events) {
+      const obj = {};
+      obj.sender_id = event.data.old_owner_id;
+      obj.contract_id = receipts.receiver_id;
+      obj.receiver_id = event.data.new_owner_id;
+      ret.push(obj);
+    }
   }
   return ret;
 };
 
-exports.filterParasActions = (receipts) => {
+exports.filterParasActions = async (receipts, txMap) => {
   const ret = [];
-  receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('nft_transfer') > -1);
+  receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract);
   for (receipts of receipts) {
-    const obj = {};
-    obj.sender_id = receipts.predecessor_id;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.receiver_id = args.receiver_id;
-    obj.token_id = args.token_id;
-    ret.push(obj);
+    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    for (let event of events) {
+      const obj = {};
+      obj.sender_id = event.data.old_owner_id;
+      obj.receiver_id = event.data.new_owner_id;
+      obj.token_id = event.data.token_ids[0]
+      ret.push(obj);
+    }
   }
   return ret;
 };
@@ -262,3 +297,14 @@ exports.getCollectionInfo = async (collectionId) => {
   const account = await this.contract();
   return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 };
+
+exports.getAstrodaoPolicy = async (contractId) => {
+  
+  return await account.viewFunction(config.nft_contract, 'get_policy', { collection_id: collectionId });
+}
+
+exports.checkAstrodaoRole = async (contractId, role, accountId) => {
+  const account = await this.contract();
+  const res = await account.viewFunction(contractId, 'get_policy', {});
+  console.log(res)
+}

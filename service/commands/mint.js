@@ -138,7 +138,7 @@ const execute = async interaction => {
 	else {
 		interaction.reply({
 			content:'\n',
-			embeds:[new MessageEmbed().setDescription('This command can only be used by server owner.').setColor('RED')],
+			embeds:[new MessageEmbed().setDescription(`You don't have the permission to mint.`).setColor('RED')],
 			ephemeral:true,
 		});
 	}
