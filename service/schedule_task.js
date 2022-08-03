@@ -66,27 +66,27 @@ let blockHeight = 0;
 let finalBlockHeight = 0;
 
 const resolveNewBlock = async (showLog = false) => {
-  if (showLog) {
-    console.log(`fetched block height: ${blockHeight}`);
-  }
-  const newestBlock = await provider.block({ finality: 'optimistic' });
-  finalBlockHeight = newestBlock.header.height;
-  if (blockHeight == 0) {
-    blockHeight = finalBlockHeight - 1;
-  }
-  const promises = [];
-  for (;blockHeight <= finalBlockHeight; blockHeight++) {
-    if (showLog) {
-      console.log(`fetched block height: ${blockHeight}`);
-    }
-    let block = {};
-    try {
-      block = await provider.block({ blockId: blockHeight });
-    }
-    catch (e) {
-      console.log(e);
-      continue;
-    }
+	if (showLog) {
+		console.log(`fetched block height: ${blockHeight}`);
+	}
+	const newestBlock = await provider.block({ finality: 'optimistic' });
+	finalBlockHeight = newestBlock.header.height;
+	if (blockHeight == 0) {
+		blockHeight = finalBlockHeight - 1;
+	}
+	const promises = [];
+	for (;blockHeight <= finalBlockHeight; blockHeight++) {
+		if (showLog) {
+			console.log(`fetched block height: ${blockHeight}`);
+		}
+		let block = {};
+		try {
+			block = await provider.block({ blockId: blockHeight });
+		}
+		catch (e) {
+			console.log(e)
+			continue;
+		}
 
     for (const chunk of block.chunks) {
       promises.push(resolveChunk(chunk.chunk_hash));
@@ -95,13 +95,12 @@ const resolveNewBlock = async (showLog = false) => {
   await Promise.all(promises);
 };
 module.exports.scheduleTask = function(fromBlockHeight = 0) {
-  if (fromBlockHeight > 0) {
-    blockHeight = fromBlockHeight;
-    resolveNewBlock(true);
-  }
-  else {
-    schedule.scheduleJob('*/1 * * * * *', function() {
-      resolveNewBlock();
-    });
-  }
+	if (fromBlockHeight > 0) {
+		blockHeight = fromBlockHeight
+		resolveNewBlock(true);
+	} else {
+		schedule.scheduleJob('*/1 * * * * *', function() {
+			resolveNewBlock();
+		});
+	}
 };
