@@ -7,6 +7,10 @@ const js_sha256 = require('js-sha256');
 const userInfos = require('../models/object/user_infos');
 const logger = require('./logger');
 
+const { providers } = require('near-api-js');
+
+const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
+
 // sign means signature
 const verifySign = (data, signature, public_key) => {
 	try {
@@ -77,4 +81,5 @@ module.exports = {
 	verifyOperationSign,
 	getSign,
 	genParasAuthToken,
+	provider
 };

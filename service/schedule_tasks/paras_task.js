@@ -67,8 +67,8 @@ const delayTask = async function(accountIdList, collectionList) {
 	}
 }
 
-const paras_task = async function(receipts) {
-	const actions = await contractUtils.filterParasActions(receipts);
+const paras_task = async function(receipts, txMap) {
+	const actions = await contractUtils.filterParasActions(receipts, txMap);
 	const accountIdList = [];
 	const collectionList = [];
 	
