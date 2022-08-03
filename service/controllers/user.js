@@ -37,12 +37,12 @@ const setInfo = async (ctx, next) => {
     return;
   }
 
-	await userUtils.setUser(args, req.account_id)
+  await userUtils.setUser(args, req.account_id);
 
-	const interaction = discordUtils.getInteraction(args.user_id, args.guild_id)
-	if (interaction) {
-		await interaction.editReply({content: '\n', ephemeral:true, embeds:[embed], components: [] })
-	}
+  const interaction = discordUtils.getInteraction(args.user_id, args.guild_id);
+  if (interaction) {
+    await interaction.editReply({ content: '\n', ephemeral:true, embeds:[embed], components: [] });
+  }
 
   ctx.body = new Resp({});
 };
@@ -71,6 +71,6 @@ const disconnectAccount = async (ctx, next) => {
 };
 
 module.exports = {
-	'POST /api/setInfo': setInfo,
-	'POST /api/disconnectAccount': disconnectAccount,
+  'POST /api/setInfo': setInfo,
+  'POST /api/disconnectAccount': disconnectAccount,
 };
