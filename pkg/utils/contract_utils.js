@@ -195,40 +195,30 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
-    try {
-      const events = await parseEvents(receipt, txMap, "nft_transfer")
-      for (let event of events) {
-        for (let item of event.data) {
-          const obj = {};
-          obj.sender_id = item.old_owner_id;
-          obj.contract_id = receipt.receiver_id;
-          obj.receiver_id = item.new_owner_id;
-          ret.push(obj);
-          eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
-          console.log(ret, "1111111111111111111111")
-        }
-        console.log(ret, "2222222222222222222222")
+    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    for (let event of events) {
+      for (let item of event.data) {
+        const obj = {};
+        obj.sender_id = item.old_owner_id;
+        obj.contract_id = receipt.receiver_id;
+        obj.receiver_id = item.new_owner_id;
+        ret.push(obj);
+        eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
       }
-      for (action of receipt.receipt.Action.actions) {
-        if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
-          const obj = {}
-          obj.sender_id = receipt.predecessor_id;
-          obj.contract_id = receipt.receiver_id;
-          const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
-          obj.receiver_id = args.receiver_id;
-          if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
-            ret.push(obj);
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e)
-      continue
     }
-    
-    console.log(ret, "33333333333333333333333333333")
+    for (action of receipt.receipt.Action.actions) {
+      if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
+        const obj = {}
+        obj.sender_id = receipt.predecessor_id;
+        obj.contract_id = receipt.receiver_id;
+        const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+        obj.receiver_id = args.receiver_id;
+        if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
+          ret.push(obj);
+        }
+      }
+    }
   }
-  console.log(ret, "44444444444444444444444444")
   return ret;
 };
 
