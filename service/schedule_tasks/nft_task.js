@@ -51,11 +51,10 @@ const nft_task = async function(receipts, txMap) {
           if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
             continue;
           }
-          console.log(member._roles.includes(role_id))
-          if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+          if (new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
             roles.push(role_id);
           }
-          if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+          if (new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
             delRoles.push(role_id);
           }
         }
