@@ -29,7 +29,6 @@ const token_task = async function(receipts) {
 		near_wallet_id: accountIdList,
 		value: tokenList,
 	});
-	console.log("=============================")
 	for (const userToken of userTokens) {
 		let stakedParas = new BN('0');
 		if (userToken.value === config.paras.token_contract) {
@@ -43,10 +42,8 @@ const token_task = async function(receipts) {
 			guild_ids.push(item.guild_id);
 		});
 		const _userInfos = await userInfos.getUsers({
-			where: {
-				guild_id: guild_ids,
-				near_wallet_id: userToken.near_wallet_id,
-			},
+			guild_id: guild_ids,
+			near_wallet_id: userToken.near_wallet_id,
 		});
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
@@ -59,7 +56,6 @@ const token_task = async function(receipts) {
 					if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
 						continue;
 					}
-					console.log("-------------------------------------")
 					if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
 						roles.push(role_id);
 					}
