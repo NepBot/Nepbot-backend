@@ -3,7 +3,7 @@ const config = require('../pkg/utils/config');
 const schedule = require('node-schedule');
 // Task
 const balanceTask = require('./schedule_tasks/balance_task');
-const ntfTask = require('./schedule_tasks/ntf_task');
+const ntfTask = require('./schedule_tasks/nft_task');
 const octTask = require('./schedule_tasks/oct_task');
 const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
