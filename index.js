@@ -24,4 +24,3 @@ client.login(config.bot_token);
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
-task.scheduleTask(96679790)

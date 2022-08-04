@@ -52,12 +52,10 @@ const nft_task = async function(receipts, txMap) {
           continue;
         }
         if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-          const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-          _role && roles.push(_role);
+          roles.push(role_id);
         }
         if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-          const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(role_id);
         }
       }
 
