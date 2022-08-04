@@ -68,7 +68,7 @@ const paras_task = async function(receipts, txMap) {
 	const actions = await contractUtils.filterParasActions(receipts, txMap);
 	const accountIdList = [];
 	const collectionList = [];
-	
+	console.log(actions)
 	for (const action of actions) {
 		accountIdList.push(action.sender_id);
 		accountIdList.push(action.receiver_id);
