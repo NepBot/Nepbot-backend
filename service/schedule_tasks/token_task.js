@@ -15,7 +15,6 @@ const token_task = async function(receipts) {
 		allTokenList.push(field.value);
 	}
 	const actions = await contractUtils.filterTokenActions(allTokenList, receipts);
-	console.log(actions)
 
 	const accountIdList = [];
 	const tokenList = [];
@@ -66,6 +65,7 @@ const token_task = async function(receipts) {
 					delRoles.push(role_id);
 				}
 			}
+			console.log(roles)
 			for (let role of roles) {
 				try {
 					await member.roles.add(role)
