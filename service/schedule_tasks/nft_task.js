@@ -44,6 +44,7 @@ const nft_task = async function(receipts, txMap) {
     for (const _userInfo of _userInfos) {
       try {
         const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+        console.log(roles)
         const guildRoles = roles.filter(role => role.guild_id == _userInfo.guild_id);
 
         const roles = [];
