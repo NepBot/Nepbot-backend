@@ -29,7 +29,6 @@ const token_task = async function(receipts) {
 		near_wallet_id: accountIdList,
 		value: tokenList,
 	});
-	console.log(userTokens)
 	for (const userToken of userTokens) {
 		let stakedParas = new BN('0');
 		if (userToken.value === config.paras.token_contract) {
@@ -46,7 +45,7 @@ const token_task = async function(receipts) {
 			guild_id: guild_ids,
 			near_wallet_id: userToken.near_wallet_id,
 		});
-		console.log(_userInfos)
+		console.log(_userInfos, "=========================")
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
 			try {
