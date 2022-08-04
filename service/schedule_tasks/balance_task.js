@@ -43,12 +43,10 @@ const balance_task = async function(receipts) {
       const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
       const totalBalance = new BN(balance).add(new BN(stakingBalance));
       if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
 

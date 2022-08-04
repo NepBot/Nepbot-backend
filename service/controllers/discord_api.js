@@ -8,6 +8,7 @@ const logger = require('../../pkg/utils/logger');
 const getRole = async (ctx, next) => {
   const guildId = ctx.params.guildId;
   const roles = discordUtils.getRoles(guildId);
+  console.log(roles)
   ctx.body = new Resp({ data: roles });
 };
 

@@ -60,12 +60,10 @@ const token_task = async function(receipts) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && roles.push(_role);
+					roles.push(_role);
 				}
 				if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && delRoles.push(_role);
+					delRoles.push(_role);
 				}
 			}
 			for (let role of roles) {

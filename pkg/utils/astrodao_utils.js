@@ -3,6 +3,7 @@ const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 
 const getMemberInfo = async (daoId) => {
+  //TODO    if policy is same with its smart contract why use api?
   const memberInfo = await axios
     .get(`${config.astrodao.api}/${daoId}`)
     .then(res => {

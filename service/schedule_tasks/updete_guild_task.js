@@ -47,66 +47,54 @@ const update_guild_task = async function(receipts) {
       if (rule.key_field[0] == 'token_id') {
         const tokenAmount = await contractUtils.getBalanceOf(rule.key_field[1], _userInfo.near_wallet_id);
         if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
       else if (rule.key_field[0] == 'appchain_id') {
         const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], _userInfo.near_wallet_id);
         if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
       else if (rule.key_field[0] == 'near') {
         const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
         if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
       else if (rule.key_field[0] == 'nft_contract_id') {
         const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], _userInfo.near_wallet_id);
         if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
       else if (rule.key_field[0] == config.paras.nft_contract) {
         const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
         if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
       else if (rule.key_field[0] == 'astrodao_id') {
         if (!member._roles.includes(rule.role_id) && astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && roles.push(_role);
+          roles.push(_role);
         }
         if (member._roles.includes(rule.role_id) && !astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
-          const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-          _role && delRoles.push(_role);
+          delRoles.push(_role);
         }
       }
     }

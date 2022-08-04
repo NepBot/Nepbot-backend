@@ -43,13 +43,11 @@ const oct_task = async function(receipts) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && roles.push(_role);
+					roles.push(_role);
 				}
 
 				if (member._roles.includes(role_id) && octRole != fields.oct_role) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && delRoles.push(_role);
+					delRoles.push(_role);
 				}
 			}
 			for (let role of roles) {

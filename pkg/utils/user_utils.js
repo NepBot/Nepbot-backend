@@ -110,12 +110,10 @@ exports.setUser = async (args, accountId) => {
       const tokenAmount = new BN(newAmount).add(stakedParas);
 
       if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {
@@ -129,12 +127,10 @@ exports.setUser = async (args, accountId) => {
       const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId, rule.fields.astrodao_role);
 
       if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {
@@ -149,12 +145,10 @@ exports.setUser = async (args, accountId) => {
       const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
       if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {
@@ -167,12 +161,10 @@ exports.setUser = async (args, accountId) => {
     try {
       const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], accountId);
       if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        const _role = discordUtils. getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {
@@ -185,12 +177,10 @@ exports.setUser = async (args, accountId) => {
     try {
       const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
       if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        const _role = await discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {
@@ -204,12 +194,10 @@ exports.setUser = async (args, accountId) => {
       const _result = await astrodaoUtils.isMemberHaveRole(rule.key_field[1], accountId);
 
       if (!member._roles.includes(rule.role_id) && _result) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && roles.push(_role);
+        roles.push(_role);
       }
       if (member._roles.includes(rule.role_id) && _result) {
-        const _role = discordUtils.getRoles(rule.guild_id, rule.role_id);
-        _role && delRoles.push(_role);
+        delRoles.push(_role);
       }
     }
     catch (e) {

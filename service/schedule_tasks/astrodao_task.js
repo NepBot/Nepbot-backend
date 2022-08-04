@@ -45,14 +45,13 @@ const astrodao_task = async function(receipts) {
       // check the user whether in other group on Astrodao
       for (const role of _conInfos.roles) {
         // if the action is remove
+        // TODO:   need try catch for every single rule adding or removing
         if (mapAstrodaoDiscord.action == 'remove' && memberInGuild.roles.cache.some(r => r.id === role.role_id)) {
-          const roleInGuild = discordUtils.getRoles(_conInfos.guild_id, role.role_id);
-          await memberInGuild.roles.remove(roleInGuild).catch(e => logger.error(e));
+          await memberInGuild.roles.remove(role.role_id).catch(e => logger.error(e));
         }
         // if the action is add
         else if (mapAstrodaoDiscord.action == 'add' && !memberInGuild.roles.cache.some(r => r.id === role.role_id)) {
-          const roleInGuild = discordUtils.getRoles(_conInfos.guild_id, role.role_id);
-          await memberInGuild.roles.add(roleInGuild).catch(e => logger.error(e));
+          await memberInGuild.roles.add(role.role_id).catch(e => logger.error(e));
         }
       }
     }
