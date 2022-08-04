@@ -106,7 +106,7 @@ async function parseEvents(receipt, txMap, eventType) {
       } catch (e) {
         return false
       }
-    })
+    }).map(log => JSON.parse(log.replace("EVENT_JSON:", "")))
     ret = ret.concat(events)
   }
   return ret
