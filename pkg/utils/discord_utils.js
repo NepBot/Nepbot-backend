@@ -13,7 +13,7 @@ exports.getGuild = async (guildId) => {
   return await client.guilds.fetch(guildId)
 };
 
-exports.getRoles = (guildId, roleId) => {
+exports.getRoles = async (guildId, roleId) => {
   const guild = await this.getGuild(guildId)
   if (roleId) {
     const role = guild.roles.fetch(roleId)
@@ -22,7 +22,7 @@ exports.getRoles = (guildId, roleId) => {
   return guild.roles.fetch();
 };
 
-exports.getOwnerId = (guildId) => {
+exports.getOwnerId = async (guildId) => {
   const guild = await this.getGuild(guildId)
   return guild.ownerId;
 };
