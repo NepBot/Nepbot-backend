@@ -52,6 +52,6 @@ for (const file of eventFiles) {
     client.on(event.name, (...args) => event.execute(...args));
   }
 }
-//client.login(config.bot_token);
+client.login(config.bot_token);
 // Login to Discord with your client's token
 module.exports = client;
