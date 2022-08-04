@@ -171,7 +171,6 @@ exports.filterRoleActions = (receipts) => {
       ret.push(obj);
     }
   }
-  console.log(ret)
   return ret;
 };
 
