@@ -191,7 +191,7 @@ exports.filterTransferActions = (accountIds, receipts) => {
 };
 
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
-  let ret = [];
+  const ret = [];
   const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
@@ -206,19 +206,18 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
         eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
       }
     }
-    for (action of receipt.receipt.Action.actions) {
-      if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
-        obj.sender_id = receipt.predecessor_id;
-        obj.contract_id = receipt.receiver_id;
-        const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
-        obj.receiver_id = args.receiver_id;
-        if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
-          console.log(obj)
-          ret.push(obj);
-        }
-      }
-      console.log(ret)
-    }
+    // for (action of receipt.receipt.Action.actions) {
+    //   if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
+    //     obj.sender_id = receipt.predecessor_id;
+    //     obj.contract_id = receipt.receiver_id;
+    //     const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+    //     obj.receiver_id = args.receiver_id;
+    //     if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
+    //       console.log(obj)
+    //       ret.push(obj);
+    //     }
+    //   }
+    // }
   }
   console.log(ret)
   return ret;
