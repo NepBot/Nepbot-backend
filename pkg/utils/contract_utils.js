@@ -104,7 +104,6 @@ async function parseEvents(receipt, txMap, eventType) {
         const logObj = JSON.parse(log.replace("EVENT_JSON:", ""))
         return logObj && logObj.event == eventType
       } catch (e) {
-        console.log(e)
         return false
       }
     })
@@ -179,6 +178,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
+    console.log(events)
     for (let event of events) {
       const obj = {};
       obj.sender_id = event.data.old_owner_id;
