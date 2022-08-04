@@ -17,7 +17,6 @@ const balance_task = async function(receipts) {
     _accountIds.push(action.account_id);
   }
   logger.debug(`accountIds: ${_accountIds}`);
-  console.log(_actions)
   const rolesByField = await contractUtils.getRulesByField('near', 'balance');
   const guild_ids = [];
   const guildMap = {};
@@ -35,39 +34,44 @@ const balance_task = async function(receipts) {
   });
 
   for (const _userInfo of _userInfos) {
-    const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-    const roles = [];
-    const delRoles = [];
-    for (const rule of guildMap[_userInfo.guild_id]) {
-      const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-      const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
-      const totalBalance = new BN(balance).add(new BN(stakingBalance));
-      if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-        roles.push(rule.role_id);
+    try {
+      const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+      const roles = [];
+      const delRoles = [];
+      for (const rule of guildMap[_userInfo.guild_id]) {
+        const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
+        const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
+        const totalBalance = new BN(balance).add(new BN(stakingBalance));
+        if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
+          roles.push(rule.role_id);
+        }
+        if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
+          delRoles.push(rule.role_id);
+        }
       }
-      if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-        delRoles.push(rule.role_id);
-      }
-    }
 
-    for (const role of roles) {
-      try {
-        await member.roles.add(role);
+      for (const role of roles) {
+        try {
+          await member.roles.add(role);
+        }
+        catch (e) {
+          continue;
+        }
       }
-      catch (e) {
-        continue;
-      }
-    }
 
-    for (const role of delRoles) {
-      try {
-        await member.roles.remove(role);
+      for (const role of delRoles) {
+        try {
+          await member.roles.remove(role);
+        }
+        catch (e) {
+          continue;
+        }
+        
       }
-      catch (e) {
-        continue;
-      }
-			
+    } catch (e) {
+      console.log(e)
     }
+    
   }
 };
 
