@@ -183,22 +183,22 @@ exports.setUser = async (args, accountId) => {
 
   }
 
-  // for (const rule of rulesMap.paras) {
-  //   try {
-  //     const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
-  //     if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-  //       roles.push(rule.role_id);
-  //     }
-  //     if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-  //       delRoles.push(rule.role_id);
-  //     }
-  //   }
-  //   catch (e) {
-  //     console.log(e)
-  //     continue;
-  //   }
+  for (const rule of rulesMap.paras) {
+    try {
+      const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
+      if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+        roles.push(rule.role_id);
+      }
+      if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+        delRoles.push(rule.role_id);
+      }
+    }
+    catch (e) {
+      console.log(e)
+      continue;
+    }
 
-  // }
+  }
 
   for (const rule of rulesMap.astrodao) {
     try {
