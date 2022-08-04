@@ -32,6 +32,7 @@ const delayTask = async function(accountIdList, collectionList) {
 
 				const roles = [];
 				const delRoles = [];
+				console.log(guildRoles)
 				for (const { fields, role_id, key_field } of guildRoles) {
 					if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
 						continue;
