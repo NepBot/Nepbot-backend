@@ -205,7 +205,6 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
         ret.push(obj);
         eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
       }
-      console.log(ret)
     }
     for (action of receipt.receipt.Action.actions) {
       if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
@@ -214,7 +213,6 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
         const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
         obj.receiver_id = args.receiver_id;
         if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
-          console.log(obj)
           ret.push(obj);
         }
       }
