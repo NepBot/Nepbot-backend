@@ -32,7 +32,6 @@ const balance_task = async function(receipts) {
     guild_id: guild_ids,
     near_wallet_id: _accountIds,
   });
-  console.log(_userInfos)
   for (const _userInfo of _userInfos) {
     try {
       const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
@@ -42,6 +41,7 @@ const balance_task = async function(receipts) {
         const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
         const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
         const totalBalance = new BN(balance).add(new BN(stakingBalance));
+        console.log(totalBalance.toString(), rule.fields.balance)
         if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
           roles.push(rule.role_id);
         }
