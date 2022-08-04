@@ -175,20 +175,24 @@ exports.filterRoleActions = (receipts) => {
 };
 
 exports.filterTransferActions = (accountIds, receipts) => {
-  const ret = [];
-  console.log(receipts[0].receipt.Action.actions.length)
-  receipts = receipts.filter(item => {
-    item.receipt.Action && item.receipt.Action.actions.length > 0 && item.receipt.Action.actions.findIndex(action => !!action.Transfer) > -1
-  });
-  for (let receipt of receipts) {
-    if (accountIds.findIndex(accountId => accountId == receipt.receiver_id) > -1) {
-      ret.push({ account_id: receipt.receiver_id });
+  try {
+    const ret = [];
+    receipts = receipts.filter(item => {
+      item.receipt.Action && item.receipt.Action.actions.length > 0 && item.receipt.Action.actions.findIndex(action => !!action.Transfer) > -1
+    });
+    for (let receipt of receipts) {
+      if (accountIds.findIndex(accountId => accountId == receipt.receiver_id) > -1) {
+        ret.push({ account_id: receipt.receiver_id });
+      }
+      if (accountIds.findIndex(accountId => accountId == receipt.predecessor_id) > -1) {
+        ret.push({ account_id: receipt.predecessor_id });
+      }
     }
-    if (accountIds.findIndex(accountId => accountId == receipt.predecessor_id) > -1) {
-      ret.push({ account_id: receipt.predecessor_id });
-    }
+    return ret;
+  } catch(e) {
+    console.log(e)
   }
-  return ret;
+  
 };
 
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
