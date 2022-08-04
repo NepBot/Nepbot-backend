@@ -179,12 +179,13 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
     for (let event of events) {
-      console.log(event.data)
-      const obj = {};
-      obj.sender_id = event.data.old_owner_id;
-      obj.contract_id = receipts.receiver_id;
-      obj.receiver_id = event.data.new_owner_id;
-      ret.push(obj);
+      for (let item of event.data) {
+        const obj = {};
+        obj.sender_id = item.old_owner_id;
+        obj.contract_id = item.receiver_id;
+        obj.receiver_id = item.new_owner_id;
+        ret.push(obj);
+      }
     }
   }
   return ret;
