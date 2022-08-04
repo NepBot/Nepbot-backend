@@ -191,7 +191,7 @@ exports.filterTransferActions = (accountIds, receipts) => {
 };
 
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
-  const ret = [];
+  let ret = [];
   const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
