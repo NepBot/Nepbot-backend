@@ -86,13 +86,13 @@ exports.getCollectionsByGuild = async (guildId) => {
 
 async function parseEvents(receipt, txMap, eventType) {
   let txDigests = txMap[receipt.receipt.Action.signer_id]
-  console.log(receipt.receipt.Action.signer_id, txDigests)
   if (!txDigests || txDigests.length == 0) {
     return []
   }
   let tx = {}
   for (let txDigest of txDigests) {
     tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
+    console.log(tx)
     if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
       break
     }
