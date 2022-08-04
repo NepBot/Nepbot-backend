@@ -61,10 +61,8 @@ const token_task = async function(receipts) {
 				if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
 					delRoles.push(role_id);
 				}
-				console.log(roles)
 			}
 
-			console.log(roles)
 			for (let role of roles) {
 				try {
 					await member.roles.add(role)
