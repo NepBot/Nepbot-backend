@@ -40,7 +40,7 @@ const token_task = async function(receipts) {
 		const total = new BN(newAmount).add(stakedParas);
 		const roles = await contractUtils.getRulesByField('token_id', userToken.value);
 		const guild_ids = [];
-		roles.map(item => {
+		roles.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 		const _userInfos = await userInfos.getUsers({
