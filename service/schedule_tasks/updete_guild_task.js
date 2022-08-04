@@ -130,6 +130,7 @@ const update_guild_task = async function(receipts) {
         value: rule.key_field[1],
       });
     }
+    console.log(roles)
     for (const role of roles) {
       try {
         await member.roles.add(role);
