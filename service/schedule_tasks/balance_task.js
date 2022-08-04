@@ -33,45 +33,39 @@ const balance_task = async function(receipts) {
     near_wallet_id: _accountIds,
   });
   for (const _userInfo of _userInfos) {
-    try {
-      const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-      const roles = [];
-      const delRoles = [];
-      for (const rule of guildMap[_userInfo.guild_id]) {
-        const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-        const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
-        const totalBalance = new BN(balance).add(new BN(stakingBalance));
-        console.log(totalBalance.toString(), rule.fields.balance)
-        if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-          roles.push(rule.role_id);
-        }
-        if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-          delRoles.push(rule.role_id);
-        }
+    const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+    const roles = [];
+    const delRoles = [];
+    for (const rule of guildMap[_userInfo.guild_id]) {
+      const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
+      const stakingBalance = await contractUtils.getStakingBalance(_userInfo.near_wallet_id);
+      const totalBalance = new BN(balance).add(new BN(stakingBalance));
+      console.log(totalBalance.toString(), rule.fields.balance)
+      if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
+        roles.push(rule.role_id);
       }
-      console.log(roles)
-      for (const role of roles) {
-        try {
-          await member.roles.add(role);
-        }
-        catch (e) {
-          continue;
-        }
+      if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
+        delRoles.push(rule.role_id);
       }
-
-      for (const role of delRoles) {
-        try {
-          await member.roles.remove(role);
-        }
-        catch (e) {
-          continue;
-        }
-        
-      }
-    } catch (e) {
-      console.log(e)
     }
-    
+    for (const role of roles) {
+      try {
+        await member.roles.add(role);
+      }
+      catch (e) {
+        continue;
+      }
+    }
+
+    for (const role of delRoles) {
+      try {
+        await member.roles.remove(role);
+      }
+      catch (e) {
+        continue;
+      }
+      
+    }
   }
 };
 
