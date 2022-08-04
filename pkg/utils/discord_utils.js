@@ -5,7 +5,7 @@ const config = require('./config');
 const replies = {};
 
 exports.getMember = async (guildId, userId) => {
-  const guild = this.getGuild(guildId)
+  const guild = await this.getGuild(guildId)
   await guild.members.fetch(userId)
 };
 
