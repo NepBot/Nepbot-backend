@@ -37,13 +37,13 @@ const delayTask = async function(accountIdList, collectionList) {
 						continue;
 					}
 					let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
-					console.log(newAmount, fields.token_amount)
 					if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
 						roles.push(role_id);
 					}
 					if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
 						delRoles.push(role_id);
 					}
+					console.log(roles)
 				}
 				for (let role of roles) {
 					try {
