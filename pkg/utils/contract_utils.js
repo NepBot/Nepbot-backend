@@ -177,12 +177,8 @@ exports.filterRoleActions = (receipts) => {
 exports.filterTransferActions = (accountIds, receipts) => {
   try {
     const ret = [];
-    for (let receipt of receipts) {
-      console.log(receipt.receipt.Action && receipt.receipt.Action.actions.length > 0 && receipt.receipt.Action.actions.findIndex(action => !!action.Transfer) > -1)
-    }
-    
     receipts = receipts.filter(item => {
-      item.receipt.Action && item.receipt.Action.actions.length > 0
+      item.receipt.Action && item.receipt.Action.actions.length > 0 && receipt.receipt.Action.actions.findIndex(action => !!action.Transfer) > -1
     });
     for (let receipt of receipts) {
       if (accountIds.findIndex(accountId => accountId == receipt.receiver_id) > -1) {
