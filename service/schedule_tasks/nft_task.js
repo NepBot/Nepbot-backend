@@ -27,7 +27,7 @@ const nft_task = async function(receipts, txMap) {
     near_wallet_id: accountIdList,
     value: contractList,
   });
-
+  console.log(userTokens)
   for (const userToken of userTokens) {
     const rolesByField = await contractUtils.getRulesByField('nft_contract_id', userToken.value);
     const guild_ids = [];
