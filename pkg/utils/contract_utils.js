@@ -162,6 +162,7 @@ exports.filterRoleActions = (receipts) => {
     item.receipt.Action.actions = item.receipt.Action.actions.filter(action => (action.findIndex(action => action.FunctionCall.method_name == 'set_roles') > -1 || action.findIndex(action => action.FunctionCall.method_name == 'del_roles') > -1))
     return item
   })
+  console.log(receipts)
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
       const obj = {};
