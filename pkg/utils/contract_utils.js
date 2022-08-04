@@ -177,9 +177,9 @@ exports.filterTransferActions = (accountIds, receipts) => {
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
+  console.log(receipts.length)
   for (receipts of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
-    console.log(events)
     for (let event of events) {
       const obj = {};
       obj.sender_id = event.data.old_owner_id;
