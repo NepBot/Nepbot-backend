@@ -5,30 +5,30 @@ const fs = require('fs');
 const logger = require('./logger');
 
 exports.getCollection = async (collectionId) => {
-	const result = await request({
-		method:'get',
-		url:`${config.paras.api}/collections?collection_id=${collectionId}`,
-	});
-	if (result.data.status == 1) {
-		return result.data.data;
-	}
-	return false;
+  const result = await request({
+    method:'get',
+    url:`${config.paras.api}/collections?collection_id=${collectionId}`,
+  });
+  if (result.data.status == 1) {
+    return result.data.data;
+  }
+  return false;
 };
 
 exports.createCollection = async (formData, auth) => {
-	const options = {
-		method: 'POST',
-		url: `${config.paras.api}/collections`,
-		headers: formData.getHeaders({
-			'authorization': auth,
-		}),
-		body: formData,
-	};
-	const result = await rp(options).catch(e => {
-		console.log(e);
-	});
-	console.log(result);
-	return JSON.parse(result);
+  const options = {
+    method: 'POST',
+    url: `${config.paras.api}/collections`,
+    headers: formData.getHeaders({
+      'authorization': auth,
+    }),
+    body: formData,
+  };
+  const result = await rp(options).catch(e => {
+    console.log(e);
+  });
+  console.log(result);
+  return JSON.parse(result);
 };
 
 exports.getTokenSeries = async (tokenSeriesId) => {

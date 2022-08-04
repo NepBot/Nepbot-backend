@@ -15,9 +15,9 @@ const delayTask = async function(accountIdList, collectionList) {
 	});
 
 	for (const userToken of userTokens) {
-		const roles = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
+		const rolesByField = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
 		const guild_ids = [];
-		roles.map(item => {
+		rolesByField.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 		const _userInfos = await userInfos.getUsers({
@@ -28,7 +28,7 @@ const delayTask = async function(accountIdList, collectionList) {
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
+			const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
 			const roles = [];
 			const delRoles = [];
@@ -38,19 +38,16 @@ const delayTask = async function(accountIdList, collectionList) {
 				}
 				let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
 				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && roles.push(_role);
+					roles.push(role_id);
 				}
 				if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-					const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-					_role && delRoles.push(_role);
+					delRoles.push(role_id);
 				}
 			}
 			for (let role of roles) {
 				try {
 					await member.roles.add(role)
 				} catch (e) {
-					console.log(e)
 					continue
 				}
 			}
@@ -64,13 +61,11 @@ const delayTask = async function(accountIdList, collectionList) {
 				
 			}
 		}
-
-
 	}
 }
 
-const paras_task = async function(receipts) {
-	const actions = await contractUtils.filterParasActions(receipts);
+const paras_task = async function(receipts, txMap) {
+	const actions = await contractUtils.filterParasActions(receipts, txMap);
 	const accountIdList = [];
 	const collectionList = [];
 	
