@@ -1,36 +1,30 @@
 const client = require('../../service/discord_bot');
-const { GuildMember, Guild } = require('discord.js');
 const { Routes } = require('discord-api-types/v9');
 const rest = require('../../deploy-commands');
 const config = require('./config');
 const replies = {};
 
-exports.getMember = async (guildId, memberId) => {
-  const member = await rest.get(`${Routes.guildMember(guildId, memberId)}`, {
-    auth:true,
-  });
-  return new GuildMember(client, member, this.getGuild(guildId));
+exports.getMember = async (guildId, userId) => {
+  const guild = this.getGuild(guildId)
+  await guild.members.fetch(userId)
 };
 
 exports.getGuild = async (guildId) => {
-  let guild = client.guilds.cache.get(guildId);
-  console.log(guild)
-  if (!guild) {
-    guild = await rest.get(`${Routes.guild(guildId)}`)
-    guild = new Guild(client, guild)
-  }
-  return guild
+  return await client.guilds.fetch(guildId)
 };
 
 exports.getRoles = (guildId, roleId) => {
+  const guild = await this.getGuild(guildId)
   if (roleId) {
-    return client.guilds.cache.get(guildId).roles.cache.get(roleId);
+    const role = guild.roles.fetch(roleId)
+    return role
   }
-  return client.guilds.cache.get(guildId).roles.cache;
+  return guild.roles.fetch();
 };
 
-exports.getOwnerId = (guild_id) => {
-  return client.guilds.cache.get(guild_id).ownerId;
+exports.getOwnerId = (guildId) => {
+  const guild = await this.getGuild(guildId)
+  return guild.ownerId;
 };
 
 exports.addSubCommand = (guildId, commandId, command) => {
