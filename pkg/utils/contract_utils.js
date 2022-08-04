@@ -198,19 +198,19 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
     for (let event of events) {
       for (let item of event.data) {
-        console.log(item)
         const obj = {};
         obj.sender_id = item.old_owner_id;
         obj.contract_id = receipt.receiver_id;
         obj.receiver_id = item.new_owner_id;
         ret.push(obj);
+        console.log(ret)
         eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
       }
     }
     for (action of receipt.receipt.Action.actions) {
       if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
         obj.sender_id = receipt.predecessor_id;
-        obj.token_id = receipt.receiver_id;
+        obj.contract_id = receipt.receiver_id;
         const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
         obj.receiver_id = args.receiver_id;
         if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
@@ -242,24 +242,6 @@ exports.filterParasActions = async (receipts, txMap) => {
   }
   return ret;
 };
-
-// exports.filterCollectionActions = (receipts) => {
-//   const ret = [];
-//   receipts = receipts.filter(item =>
-//     item.receipt.Action && item.receiver_id == config.nft_contract &&
-// 			(item.receipt.Action.actions[0].FunctionCall.method_name == 'create_collection'),
-//   );
-//   for (receipts of receipts) {
-//     const obj = {};
-//     obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
-//     const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-//     obj.outer_collection_id = args.outer_collection_id;
-//     obj.contract_type = args.contract_type;
-//     obj.guild_id = args.guild_id;
-//     ret.push(obj);
-//   }
-//   return ret;
-// };
 
 exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
   const account = await this.contract();
