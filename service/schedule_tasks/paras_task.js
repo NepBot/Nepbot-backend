@@ -26,47 +26,40 @@ const delayTask = async function(accountIdList, collectionList) {
 		
 		
 		for (const _userInfo of _userInfos) {
-			try {
-				const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-				const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
+			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+			const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
-				const roles = [];
-				const delRoles = [];
-				for (const { fields, role_id, key_field } of guildRoles) {
-					if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
-						continue;
-					}
-					let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
-					if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-						roles.push(role_id);
-					}
-					if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-						delRoles.push(role_id);
-					}
-					console.log(roles)
+			const roles = [];
+			const delRoles = [];
+			for (const { fields, role_id, key_field } of guildRoles) {
+				if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
+					continue;
 				}
-				for (let role of roles) {
-					try {
-						await member.roles.add(role)
-					} catch (e) {
-						console.log(e)
-						continue
-					}
+				let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
+				if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+					roles.push(role_id);
 				}
-		
-				for (let role of delRoles) {
-					try {
-						await member.roles.remove(role)
-					} catch (e) {
-						console.log(e)
-						continue
-					}
-					
+				if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+					delRoles.push(role_id);
 				}
-			} catch (e) {
-				console.log(e)
-				continue
 			}
+			for (let role of roles) {
+				try {
+					await member.roles.add(role)
+				} catch (e) {
+					continue
+				}
+			}
+	
+			for (let role of delRoles) {
+				try {
+					await member.roles.remove(role)
+				} catch (e) {
+					continue
+				}
+				
+			}
+	
 			
 		}
 	}
