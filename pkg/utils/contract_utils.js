@@ -159,9 +159,15 @@ exports.filterRoleActions = (receipts) => {
   receipts = receipts.filter(item =>
     item.receipt.Action && item.receiver_id == config.rule_contract
   ).map(item => {
-    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => (action.findIndex(action => action.FunctionCall.method_name == 'set_roles') > -1 || action.findIndex(action => action.FunctionCall.method_name == 'del_roles') > -1))
-    console.log(item)
-    return item
+    try {
+      console.log(item)
+      item.receipt.Action.actions = item.receipt.Action.actions.filter(action => (action.findIndex(action => action.FunctionCall.method_name == 'set_roles') > -1 || action.findIndex(action => action.FunctionCall.method_name == 'del_roles') > -1))
+      console.log(item)
+      return item
+    } catch(e) {
+      console.log(e)
+    }
+    
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
