@@ -13,7 +13,6 @@ const nft_task = async function(receipts, txMap) {
   for (const field of allFieldList) {
     allContractList.push(field.value);
   }
-  console.log(allContractList)
   const actions = await contractUtils.filterNftActions(allContractList, receipts, txMap);
   const accountIdList = [];
   const contractList = [];
