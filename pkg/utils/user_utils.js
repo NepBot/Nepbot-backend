@@ -123,6 +123,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
+      console.log(e)
       continue;
     }
 
@@ -140,6 +141,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
+      console.log(e)
       continue;
     }
   }
@@ -158,6 +160,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
+      console.log(e)
       continue;
     }
 
@@ -174,6 +177,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
+      console.log(e)
       continue;
     }
 
@@ -190,6 +194,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
+      console.log(e)
       continue;
     }
 
@@ -207,7 +212,8 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-		  	continue;
+      console.log(e)
+		  continue;
     }
   }
 
@@ -216,6 +222,7 @@ exports.setUser = async (args, accountId) => {
       await member.roles.add(role);
     }
     catch (e) {
+      console.log(e)
       continue;
     }
   }
@@ -225,6 +232,7 @@ exports.setUser = async (args, accountId) => {
       await member.roles.remove(role);
     }
     catch (e) {
+      console.log(e)
       continue;
     }
 
