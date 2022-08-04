@@ -48,6 +48,7 @@ const delayTask = async function(accountIdList, collectionList) {
 					try {
 						await member.roles.add(role)
 					} catch (e) {
+						console.log(e)
 						continue
 					}
 				}
@@ -56,6 +57,7 @@ const delayTask = async function(accountIdList, collectionList) {
 					try {
 						await member.roles.remove(role)
 					} catch (e) {
+						console.log(e)
 						continue
 					}
 					
@@ -73,7 +75,6 @@ const paras_task = async function(receipts, txMap) {
 	const actions = await contractUtils.filterParasActions(receipts, txMap);
 	const accountIdList = [];
 	const collectionList = [];
-	console.log(actions)
 	for (const action of actions) {
 		accountIdList.push(action.sender_id);
 		accountIdList.push(action.receiver_id);
