@@ -46,59 +46,78 @@ const update_guild_task = async function(receipts) {
         try {
           const tokenAmount = await contractUtils.getBalanceOf(rule.key_field[1], _userInfo.near_wallet_id);
           if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-            roles.push(_role);
+            roles.push(rule.role_id);
           }
           if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-            delRoles.push(_role);
+            delRoles.push(rule.role_id);
           }
         } catch (e) {
-          console.log(e)
+          continue
+        }
+      }
+      else if (rule.key_field[0] == 'appchain_id') {
+        try {
+          const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], _userInfo.near_wallet_id);
+          if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
+            roles.push(rule.role_id);
+          }
+          if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
+            delRoles.push(rule.role_id);
+          }
+        } catch (e) {
           continue
         }
         
       }
-      else if (rule.key_field[0] == 'appchain_id') {
-        const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], _userInfo.near_wallet_id);
-        if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-          roles.push(_role);
-        }
-        if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
-          delRoles.push(_role);
-        }
-      }
       else if (rule.key_field[0] == 'near') {
-        const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
-        if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
-          roles.push(_role);
-        }
-        if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
-          delRoles.push(_role);
+        try{
+          const balance = await contractUtils.getNearBalanceOf(_userInfo.near_wallet_id);
+          if (!member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) != -1) {
+            roles.push(rule.role_id);
+          }
+          if (member._roles.includes(rule.role_id) && new BN(balance).cmp(new BN(rule.fields.balance)) == -1) {
+            delRoles.push(rule.role_id);
+          }
+        } catch (e) {
+          continue
         }
       }
       else if (rule.key_field[0] == 'nft_contract_id') {
-        const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], _userInfo.near_wallet_id);
-        if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-          roles.push(_role);
-        }
-        if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-          delRoles.push(_role);
+        try {
+          const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], _userInfo.near_wallet_id);
+          if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+            roles.push(rule.role_id);
+          }
+          if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+            delRoles.push(rule.role_id);
+          }
+        } catch (e) {
+          continue
         }
       }
       else if (rule.key_field[0] == config.paras.nft_contract) {
-        const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
-        if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-          roles.push(_role);
-        }
-        if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-          delRoles.push(_role);
+        try {
+          const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], _userInfo.near_wallet_id);
+          if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+            roles.push(rule.role_id);
+          }
+          if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+            delRoles.push(rule.role_id);
+          }
+        } catch (e) {
+          continue
         }
       }
       else if (rule.key_field[0] == 'astrodao_id') {
-        if (!member._roles.includes(rule.role_id) && astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
-          roles.push(_role);
-        }
-        if (member._roles.includes(rule.role_id) && !astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
-          delRoles.push(_role);
+        try {
+          if (!member._roles.includes(rule.role_id) && astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
+            roles.push(rule.role_id);
+          }
+          if (member._roles.includes(rule.role_id) && !astrodaoUtils.isMemberHaveRole(rule.key_field[1], _userInfo.near_wallet_id, rule.fields.astrodao_role)) {
+            delRoles.push(rule.role_id);
+          }
+        } catch (e) {
+          continue
         }
       }
     }

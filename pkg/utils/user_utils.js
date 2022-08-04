@@ -116,10 +116,10 @@ exports.setUser = async (args, accountId) => {
       const tokenAmount = new BN(newAmount).add(stakedParas);
 
       if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {
@@ -133,10 +133,10 @@ exports.setUser = async (args, accountId) => {
       const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId, rule.fields.astrodao_role);
 
       if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {
@@ -151,10 +151,10 @@ exports.setUser = async (args, accountId) => {
       const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
       if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {
@@ -167,10 +167,10 @@ exports.setUser = async (args, accountId) => {
     try {
       const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], accountId);
       if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {
@@ -183,10 +183,10 @@ exports.setUser = async (args, accountId) => {
     try {
       const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
       if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {
@@ -200,10 +200,10 @@ exports.setUser = async (args, accountId) => {
       const _result = await astrodaoUtils.isMemberHaveRole(rule.key_field[1], accountId);
 
       if (!member._roles.includes(rule.role_id) && _result) {
-        roles.push(_role);
+        roles.push(rule.role_id);
       }
       if (member._roles.includes(rule.role_id) && _result) {
-        delRoles.push(_role);
+        delRoles.push(rule.role_id);
       }
     }
     catch (e) {

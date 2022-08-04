@@ -43,11 +43,11 @@ const oct_task = async function(receipts) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && octRole == fields.oct_role) {
-					roles.push(_role);
+					roles.push(role_id);
 				}
 
 				if (member._roles.includes(role_id) && octRole != fields.oct_role) {
-					delRoles.push(_role);
+					delRoles.push(role_id);
 				}
 			}
 			for (let role of roles) {

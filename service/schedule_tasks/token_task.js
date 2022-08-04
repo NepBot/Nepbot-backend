@@ -60,10 +60,10 @@ const token_task = async function(receipts) {
 					continue;
 				}
 				if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
-					roles.push(_role);
+					roles.push(role_id);
 				}
 				if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
-					delRoles.push(_role);
+					delRoles.push(role_id);
 				}
 			}
 			for (let role of roles) {
