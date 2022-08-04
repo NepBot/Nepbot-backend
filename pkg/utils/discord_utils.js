@@ -16,10 +16,10 @@ exports.getGuild = async (guildId) => {
 exports.getRoles = async (guildId, roleId) => {
   const guild = await this.getGuild(guildId)
   if (roleId) {
-    const role = guild.roles.fetch(roleId)
+    const role = await guild.roles.fetch(roleId)
     return role
   }
-  return guild.roles.fetch();
+  return await guild.roles.fetch();
 };
 
 exports.getOwnerId = async (guildId) => {
