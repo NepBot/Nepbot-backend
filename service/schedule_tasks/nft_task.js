@@ -28,7 +28,6 @@ const nft_task = async function(receipts, txMap) {
     value: contractList,
   });
 
-  console.log(userTokens)
   for (const userToken of userTokens) {
     const roles = await contractUtils.getRulesByField('nft_contract_id', userToken.value);
     const guild_ids = [];
@@ -43,6 +42,7 @@ const nft_task = async function(receipts, txMap) {
 
 
     for (const _userInfo of _userInfos) {
+      console.log(_userInfo)
       const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
       const guildRoles = roles.filter(role => role.guild_id == _userInfo.guild_id);
 
