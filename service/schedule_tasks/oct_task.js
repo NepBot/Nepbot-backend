@@ -22,9 +22,9 @@ const oct_task = async function(receipts) {
 
 	for (const _userField of _userFields) {
 		const octRole = await contractUtils.getOctAppchainRole(_userField.value, _userField.near_wallet_id);
-		const roles = await contractUtils.getRulesByField('appchain_id', _userField.value);
+		const rolesByField = await contractUtils.getRulesByField('appchain_id', _userField.value);
 		const guild_ids = [];
-		roles.forEach(item => {
+		rolesByField.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 
@@ -34,7 +34,7 @@ const oct_task = async function(receipts) {
 		});
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = roles.filter(role => role.guild_id == _userInfo.guild_id)
+			const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id)
 
 			const roles = [];
 			const delRoles = [];

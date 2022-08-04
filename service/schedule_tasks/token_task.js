@@ -38,9 +38,9 @@ const token_task = async function(receipts) {
 		}
 		const newAmount = await contractUtils.getBalanceOf(userToken.value, userToken.near_wallet_id);
 		const total = new BN(newAmount).add(stakedParas);
-		const roles = await contractUtils.getRulesByField('token_id', userToken.value);
+		const rolesByField = await contractUtils.getRulesByField('token_id', userToken.value);
 		const guild_ids = [];
-		roles.forEach(item => {
+		rolesByField.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 		const _userInfos = await userInfos.getUsers({
@@ -51,7 +51,7 @@ const token_task = async function(receipts) {
 		});
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = roles.filter(role => role.guild_id == _userInfo.guild_id)
+			const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id)
 
 			const roles = [];
 			const delRoles = [];

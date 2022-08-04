@@ -15,9 +15,9 @@ const delayTask = async function(accountIdList, collectionList) {
 	});
 
 	for (const userToken of userTokens) {
-		const roles = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
+		const rolesByField = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
 		const guild_ids = [];
-		roles.forEach(item => {
+		rolesByField.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 		const _userInfos = await userInfos.getUsers({
@@ -28,7 +28,7 @@ const delayTask = async function(accountIdList, collectionList) {
 		
 		for (const _userInfo of _userInfos) {
 			const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-			const guildRoles = await contractUtils.getRules(_userInfo.guild_id);
+			const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
 			const roles = [];
 			const delRoles = [];

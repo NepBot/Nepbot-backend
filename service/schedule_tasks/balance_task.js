@@ -18,10 +18,10 @@ const balance_task = async function(receipts) {
   }
   logger.debug(`accountIds: ${_accountIds}`);
 
-  const roles = await contractUtils.getRulesByField('near', 'balance');
+  const rolesByField = await contractUtils.getRulesByField('near', 'balance');
   const guild_ids = [];
   const guildMap = {};
-  roles.forEach(item => {
+  rolesByField.forEach(item => {
     guild_ids.push(item.guild_id);
     if (!guildMap[item.guild_id]) {
       guildMap[item.guild_id] = [];
