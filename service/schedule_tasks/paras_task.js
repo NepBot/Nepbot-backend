@@ -13,7 +13,7 @@ const delayTask = async function(accountIdList, collectionList) {
 		near_wallet_id: accountIdList,
 		value: collectionList,
 	});
-
+	console.log(userTokens)
 	for (const userToken of userTokens) {
 		const rolesByField = await contractUtils.getRulesByField(config.paras.nft_contract, userToken.value);
 		const guild_ids = [];
@@ -79,7 +79,7 @@ const paras_task = async function(receipts, txMap) {
 		}
 	}
 
-	setTimeout(() => delayTask(accountIdList, collectionList), 1000 * 60)
+	await delayTask(accountIdList, collectionList)
 };
 
 module.exports = paras_task;
