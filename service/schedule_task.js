@@ -38,7 +38,7 @@ const resolveChunk = async (chunkHash) => {
 
 async function resolveTxs(transactions) {
   if (signerPerBlock.length >= 20) {
-    signerPerBlock.splice(0, txPerBlock.length - 20);
+    signerPerBlock.splice(0, signerPerBlock.length - 20);
   }
   for (const signerId in txMap) {
     const index = signerPerBlock.findIndex(ids => {
