@@ -2,7 +2,7 @@
 const task = require("./service/schedule_task.js")
 const client = require("./service/discord_bot.js")
 client.on("ready", () => {
-    task.scheduleTask(96698367)
+    task.scheduleTask(96698858)
 })
 
 
