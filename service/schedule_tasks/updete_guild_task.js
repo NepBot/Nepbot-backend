@@ -135,7 +135,6 @@ const update_guild_task = async function(receipts) {
         await member.roles.add(role);
       }
       catch (e) {
-        console.log(e)
         continue;
       }
     }
