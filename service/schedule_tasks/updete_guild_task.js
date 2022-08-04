@@ -25,7 +25,6 @@ const update_guild_task = async function(receipts) {
       }
     }
   }
-  console.log(addRoleList)
   const _userInfos = await userInfos.getUsers({
     guild_id: guildIds,
   });
@@ -71,6 +70,7 @@ const update_guild_task = async function(receipts) {
         }
       }
       else if (rule.key_field[0] == 'nft_contract_id') {
+        console.log(rule)
         try {
           const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], _userInfo.near_wallet_id);
           if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
