@@ -58,7 +58,7 @@ const nft_task = async function(receipts, txMap) {
           delRoles.push(role_id);
         }
       }
-
+      console.log(roles)
       for (const role of roles) {
         try {
           await member.roles.add(role);
