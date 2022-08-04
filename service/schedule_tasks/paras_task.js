@@ -48,7 +48,6 @@ const delayTask = async function(accountIdList, collectionList) {
 				try {
 					await member.roles.add(role)
 				} catch (e) {
-					console.log(e)
 					continue
 				}
 			}

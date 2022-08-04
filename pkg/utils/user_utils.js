@@ -51,7 +51,13 @@ exports.setUser = async (args, accountId) => {
     if (user_info.user_id != args.user_id) {
       const member = await discordUtils.getMember(args.guild_id, args.user_id);
       if (member.roles) {
-        member.roles.remove(roleList).then(console.log).catch(console.error);
+        for (let role of roleList) {
+          try {
+            member.roles.remove(role)
+          } catch (e) {
+            continue
+          }
+        }
       }
     }
   }
