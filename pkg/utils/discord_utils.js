@@ -12,8 +12,8 @@ exports.getMember = async (guildId, memberId) => {
   return new GuildMember(client, member, this.getGuild(guildId));
 };
 
-exports.getGuild = async (guild_id) => {
-  let guild = client.guilds.cache.get(guild_id);
+exports.getGuild = async (guildId) => {
+  let guild = client.guilds.cache.get(guildId);
   console.log(guild)
   if (!guild) {
     guild = await rest.get(`${Routes.guild(guildId)}`)
@@ -22,11 +22,11 @@ exports.getGuild = async (guild_id) => {
   return guild
 };
 
-exports.getRoles = (guid_id, role_id) => {
-  if (role_id) {
-    return client.guilds.cache.get(guid_id).roles.cache.get(role_id);
+exports.getRoles = (guildId, roleId) => {
+  if (roleId) {
+    return client.guilds.cache.get(guildId).roles.cache.get(roleId);
   }
-  return client.guilds.cache.get(guid_id).roles.cache;
+  return client.guilds.cache.get(guildId).roles.cache;
 };
 
 exports.getOwnerId = (guild_id) => {
