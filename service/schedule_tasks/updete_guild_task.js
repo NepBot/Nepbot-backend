@@ -12,7 +12,7 @@ const update_guild_task = async function(receipts) {
   let addRoleList = [];
   let delRoleList = [];
   const guildIds = [];
-
+  console.log(actions)
   for (const action of actions) {
     if (action.method_name == 'set_roles') {
       addRoleList = addRoleList.concat(action.roles);
