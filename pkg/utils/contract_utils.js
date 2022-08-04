@@ -206,7 +206,6 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
         eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
       }
     }
-    console.log(ret)
     for (action of receipt.receipt.Action.actions) {
       if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
         obj.sender_id = receipt.predecessor_id;
