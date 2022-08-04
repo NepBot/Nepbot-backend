@@ -42,30 +42,26 @@ const nft_task = async function(receipts, txMap) {
 
 
     for (const _userInfo of _userInfos) {
-      try {
-        const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-        const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
+      const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+      const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
-        const roles = [];
-        const delRoles = [];
-        for (const { fields, role_id, key_field } of guildRoles) {
-          if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
-            continue;
-          }
-          if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-            const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-            _role && roles.push(_role);
-          }
-          if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-            const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
-            _role && delRoles.push(_role);
-          }
+      const roles = [];
+      const delRoles = [];
+      for (const { fields, role_id, key_field } of guildRoles) {
+        if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
+          continue;
         }
-      } catch (e) {
-        console.log(e)
-        continue
+        if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+          const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
+          _role && roles.push(_role);
+        }
+        if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+          const _role = discordUtils.getRoles(_userInfo.guild_id, role_id);
+          _role && delRoles.push(_role);
+        }
       }
 
+      console.log(roles)
       for (const role of roles) {
         try {
           await member.roles.add(role);
