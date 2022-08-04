@@ -100,9 +100,9 @@ async function parseEvents(receipt, txMap, eventType) {
   let ret = []
   for (let outcome of tx.receipts_outcome) {
     const events = outcome.outcome.logs.filter(log => {
-      console.log(log)
       try {
         const logObj = JSON.parse(log)
+        consolelog(logObj)
         return logObj.EVENT_JSON && logObj.EVENT_JSON.event == eventType
       } catch (e) {
         return false
