@@ -116,11 +116,11 @@ async function parseEvents(receipt, txMap, eventType) {
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('ft_transfer') > -1);
-  for (receipts of receipts) {
+  for (receipt of receipts) {
     const obj = {};
-    obj.sender_id = receipts.predecessor_id;
-    obj.token_id = receipts.receiver_id;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+    obj.sender_id = receipt.predecessor_id;
+    obj.token_id = receipt.receiver_id;
+    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
     obj.receiver_id = args.receiver_id;
     ret.push(obj);
   }
@@ -131,11 +131,11 @@ exports.filterTokenActions = (tokenIds, receipts) => {
 exports.filterOctActions = (receipts) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.oct_contract && item.receipt.Action.actions[0].FunctionCall.method_name == 'sync_state_of');
-  for (receipts of receipts) {
+  for (receipt of receipts) {
     const obj = {};
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
     obj.appchain_id = args.appchain_id;
-    obj.signer_id = receipts.receipt.Action.signer_id;
+    obj.signer_id = receipt.receipt.Action.signer_id;
     ret.push(obj);
   }
   return ret;
@@ -148,10 +148,10 @@ exports.filterRoleActions = (receipts) => {
 			(item.receipt.Action.actions[0].FunctionCall.method_name == 'set_roles' ||
 			item.receipt.Action.actions[0].FunctionCall.method_name == 'del_roles'),
   );
-  for (receipts of receipts) {
+  for (receipt of receipts) {
     const obj = {};
-    obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+    obj.method_name = receipt.receipt.Action.actions[0].FunctionCall.method_name;
+    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
     obj.roles = args.roles;
     ret.push(obj);
   }
@@ -178,7 +178,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   console.log(receipts.length)
-  for (receipts of receipts) {
+  for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
     for (let event of events) {
       const obj = {};
@@ -194,7 +194,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
 exports.filterParasActions = async (receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract);
-  for (receipts of receipts) {
+  for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
     for (let event of events) {
       const obj = {};
