@@ -39,10 +39,10 @@ const setInfo = async (ctx, next) => {
 
   await userUtils.setUser(args, req.account_id);
 
-  const interaction = discordUtils.getInteraction(args.user_id, args.guild_id);
-  if (interaction) {
-    await interaction.editReply({ content: '\n', ephemeral:true, embeds:[embed], components: [] });
-  }
+  // const interaction = discordUtils.getInteraction(args.user_id, args.guild_id);
+  // if (interaction) {
+  //   await interaction.editReply({ content: '\n', ephemeral:true, embeds:[embed], components: [] });
+  // }
 
   ctx.body = new Resp({});
 };
