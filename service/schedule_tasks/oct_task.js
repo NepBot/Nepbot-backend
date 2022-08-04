@@ -24,7 +24,7 @@ const oct_task = async function(receipts) {
 		const octRole = await contractUtils.getOctAppchainRole(_userField.value, _userField.near_wallet_id);
 		const roles = await contractUtils.getRulesByField('appchain_id', _userField.value);
 		const guild_ids = [];
-		roles.map(item => {
+		roles.forEach(item => {
 			guild_ids.push(item.guild_id);
 		});
 
