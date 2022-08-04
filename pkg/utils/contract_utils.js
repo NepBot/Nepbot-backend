@@ -105,6 +105,7 @@ async function parseEvents(receipt, txMap, eventType) {
         consolelog(logObj)
         return logObj.EVENT_JSON && logObj.EVENT_JSON.event == eventType
       } catch (e) {
+        console.log(e)
         return false
       }
     })
