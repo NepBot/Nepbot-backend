@@ -32,7 +32,7 @@ const balance_task = async function(receipts) {
     guild_id: guild_ids,
     near_wallet_id: _accountIds,
   });
-
+  console.log(_userInfos)
   for (const _userInfo of _userInfos) {
     try {
       const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
@@ -49,7 +49,7 @@ const balance_task = async function(receipts) {
           delRoles.push(rule.role_id);
         }
       }
-
+      console.log(roles)
       for (const role of roles) {
         try {
           await member.roles.add(role);
