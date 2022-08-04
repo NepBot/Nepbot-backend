@@ -156,14 +156,11 @@ exports.filterOctActions = (receipts) => {
 
 exports.filterRoleActions = (receipts) => {
   const ret = [];
-  const haha = receipts.filter(item =>
-    item.receipt.Action && item.receiver_id == config.rule_contract
-  )
-  console.log(haha)
   receipts = receipts.filter(item =>
     item.receipt.Action && item.receiver_id == config.rule_contract
   ).map(item => {
     item.receipt.Action.actions = item.receipt.Action.actions.filter(action => (action.findIndex(action => action.FunctionCall.method_name == 'set_roles') > -1 || action.findIndex(action => action.FunctionCall.method_name == 'del_roles') > -1))
+    console.log(item)
     return item
   })
   for (receipt of receipts) {
