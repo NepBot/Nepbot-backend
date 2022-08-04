@@ -29,6 +29,7 @@ const token_task = async function(receipts) {
 		near_wallet_id: accountIdList,
 		value: tokenList,
 	});
+	console.log(userTokens)
 	for (const userToken of userTokens) {
 		let stakedParas = new BN('0');
 		if (userToken.value === config.paras.token_contract) {
