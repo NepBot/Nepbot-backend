@@ -59,12 +59,12 @@ const nft_task = async function(receipts, txMap) {
         }
       }
 
-      console.log(roles)
       for (const role of roles) {
         try {
           await member.roles.add(role);
         }
         catch (e) {
+          console.log(e)
           continue;
         }
       }
