@@ -52,6 +52,7 @@ const update_guild_task = async function(receipts) {
             delRoles.push(rule.role_id);
           }
         } catch (e) {
+          console.log(e)
           continue
         }
       }
