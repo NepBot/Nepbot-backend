@@ -41,23 +41,29 @@ const nft_task = async function(receipts, txMap) {
 
 
     for (const _userInfo of _userInfos) {
-      const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
-      const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
+      try {
+        const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
+        const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
-      const roles = [];
-      const delRoles = [];
-      for (const { fields, role_id, key_field } of guildRoles) {
-        if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
-          continue;
+        const roles = [];
+        const delRoles = [];
+        for (const { fields, role_id, key_field } of guildRoles) {
+          if (key_field[0] != 'nft_contract_id' && key_field[1] != userToken.value) {
+            continue;
+          }
+          console.log(member._roles.includes(role_id))
+          if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+            roles.push(role_id);
+          }
+          if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+            delRoles.push(role_id);
+          }
         }
-        console.log(member._roles.includes(role_id))
-        if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
-          roles.push(role_id);
-        }
-        if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
-          delRoles.push(role_id);
-        }
+      } catch (e) {
+        console.log(e)
+        continue
       }
+      
       console.log(roles)
       for (const role of roles) {
         try {
