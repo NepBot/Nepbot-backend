@@ -213,6 +213,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
         const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
         obj.receiver_id = args.receiver_id;
         if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
+          console.log(obj)
           ret.push(obj);
         }
       }
