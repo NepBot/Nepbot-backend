@@ -6,7 +6,7 @@ const replies = {};
 
 exports.getMember = async (guildId, userId) => {
   const guild = await this.getGuild(guildId)
-  await guild.members.fetch(userId)
+  return await guild.members.fetch(userId)
 };
 
 exports.getGuild = async (guildId) => {
