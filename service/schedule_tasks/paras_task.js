@@ -36,8 +36,8 @@ const delayTask = async function(accountIdList, collectionList) {
 					if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
 						continue;
 					}
-					console.log(newAmount, fields.token_amount)
 					let newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
+					console.log(newAmount, fields.token_amount)
 					if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
 						roles.push(role_id);
 					}
