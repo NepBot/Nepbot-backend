@@ -4,7 +4,7 @@ const config = require('./pkg/utils/config');
 // Load logger
 const logger = require('./pkg/utils/logger');
 
-// Checking connection of mysql wheather success or not.
+// Checking connection of mysql whether success or not.
 require('./pkg/models/db_driver/mysql_driver');
 
 // Sync models to mysql
@@ -14,13 +14,13 @@ require('./pkg/utils/sync_models');
 // Run backend app
 const app = require('./service/app');
 app.listen(config.port, () => {
-	logger.info(`app listening at http://127.0.0.1:${config.port}/api`);
+  logger.info(`app listening at http://127.0.0.1:${config.port}/api`);
 });
+
+// Run discord bot
+const client = require('./service/discord_bot');
+// client.login(config.bot_token);
 
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
-
-// Run discord bot
-const client = require('./service/discord_bot');
-client.login(config.bot_token);
