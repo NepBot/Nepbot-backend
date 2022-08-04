@@ -114,14 +114,21 @@ async function parseEvents(receipt, txMap, eventType) {
 
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
-  receipts = receipts.filter(item => item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1 && item.receipt.Action.actions[0].FunctionCall.method_name.indexOf('ft_transfer') > -1);
+  receipts = receipts.filter(item => 
+    item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1
+  ).map(item => {
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name.indexOf('ft_transfer') > -1)
+    return item
+  })
   for (receipt of receipts) {
-    const obj = {};
-    obj.sender_id = receipt.predecessor_id;
-    obj.token_id = receipt.receiver_id;
-    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.receiver_id = args.receiver_id;
-    ret.push(obj);
+    for (action of receipt.receipt.Action.actions) {
+      const obj = {};
+      obj.sender_id = receipt.predecessor_id;
+      obj.token_id = receipt.receiver_id;
+      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      obj.receiver_id = args.receiver_id;
+      ret.push(obj);
+    }
   }
 
   return ret;
@@ -129,13 +136,20 @@ exports.filterTokenActions = (tokenIds, receipts) => {
 
 exports.filterOctActions = (receipts) => {
   const ret = [];
-  receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.oct_contract && item.receipt.Action.actions[0].FunctionCall.method_name == 'sync_state_of');
+  receipts = receipts.filter(item => 
+    item.receipt.Action && item.receiver_id == config.oct_contract
+  ).map(item => {
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name == 'sync_state_of')
+    return item
+  })
   for (receipt of receipts) {
-    const obj = {};
-    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.appchain_id = args.appchain_id;
-    obj.signer_id = receipt.receipt.Action.signer_id;
-    ret.push(obj);
+    for (action of receipt.receipt.Action.actions) {
+      const obj = {};
+      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      obj.appchain_id = args.appchain_id;
+      obj.signer_id = receipt.receipt.Action.signer_id;
+      ret.push(obj);
+    }
   }
   return ret;
 };
@@ -143,38 +157,42 @@ exports.filterOctActions = (receipts) => {
 exports.filterRoleActions = (receipts) => {
   const ret = [];
   receipts = receipts.filter(item =>
-    item.receipt.Action && item.receiver_id == config.rule_contract &&
-			(item.receipt.Action.actions[0].FunctionCall.method_name == 'set_roles' ||
-			item.receipt.Action.actions[0].FunctionCall.method_name == 'del_roles'),
-  );
+    item.receipt.Action && item.receiver_id == config.rule_contract
+  ).map(item => {
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => (action.findIndex(action => action.FunctionCall.method_name == 'set_roles') > -1 || action.findIndex(action => action.FunctionCall.method_name == 'del_roles') > -1))
+    return item
+  })
   for (receipt of receipts) {
-    const obj = {};
-    obj.method_name = receipt.receipt.Action.actions[0].FunctionCall.method_name;
-    const args = JSON.parse(Buffer.from(receipt.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.roles = args.roles;
-    ret.push(obj);
+    for (action of receipt.receipt.Action.actions) {
+      const obj = {};
+      obj.method_name = action.FunctionCall.method_name;
+      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      obj.roles = args.roles;
+      ret.push(obj);
+    }
   }
   return ret;
 };
 
 exports.filterTransferActions = (accountIds, receipts) => {
   const ret = [];
-  receipts.forEach(item => {
-    if (item.receipt.Action && item.receipt.Action.actions[0] && item.receipt.Action.actions[0].Transfer) {
-      if (accountIds.findIndex(accountId => accountId == item.receiver_id) > -1) {
-        ret.push({ account_id: item.receiver_id });
-      }
-      if (accountIds.findIndex(accountId => accountId == item.predecessor_id) > -1) {
-        ret.push({ account_id: item.predecessor_id });
-      }
-    }
-
+  receipts = receipts.filter(item => {
+    item.receipt.Action && item.receipt.Action.actions.length > 0 && item.receipt.Action.actions.findIndex(action => action.Transfer) > -1
   });
+  for (let receipt of receipts) {
+    if (accountIds.findIndex(accountId => accountId == receipt.receiver_id) > -1) {
+      ret.push({ account_id: receipt.receiver_id });
+    }
+    if (accountIds.findIndex(accountId => accountId == receipt.predecessor_id) > -1) {
+      ret.push({ account_id: receipt.predecessor_id });
+    }
+  }
   return ret;
 };
 
 exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const ret = [];
+  const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
@@ -182,13 +200,24 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
       for (let item of event.data) {
         const obj = {};
         obj.sender_id = item.old_owner_id;
-        obj.contract_id = item.receiver_id;
+        obj.contract_id = receipt.receiver_id;
         obj.receiver_id = item.new_owner_id;
         ret.push(obj);
+        eventMap[obj.sender_id + obj.contract_id + obj.receiver_id] = true
+      }
+    }
+    for (action of receipt.receipt.Action.actions) {
+      if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
+        obj.sender_id = receipt.predecessor_id;
+        obj.token_id = receipt.receiver_id;
+        const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+        obj.receiver_id = args.receiver_id;
+        if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
+          ret.push(obj);
+        }
       }
     }
   }
-  console.log(ret)
   return ret;
 };
 
@@ -198,52 +227,61 @@ exports.filterParasActions = async (receipts, txMap) => {
   for (receipt of receipts) {
     const events = await parseEvents(receipt, txMap, "nft_transfer")
     for (let event of events) {
-      const obj = {};
-      obj.sender_id = event.data.old_owner_id;
-      obj.receiver_id = event.data.new_owner_id;
-      obj.token_id = event.data.token_ids[0]
-      ret.push(obj);
+      for (let item of event.data) {
+        for (let token_id of item.token_ids) {
+          const obj = {};
+          obj.sender_id = item.old_owner_id;
+          obj.receiver_id = item.new_owner_id;
+          obj.token_id = token_id
+          ret.push(obj);
+        }
+      }
     }
   }
   return ret;
 };
 
-exports.filterCollectionActions = (receipts) => {
-  const ret = [];
-  receipts = receipts.filter(item =>
-    item.receipt.Action && item.receiver_id == config.nft_contract &&
-			(item.receipt.Action.actions[0].FunctionCall.method_name == 'create_collection'),
-  );
-  for (receipts of receipts) {
-    const obj = {};
-    obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    obj.outer_collection_id = args.outer_collection_id;
-    obj.contract_type = args.contract_type;
-    obj.guild_id = args.guild_id;
-    ret.push(obj);
-  }
-  return ret;
-};
+// exports.filterCollectionActions = (receipts) => {
+//   const ret = [];
+//   receipts = receipts.filter(item =>
+//     item.receipt.Action && item.receiver_id == config.nft_contract &&
+// 			(item.receipt.Action.actions[0].FunctionCall.method_name == 'create_collection'),
+//   );
+//   for (receipts of receipts) {
+//     const obj = {};
+//     obj.method_name = receipts.receipt.Action.actions[0].FunctionCall.method_name;
+//     const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
+//     obj.outer_collection_id = args.outer_collection_id;
+//     obj.contract_type = args.contract_type;
+//     obj.guild_id = args.guild_id;
+//     ret.push(obj);
+//   }
+//   return ret;
+// };
 
 exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
   const account = await this.contract();
   const ret = [];
   receipts = receipts.filter(item =>
     item.receipt.Action &&
-    daoIds.findIndex(daoId => daoId == item.receiver_id) > -1 &&
-    item.receipt.Action.actions[0].FunctionCall.method_name == 'act_proposal');
-  for (receipts of receipts) {
-    const obj = {};
-    obj.dao_id = receipts.receiver_id;
-    const args = JSON.parse(Buffer.from(receipts.receipt.Action.actions[0].FunctionCall.args, 'base64').toString());
-    const proposalResult = await account.viewFunction(receipts.receiver_id, 'get_proposal', { 'id': args.id });
-    if (!('AddMemberToRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
-      continue;
+    daoIds.findIndex(daoId => daoId == item.receiver_id) > -1
+  ).map(item => {
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name == 'act_proposal')
+    return item
+  })
+  for (receipt of receipts) {
+    for (action of receipt.receipt.Action.actions) {
+      const obj = {};
+      obj.dao_id = receipt.receiver_id;
+      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      const proposalResult = await account.viewFunction(receipt.receiver_id, 'get_proposal', { 'id': args.id });
+      if (!('AddMemberToRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
+        continue;
+      }
+      obj.kind = proposalResult.kind;
+      // obj = {dao_id: "xxxxxxxxx.sputnikv2.testnet", kind: {RemoveMemberFromRole: { member_id: 'member_id', role: 'council' }}}
+      ret.push(obj);
     }
-    obj.kind = proposalResult.kind;
-    // obj = {dao_id: "xxxxxxxxx.sputnikv2.testnet", kind: {RemoveMemberFromRole: { member_id: 'member_id', role: 'council' }}}
-    ret.push(obj);
   }
   if (ret.length > 0) {
     logger.debug(`ret: ${ JSON.stringify(ret) }`);
