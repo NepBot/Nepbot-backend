@@ -216,6 +216,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
           ret.push(obj);
         }
       }
+      console.log(ret)
     }
   }
   console.log(ret)
