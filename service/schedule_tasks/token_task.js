@@ -29,7 +29,7 @@ const token_task = async function(receipts) {
 		near_wallet_id: accountIdList,
 		value: tokenList,
 	});
-
+	console.log("=============================")
 	for (const userToken of userTokens) {
 		let stakedParas = new BN('0');
 		if (userToken.value === config.paras.token_contract) {
@@ -58,6 +58,7 @@ const token_task = async function(receipts) {
 				if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
 					continue;
 				}
+				console.log("-------------------------------------")
 				if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
 					roles.push(role_id);
 				}
