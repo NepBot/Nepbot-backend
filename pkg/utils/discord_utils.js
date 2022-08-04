@@ -12,7 +12,7 @@ exports.getMember = async (guildId, memberId) => {
   return new GuildMember(client, member, this.getGuild(guildId));
 };
 
-exports.getGuild = (guild_id) => {
+exports.getGuild = async (guild_id) => {
   let guild = client.guilds.cache.get(guild_id);
   console.log(guild)
   if (!guild) {
@@ -73,6 +73,6 @@ exports.setInteraction = (interaction) => {
 };
 
 exports.getMemberInGuild = async (guildId, userId) => {
-  const guild = this.getGuild(guildId);
+  const guild = await this.getGuild(guildId);
   return await guild.members.fetch(userId);
 };

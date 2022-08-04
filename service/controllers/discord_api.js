@@ -13,7 +13,7 @@ const getRole = async (ctx, next) => {
 
 const getServer = async (ctx, next) => {
   const guildId = ctx.params.guildId;
-  const serverList = discordUtils.getGuild(guildId);
+  const serverList = await discordUtils.getGuild(guildId);
   ctx.body = new Resp({ data: serverList });
 };
 
