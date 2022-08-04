@@ -12,15 +12,15 @@ const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 
 
-let txMap = []
-let signerPerBlock = []
+const txMap = [];
+const signerPerBlock = [];
 
 const resolveChunk = async (chunkHash) => {
   try {
     const chunkData = await provider.chunk(chunkHash);
     const promises = [];
 
-	promises.push(resolveTxs(chunkData.transactions));
+    promises.push(resolveTxs(chunkData.transactions));
 
     promises.push(updeteGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
@@ -37,28 +37,28 @@ const resolveChunk = async (chunkHash) => {
 };
 
 async function resolveTxs(transactions) {
-    if (signerPerBlock.length >= 20) {
-		signerPerBlock.splice(0, txPerBlock.length - 20)
+  if (signerPerBlock.length >= 20) {
+    signerPerBlock.splice(0, txPerBlock.length - 20);
+  }
+  for (const signerId in txMap) {
+    const index = signerPerBlock.findIndex(ids => {
+      return ids.findIndex(id => id == signerId) > -1;
+    });
+    if (index == -1) {
+      delete txMap[signerId];
     }
-	for (let signerId in txMap) {
-		const index = signerPerBlock.findIndex(ids => {
-			return ids.findIndex(id => id == signerId) > -1
-		})
-		if (index == -1) {
-			delete txMap[signerId]
-		}
-	}
-    let blockSigners = []
-    for (let tx of transactions) {
-        let signerId = tx.signer_id
-        blockSigners.push(signerId)
-        if (!txMap[signerId]) {
-            txMap[signerId] = []
-        }
-        txMap[signerId].push(tx)
+  }
+  const blockSigners = [];
+  for (const tx of transactions) {
+    const signerId = tx.signer_id;
+    blockSigners.push(signerId);
+    if (!txMap[signerId]) {
+      txMap[signerId] = [];
+    }
+    txMap[signerId].push(tx);
 
-    }
-    signerPerBlock.push(blockSigners)
+  }
+  signerPerBlock.push(blockSigners);
 }
 
 
@@ -66,27 +66,27 @@ let blockHeight = 0;
 let finalBlockHeight = 0;
 
 const resolveNewBlock = async (showLog = false) => {
-	if (showLog) {
-		console.log(`fetched block height: ${blockHeight}`);
-	}
-	const newestBlock = await provider.block({ finality: 'optimistic' });
-	finalBlockHeight = newestBlock.header.height;
-	if (blockHeight == 0) {
-		blockHeight = finalBlockHeight - 1;
-	}
-	const promises = [];
-	for (;blockHeight <= finalBlockHeight; blockHeight++) {
-		if (showLog) {
-			console.log(`fetched block height: ${blockHeight}`);
-		}
-		let block = {};
-		try {
-			block = await provider.block({ blockId: blockHeight });
-		}
-		catch (e) {
-			console.log(e)
-			continue;
-		}
+  if (showLog) {
+    console.log(`fetched block height: ${blockHeight}`);
+  }
+  const newestBlock = await provider.block({ finality: 'optimistic' });
+  finalBlockHeight = newestBlock.header.height;
+  if (blockHeight == 0) {
+    blockHeight = finalBlockHeight - 1;
+  }
+  const promises = [];
+  for (;blockHeight <= finalBlockHeight; blockHeight++) {
+    if (showLog) {
+      console.log(`fetched block height: ${blockHeight}`);
+    }
+    let block = {};
+    try {
+      block = await provider.block({ blockId: blockHeight });
+    }
+    catch (e) {
+      console.log(e);
+      continue;
+    }
 
     for (const chunk of block.chunks) {
       promises.push(resolveChunk(chunk.chunk_hash));
@@ -95,13 +95,13 @@ const resolveNewBlock = async (showLog = false) => {
   await Promise.all(promises);
 };
 module.exports.scheduleTask = function(fromBlockHeight = 0) {
-	if (fromBlockHeight > 0) {
-		blockHeight = fromBlockHeight
-		resolveNewBlock(true);
-	} else {
-		schedule.scheduleJob('*/1 * * * * *', function() {
-			resolveNewBlock();
-		});
-	}
-	
+  if (fromBlockHeight > 0) {
+    blockHeight = fromBlockHeight;
+    resolveNewBlock(true);
+  }
+  else {
+    schedule.scheduleJob('*/1 * * * * *', function() {
+      resolveNewBlock();
+    });
+  }
 };

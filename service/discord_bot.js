@@ -1,5 +1,6 @@
 // get the app root path
 const appRoot = require('app-root-path');
+const config = require('../pkg/utils/config');
 const commands_dir = `${ appRoot }/service/commands`;
 const events_dir = `${ appRoot }/service/events`;
 // require logger
@@ -51,6 +52,6 @@ for (const file of eventFiles) {
     client.on(event.name, (...args) => event.execute(...args));
   }
 }
-
+//client.login(config.bot_token);
 // Login to Discord with your client's token
 module.exports = client;

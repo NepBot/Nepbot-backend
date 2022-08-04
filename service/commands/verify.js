@@ -33,16 +33,16 @@ const execute = async interaction => {
   // Set the url
   button.setURL(`${config.wallet_auth_url}/verify/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
 
-	await userInfos.addUser({
-		user_id: interaction.user.id,
-		guild_id: interaction.guildId,
-		nonce: nonce,
-	});
-	// store data into mysql
-	logger.debug('saving user info...');
-	// replay message to discord user
-	await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
-	discordUtils.setInteraction(interaction)
+  await userInfos.addUser({
+    user_id: interaction.user.id,
+    guild_id: interaction.guildId,
+    nonce: nonce,
+  });
+  // store data into mysql
+  logger.debug('saving user info...');
+  // replay message to discord user
+  await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+  discordUtils.setInteraction(interaction);
 };
 
 module.exports = {
