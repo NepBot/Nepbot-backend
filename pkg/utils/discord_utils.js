@@ -1,5 +1,5 @@
 const client = require('../../service/discord_bot');
-const { GuildMember } = require('discord.js');
+const { GuildMember, Guild } = require('discord.js');
 const { Routes } = require('discord-api-types/v9');
 const rest = require('../../deploy-commands');
 const config = require('./config');
@@ -13,7 +13,13 @@ exports.getMember = async (guildId, memberId) => {
 };
 
 exports.getGuild = (guild_id) => {
-  return client.guilds.cache.get(guild_id);
+  let guild = client.guilds.cache.get(guild_id);
+  console.log(guild)
+  if (!guild) {
+    guild = await rest.get(`${Routes.guild(guildId)}`)
+    guild = new Guild(client, guild)
+  }
+  return guild
 };
 
 exports.getRoles = (guid_id, role_id) => {
