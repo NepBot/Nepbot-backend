@@ -2,6 +2,7 @@ const { connect, WalletConnection, providers } = require('near-api-js');
 const config = require('./config');
 const BN = require('bn.js');
 const logger = require('./logger');
+const { provider } = require('./near_utils');
 const contract = async () => {
   // connect to NEAR
   const near = await connect(config.nearWallet);
@@ -92,7 +93,6 @@ async function parseEvents(receipt, txMap, eventType) {
   let tx = {}
   for (let txDigest of txDigests) {
     tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
-    console.log(tx)
     if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
       break
     }
