@@ -180,6 +180,7 @@ exports.filterTransferActions = (accountIds, receipts) => {
     receipts = receipts.filter(item => {
       item.receipt.Action && item.receipt.Action.actions.length > 0 && item.receipt.Action.actions.findIndex(action => !!action.Transfer) > -1
     });
+    console.log(receipts, "==========================")
     for (let receipt of receipts) {
       if (accountIds.findIndex(accountId => accountId == receipt.receiver_id) > -1) {
         ret.push({ account_id: receipt.receiver_id });
