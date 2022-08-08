@@ -1,6 +1,6 @@
 const yargs = require("yargs")
 const appRoot = require('app-root-path');
-const args = require("./scripts/rescan-blocks");
+const fs = require('node:fs');
 const scriptsDir = `${ appRoot }/scripts`;
 
 const scriptFiles = fs.readdirSync(scriptsDir).filter(file => file.endsWith('.js'));
