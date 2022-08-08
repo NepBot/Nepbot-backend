@@ -1,7 +1,7 @@
 // Load config info
-const config = require('./pkg/utils/config');
-const logger = require('./pkg/utils/logger');
-const guildCreate = require('./service/events/guildCreate');
+const config = require('../pkg/utils/config');
+const logger = require('../pkg/utils/logger');
+const guildCreate = require('../service/events/guildCreate');
 const { Client, Intents } = require('discord.js');
 const intents = [Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS];
 // Create a new client instance

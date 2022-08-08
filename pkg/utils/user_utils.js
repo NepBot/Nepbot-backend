@@ -55,6 +55,7 @@ exports.setUser = async (args, accountId) => {
           try {
             member.roles.remove(role)
           } catch (e) {
+            console.log(e)
             continue
           }
         }

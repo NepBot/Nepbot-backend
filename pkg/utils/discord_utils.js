@@ -1,8 +1,10 @@
 const client = require('../../service/discord_bot');
 const { Routes } = require('discord-api-types/v9');
-const rest = require('../../deploy-commands');
+const { REST } = require('@discordjs/rest');
 const config = require('./config');
 const replies = {};
+
+const rest = new REST({ version: '9' }).setToken(config.bot_token);
 
 exports.getMember = async (guildId, userId) => {
   const guild = await this.getGuild(guildId)
