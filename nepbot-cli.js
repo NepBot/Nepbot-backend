@@ -30,9 +30,9 @@ async function init() {
         }
         yargsObj.command(commandStr, script.params.description, (yargs) => {
             for (arg of script.params.args) {
-                yargs.positional(args.name, {
+                yargs.positional(arg.name, {
                     type: arg.type,
-                    describe: args.describe
+                    describe: arg.describe
                 })
             }
         }, async function (argv) {
