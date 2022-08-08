@@ -218,6 +218,7 @@ exports.setUser = async (args, accountId) => {
     }
   }
 
+  console.log(roles)
   for (const role of roles) {
     try {
       await member.roles.add(role);
