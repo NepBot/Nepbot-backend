@@ -36,7 +36,7 @@ async function init() {
                 })
             }
         }, async function (argv) {
-            await script.execution(argv)
+            await script.execute(argv)
         })
     }
     yargsObj.argv
