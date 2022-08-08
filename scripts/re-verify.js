@@ -9,11 +9,10 @@ client.on("ready", async () => {
     const users = await userInfos.getUsers({
         guild_id: '923197936068861953',
     });
-    console.log(users)
     for (const user of users) {
         const args = { guild_id: user.guild_id, user_id: user.user_id };
         const accountId = user.near_wallet_id;
-        userUtils.setUser(args, accountId);
+        await userUtils.setUser(args, accountId);
     }
     process.exit(0);
 })
