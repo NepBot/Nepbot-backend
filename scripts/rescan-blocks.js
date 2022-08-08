@@ -3,7 +3,6 @@ exports.execute = async function(args) {
     // Create a new client instance
     const task = require("../service/schedule_task.js")
     const client = require("../service/discord_bot.js")
-    let args = 0
     client.on("ready", () => {
         try {
             task.scheduleTask(args.height)
