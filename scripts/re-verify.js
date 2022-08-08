@@ -1,18 +1,19 @@
 // Create a new client instance
-const userInfos_utils = require('../pkg/models/object/user_infos');
+const userInfos = require('../pkg/models/object/user_infos');
 //const client = require('./service/discord_bot');
-const user_utils = require('../pkg/utils/user_utils');
+const userUtils = require('../pkg/utils/user_utils');
 
 // Load config info
 const client = require("../service/discord_bot.js")
 client.on("ready", async () => {
-    const userInfos = await userInfos_utils.getUsers({
+    const users = await userInfos.getUsers({
         guild_id: '942411087251398727',
     });
-    for (const userInfo of userInfos) {
-        const args = { guild_id: userInfo.guild_id, user_id: userInfo.user_id };
-        const accountId = userInfo.near_wallet_id;
-        user_utils.setUser(args, accountId);
+    console.log(users)
+    for (const user of users) {
+        const args = { guild_id: user.guild_id, user_id: user.user_id };
+        const accountId = user.near_wallet_id;
+        userUtils.setUser(args, accountId);
     }
     process.exit(0);
 })
