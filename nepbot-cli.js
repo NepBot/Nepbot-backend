@@ -25,11 +25,11 @@ async function init() {
     for (let scriptName of scriptNames) {
         const script = require(`${scriptsDir}/${scriptName}.js`)
         let commandStr = `${scriptName}`
-        for (arg of script.param.args) {
+        for (arg of script.params.args) {
             commandStr += ` [${arg.name}]`
         }
         yargsObj.command(commandStr, (yargs) => {
-            for (arg of scriptsDir.param.args) {
+            for (arg of scriptsDir.params.args) {
                 yargs.positional(args.name, {
                     type: arg.type,
                     describe: args.describe
