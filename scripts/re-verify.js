@@ -12,7 +12,12 @@ client.on("ready", async () => {
     for (const user of users) {
         const args = { guild_id: user.guild_id, user_id: user.user_id };
         const accountId = user.near_wallet_id;
-        await userUtils.setUser(args, accountId);
+        try {
+            await userUtils.setUser(args, accountId);
+        } catch (e) {
+            console.log(e)
+        }
+        
     }
     process.exit(0);
 })
