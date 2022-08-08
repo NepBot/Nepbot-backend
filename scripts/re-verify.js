@@ -7,7 +7,7 @@ const userUtils = require('../pkg/utils/user_utils');
 const client = require("../service/discord_bot.js")
 client.on("ready", async () => {
     const users = await userInfos.getUsers({
-        guild_id: '942411087251398727',
+        guild_id: '923197936068861953',
     });
     console.log(users)
     for (const user of users) {
