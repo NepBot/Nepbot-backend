@@ -28,7 +28,7 @@ async function init() {
         for (arg of script.params.args) {
             commandStr += ` [${arg.name}]`
         }
-        yargsObj.command(commandStr, scriptsDir.params.description, (yargs) => {
+        yargsObj.command(commandStr, script.params.description, (yargs) => {
             for (arg of scriptsDir.params.args) {
                 yargs.positional(args.name, {
                     type: arg.type,
