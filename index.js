@@ -18,8 +18,7 @@ app.listen(config.port, () => {
 });
 
 // Run discord bot
-const client = require('./service/discord_bot');
-// client.login(config.bot_token);
+require('./service/discord_bot');
 
 // Run schedule task
 const task = require('./service/schedule_task');

@@ -5,25 +5,25 @@ const config = require('./config');
 const replies = {};
 
 exports.getMember = async (guildId, userId) => {
-  const guild = await this.getGuild(guildId)
-  return await guild.members.fetch(userId)
+  const guild = await this.getGuild(guildId);
+  return await guild.members.fetch(userId);
 };
 
 exports.getGuild = async (guildId) => {
-  return await client.guilds.fetch(guildId)
+  return await client.guilds.fetch(guildId);
 };
 
 exports.getRoles = async (guildId, roleId) => {
-  const guild = await this.getGuild(guildId)
+  const guild = await this.getGuild(guildId);
   if (roleId) {
-    const role = await guild.roles.fetch(roleId)
-    return role
+    const role = await guild.roles.fetch(roleId);
+    return role;
   }
   return await guild.roles.fetch();
 };
 
 exports.getOwnerId = async (guildId) => {
-  const guild = await this.getGuild(guildId)
+  const guild = await this.getGuild(guildId);
   return guild.ownerId;
 };
 
@@ -69,4 +69,9 @@ exports.setInteraction = (interaction) => {
 exports.getMemberInGuild = async (guildId, userId) => {
   const guild = await this.getGuild(guildId);
   return await guild.members.fetch(userId);
+};
+
+exports.getMemberNameById = async (guildId, userId) => {
+  const guild = await this.getGuild(guildId);
+  return await guild.members.fetch(userId).user.username;
 };

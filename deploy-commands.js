@@ -6,10 +6,10 @@ const { Routes } = require('discord-api-types/v9');
 const config = require('./pkg/utils/config');
 
 const commands = [];
-const commandFiles = fs.readdirSync('./service/commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(`${ appRoot }/service/commands`).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  const command = require(`./service/commands/${file}`);
+  const command = require(`${ appRoot }/service/commands/${file}`);
   commands.push(command.data.toJSON());
 }
 
