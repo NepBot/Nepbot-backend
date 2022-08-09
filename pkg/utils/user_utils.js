@@ -9,7 +9,6 @@ const astrodaoUtils = require('../../pkg/utils/astrodao_utils');
 const BN = require('bn.js');
 const { verifySign } = require('./near_utils');
 
-
 exports.verifyUserId = async (args, sign) => {
   if (!(await this.verifyUserSign(args, sign))) {
     return false;

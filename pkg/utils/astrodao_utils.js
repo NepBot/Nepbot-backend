@@ -16,6 +16,13 @@ const getMemberInfo = async (daoId) => {
   return memberInfo;
 };
 
+/**
+ * @description based on the params to justify the account have role in dao.
+ * @param {*} daoId
+ * @param {*} accountId
+ * @param {*} roleInDao
+ * @returns boolean
+ */
 exports.isMemberHaveRole = async (daoId, accountId, roleInDao) => {
   const policy = await contractUtils.getAstrodaoPolicy(daoId);
   for (const role of policy.roles) {
