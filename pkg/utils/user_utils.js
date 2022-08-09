@@ -135,12 +135,11 @@ exports.setUser = async (args, accountId) => {
 
   for (const rule of rulesMap.oct) {
     try {
-      const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId, rule.fields.astrodao_role);
-
+      const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId);
       if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
         roles.push(rule.role_id);
       }
-      if (member._roles.includes(rule.role_id) && !octRole == rule.fields.oct_role) {
+      if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
         delRoles.push(rule.role_id);
       }
     }
