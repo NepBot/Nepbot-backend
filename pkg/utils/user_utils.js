@@ -137,7 +137,6 @@ exports.setUser = async (args, accountId) => {
   for (const rule of rulesMap.oct) {
     try {
       const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId);
-
       if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
         roles.push(rule.role_id);
       }
