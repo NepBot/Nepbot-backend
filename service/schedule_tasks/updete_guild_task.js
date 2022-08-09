@@ -132,7 +132,7 @@ const update_guild_task = async function(receipts) {
     }
     for (const role of roles) {
       try {
-        await member.roles.add(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in update_guild_task`));
+        await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in update_guild_task`));
       }
       catch (e) {
         continue;
@@ -141,7 +141,7 @@ const update_guild_task = async function(receipts) {
 
     for (const role of delRoles) {
       try {
-        await member.roles.remove(role).then(logger.info(`${member.user.username} remove role, the role name is ${role.name} in update_guild_task`));
+        await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in update_guild_task`));
       }
       catch (e) {
         continue;

@@ -24,6 +24,7 @@ exports.getRoles = async (guildId, roleId) => {
   return await guild.roles.fetch();
 };
 
+this.getRoles('966966468774350948', '1004475262097952848').then(e => console.log(e.name));
 exports.getOwnerId = async (guildId) => {
   const guild = await this.getGuild(guildId);
   return guild.ownerId;
