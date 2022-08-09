@@ -42,7 +42,7 @@ exports.verifyUserSign = async (args, sign) => {
 
 exports.setUser = async (args, accountId) => {
   if (!accountId) {
-    return
+    return;
   }
   const rules = await contractUtils.getRules(args.guild_id);
   const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
@@ -54,12 +54,13 @@ exports.setUser = async (args, accountId) => {
     if (user_info.user_id != args.user_id) {
       const member = await discordUtils.getMember(args.guild_id, args.user_id);
       if (member.roles) {
-        for (let role of roleList) {
+        for (const role of roleList) {
           try {
-            member.roles.remove(role)
-          } catch (e) {
-            console.log(e)
-            continue
+            member.roles.remove(role);
+          }
+          catch (e) {
+            logger.error(e);
+            continue;
           }
         }
       }
@@ -127,7 +128,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
 
@@ -144,7 +145,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
   }
@@ -163,7 +164,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
 
@@ -180,7 +181,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
 
@@ -197,7 +198,7 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
 
@@ -215,27 +216,27 @@ exports.setUser = async (args, accountId) => {
       }
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
 		  continue;
     }
   }
 
   for (const role of roles) {
     try {
-      await member.roles.add(role);
+      await member.roles.add(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in setUser`));
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
   }
 
   for (const role of delRoles) {
     try {
-      await member.roles.remove(role);
+      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role, the role name is ${role.name} in setUser`));
     }
     catch (e) {
-      console.log(e)
+      logger.error(e);
       continue;
     }
 

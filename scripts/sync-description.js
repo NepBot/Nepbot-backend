@@ -1,10 +1,7 @@
-
-
-
-exports.execute = async function () {
+exports.execute = async function() {
   const logger = require('../pkg/utils/logger');
   const guildCreate = require('../service/events/guildCreate');
-  const client = require("../service/discord_bot.js")
+  const client = require('../service/discord_bot.js');
 
   client.on('ready', async () => {
     const guilds = client.guilds.cache.values();
@@ -15,9 +12,9 @@ exports.execute = async function () {
     }
     process.exit(0);
   });
-}
+};
 
 exports.params = {
   args: [],
   description: 'update nepbot channels',
-}
+};
