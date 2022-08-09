@@ -57,10 +57,10 @@ const nft_task = async function(receipts, txMap) {
           delRoles.push(role_id);
         }
       }
-      
+
       for (const role of roles) {
         try {
-          await member.roles.add(role);
+          await member.roles.add(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in nft_task`));
         }
         catch (e) {
           continue;
@@ -69,7 +69,7 @@ const nft_task = async function(receipts, txMap) {
 
       for (const role of delRoles) {
         try {
-          await member.roles.remove(role);
+          await member.roles.remove(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in nft_task`));
         }
         catch (e) {
           continue;

@@ -1,6 +1,4 @@
-
-
-exports.execute = async function () {
+exports.execute = async function() {
   const logger = require('../pkg/utils/logger');
   const fs = require('node:fs');
   const { REST } = require('@discordjs/rest');
@@ -21,9 +19,9 @@ exports.execute = async function () {
   rest.put(Routes.applicationCommands(config.bot_appid), { body: commands })
     .then(() => logger.info('Successfully registered application commands.'))
     .catch(console.error);
-}
+};
 
 exports.params = {
   args: [],
   description: 'update nepbot channels',
-}
+};
