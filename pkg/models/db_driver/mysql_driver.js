@@ -13,6 +13,7 @@ const operatorsAliases = {
   $all: Op.all,
   $values: Op.values,
   $col: Op.col,
+  $nin: Op.notIn,
 };
 
 const mysql = new Sequelize(`${config.mysql_url}`, {

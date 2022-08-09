@@ -19,9 +19,8 @@ app.listen(config.port, () => {
 
 // Run discord bot
 require('./service/discord_bot');
-//client must be launched by itself
 
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
-//schedule need to be run here
+// schedule need to be run here

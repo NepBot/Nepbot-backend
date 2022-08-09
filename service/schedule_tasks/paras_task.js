@@ -45,7 +45,7 @@ const delayTask = async function(accountIdList, collectionList) {
 			}
 			for (let role of roles) {
 				try {
-					await member.roles.add(role)
+					await member.roles.add(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in delayTask`))
 				} catch (e) {
 					continue
 				}
@@ -53,7 +53,7 @@ const delayTask = async function(accountIdList, collectionList) {
 	
 			for (let role of delRoles) {
 				try {
-					await member.roles.remove(role)
+					await member.roles.remove(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in delayTask`))
 				} catch (e) {
 					continue
 				}
