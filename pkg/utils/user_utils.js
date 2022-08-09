@@ -41,6 +41,9 @@ exports.verifyUserSign = async (args, sign) => {
 };
 
 exports.setUser = async (args, accountId) => {
+  if (!accountId) {
+    return
+  }
   const rules = await contractUtils.getRules(args.guild_id);
   const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
   const result = await userInfos.getUsers({
@@ -55,6 +58,7 @@ exports.setUser = async (args, accountId) => {
           try {
             member.roles.remove(role)
           } catch (e) {
+            console.log(e)
             continue
           }
         }
@@ -217,6 +221,7 @@ exports.setUser = async (args, accountId) => {
     }
   }
 
+  console.log(roles)
   for (const role of roles) {
     try {
       await member.roles.add(role);

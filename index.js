@@ -23,3 +23,4 @@ require('./service/discord_bot');
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
+// schedule need to be run here
