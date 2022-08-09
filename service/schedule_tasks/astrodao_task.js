@@ -47,11 +47,11 @@ const astrodao_task = async function(receipts) {
         try {
           // if the action is remove
           if (mapAstrodaoDiscord.action == 'remove' && memberInGuild.roles.cache.some(r => r.id === role.role_id)) {
-            await memberInGuild.roles.remove(role.role_id).then(logger.info(`${memberInGuild.user.username} remove role, the role name is ${role.name} in astrodao_task`)).catch(e => logger.error(e));
+            await memberInGuild.roles.remove(role.role_id).then(logger.info(`${memberInGuild.user.username} remove role_id ${role} in astrodao_task`)).catch(e => logger.error(e));
           }
           // if the action is add
           else if (mapAstrodaoDiscord.action == 'add' && !memberInGuild.roles.cache.some(r => r.id === role.role_id)) {
-            await memberInGuild.roles.add(role.role_id).then(logger.info(`${memberInGuild.user.username} add role, the role name is ${role.name} in astrodao_task`)).catch(e => logger.error(e));
+            await memberInGuild.roles.add(role.role_id).then(logger.info(`${memberInGuild.user.username} add role_id ${role} in astrodao_task`)).catch(e => logger.error(e));
           }
         }
         catch (e) {

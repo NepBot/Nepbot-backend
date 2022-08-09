@@ -222,7 +222,7 @@ exports.setUser = async (args, accountId) => {
 
   for (const role of roles) {
     try {
-      await member.roles.add(role).then(logger.info(`${member.user.username} add role, the role name is ${role.name} in setUser`));
+      await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in setUser`));
     }
     catch (e) {
       logger.error(e);
@@ -232,7 +232,7 @@ exports.setUser = async (args, accountId) => {
 
   for (const role of delRoles) {
     try {
-      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role, the role name is ${role.name} in setUser`));
+      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in setUser`));
     }
     catch (e) {
       logger.error(e);
