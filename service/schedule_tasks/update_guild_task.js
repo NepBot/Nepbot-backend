@@ -23,8 +23,8 @@ const update_guild_task = async (receipts) => {
     // get all rules that related to the role_id -> ruleFromAction.role_id
     if (action.method_name == 'set_roles') {
       for (const user of usersInDB) {
-        if (!await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
-          try {
+        try {
+          if (!await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
             logger.debug(`the user is not in role ${ruleFromAction.role_id} & satisfy the rule ${JSON.stringify(ruleFromAction)} in set_roles`);
             const guildMember = await discordUtils.getMember(user.guild_id, user.user_id);
             await guildMember.roles.add(ruleFromAction.role_id).then(logger.info(`${guildMember.user.username} add role_id ${ruleFromAction.role_id} in update_guild_task`)).catch(e => logger.error(e));
@@ -35,26 +35,33 @@ const update_guild_task = async (receipts) => {
             });
             logger.debug(`${user.user_id} add role & addUserFields`);
           }
-          catch (e) {
-            logger.error(e);
-          }
-
+        }
+        catch (e) {
+          logger.error(e);
+          continue;
         }
       }
     }
 
     else if (action.method_name == 'del_roles') {
       historyRules = await contractUtils.getRules(guildId).then(e => e.filter(d => d.role_id == ruleFromAction.role_id));
-      logger.debug(`historyRules: ${historyRules}`);
       for (const user of usersInDB) {
         if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & satisfy the deleted rule ${JSON.stringify(ruleFromAction)} in del_roles`);
           let isDelRole = true;
           for (const rule of historyRules) {
-            if (await userUtils.isMemberSatisfyRule(user.near_wallet_id, rule)) {
-              logger.debug(`satisfy other rule ${JSON.stringify(ruleFromAction)} in del_roles`);
-              isDelRole = false;
+            logger.debug(`rule: ${JSON.stringify(rule)}`);
+            try {
+              if (await userUtils.isMemberSatisfyRule(user.near_wallet_id, rule)) {
+                logger.debug(`satisfy other rule ${JSON.stringify(ruleFromAction)} in del_roles`);
+                isDelRole = false;
+              }
             }
+            catch (e) {
+              logger.error(e);
+              continue;
+            }
+
           }
           if (isDelRole) {
             try {
@@ -69,6 +76,7 @@ const update_guild_task = async (receipts) => {
             }
             catch (e) {
               logger.error(e);
+              continue;
             }
           }
         }
@@ -89,7 +97,6 @@ const getUserFromDB = async function(guildId) {
     near_wallet_id: { $ne: null },
   });
 };
-//const reipte = '[{"method_name":"del_roles","roles":[{"guild_id":"923197936068861953","role_id":"1008008561617535026","key_field":["near","balance"],"fields":{"balance":"30000000000000000000000000"}}]}]';
+// const reipte = '[{"method_name":"del_roles","roles":[{"guild_id":"923197936068861953","role_id":"1008008561617535026","key_field":["near","balance"],"fields":{"balance":"30000000000000000000000000"}}]}]';
 
 module.exports = update_guild_task;
-//update_guild_task(JSON.parse(reipte));

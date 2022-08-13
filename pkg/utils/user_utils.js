@@ -78,8 +78,8 @@ exports.setUser = async (args, accountId) => {
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
   for (const rule of rules) {
     logger.debug(`rule in setUser ${JSON.stringify(rule)}`);
-    if (!await discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && await this.isMemberSatisfyRule(accountId, rule)) {
-      try {
+    try {
+      if (!await discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && await this.isMemberSatisfyRule(accountId, rule)) {
         logger.debug(`the user is not in role ${rule.role_id} & it satisfy the rule ${JSON.stringify(rule)}`);
         await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in setUser`)).catch(e => logger.error(e));
         await userFields.addUserField({
@@ -89,10 +89,11 @@ exports.setUser = async (args, accountId) => {
         });
         logger.debug(`${args.user_id} add role & addUserFields`);
       }
-      catch (e) {
-        logger.error(e);
-        continue;
-      }
+
+    }
+    catch (e) {
+      logger.error(e);
+      continue;
     }
   }
 };
