@@ -30,5 +30,4 @@ exports.params = {
     describe: 'sql fields',
   }],
   description: 're-verify users',
-
 };
