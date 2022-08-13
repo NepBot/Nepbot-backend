@@ -4,7 +4,7 @@ const logger = require('../../pkg/utils/logger');
 const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
-const update_guild_task = async function(receipts) {
+const update_guild_task = async (receipts) => {
   // the actions may include more than one transaction, so it should use for to get each one.
   const actions = await contractUtils.filterRoleActions(receipts);
   let ruleFromAction;
@@ -21,8 +21,6 @@ const update_guild_task = async function(receipts) {
     guildId = ruleFromAction.guild_id;
     usersInDB = await getUserFromDB(guildId);
     // get all rules that related to the role_id -> ruleFromAction.role_id
-    historyRules = await contractUtils.getRules(guildId).then(e => e.some(e.role_id == ruleFromAction.role_id));
-
     if (action.method_name == 'set_roles') {
       for (const user of usersInDB) {
         if (!await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
@@ -46,6 +44,7 @@ const update_guild_task = async function(receipts) {
     }
 
     else if (action.method_name == 'del_roles') {
+      historyRules = await contractUtils.getRules(guildId).then(e => e.filter(d => d.role_id == ruleFromAction.role_id));
       for (const user of usersInDB) {
         if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id)) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & not satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
