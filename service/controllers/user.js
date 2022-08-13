@@ -67,6 +67,18 @@ const disconnectAccount = async (ctx, next) => {
     guild_id: args.guild_id,
     near_wallet_id: null,
   });
+
+  // remove all roles for user
+  const member = discordUtils.getMember(args.guild_id, args.user_id);
+  for (const role of member._roles) {
+    try {
+      await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
+    }
+    catch (e) {
+      logger.debug(e);
+      continue;
+    }
+  }
   ctx.body = new Resp({});
 };
 
