@@ -60,6 +60,7 @@ exports.setUser = async (args, accountId) => {
             await userFields.deleteUserField({
               near_wallet_id: accountId,
             });
+            logger.debug(`${args.user_id} remove role & addUserFields is finished`);
           }
           catch (e) {
             logger.error(e);
@@ -80,14 +81,17 @@ exports.setUser = async (args, accountId) => {
   // add role for new user
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
   for (const rule of rules) {
+    logger.debug(`rule in setUser ${JSON.stringify(rule)}`);
     if (!discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && this.isMemberSatisfyRule(accountId, rule)) {
       try {
+        logger.debug(`the user is not in role ${rule.role_id} & it satisfy the rule ${JSON.stringify(rule)}`);
         await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in setUser`)).catch(e => logger.error(e));
         await userFields.addUserField({
           near_wallet_id: accountId,
           key: rule.key_field[0],
           value: rule.key_field[1],
         });
+        logger.debug(`${args.user_id} add role & addUserFields`);
       }
       catch (e) {
         logger.error(e);
@@ -115,9 +119,11 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     const tokenAmount = new BN(newAmount).add(stakedParas);
 
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      logger.debug(`satisfy the {token_id} rule walletId: ${walletId}`);
       return true;
     }
     else if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      logger.debug(`unsatisfying the {token_id} rule walletId: ${walletId}`);
       return false;
     }
 
@@ -125,9 +131,11 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
   else if (rule.key_field[0] == 'appchain_id') {
     const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], walletId);
     if (octRole == rule.fields.oct_role) {
+      logger.debug(`satisfy the {appchain_id} rule walletId: ${walletId}`);
       return true;
     }
     if (octRole != rule.fields.oct_role) {
+      logger.debug(`unsatisfying the {appchain_id} rule walletId: ${walletId}`);
       return false;
     }
   }
@@ -138,35 +146,43 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
     if (new BN(totalBalance).cmp(new BN(rule.fields.balance)) != -1) {
+      logger.debug(`satisfy the {near} rule walletId: ${walletId}`);
       return true;
     }
     if (new BN(totalBalance).cmp(new BN(rule.fields.balance)) == -1) {
+      logger.debug(`unsatisfying the {near} rule walletId: ${walletId}`);
       return false;
     }
   }
   else if (rule.key_field[0] == 'nft_contract_id') {
     const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], walletId);
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      logger.debug(`satisfy the {nft_contract_id} rule walletId: ${walletId}`);
       return true;
     }
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      logger.debug(`unsatisfying the {nft_contract_id} rule walletId: ${walletId}`);
       return false;
     }
   }
   else if (rule.key_field[0] == config.paras.nft_contract) {
     const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], walletId);
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      logger.debug(`satisfy the ${config.paras.nft_contract} rule walletId: ${walletId}`);
       return true;
     }
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
       return false;
     }
   }
   else if (rule.key_field[0] == 'astrodao_id') {
     if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+      logger.debug(`satisfy the {astrodao_id} rule walletId: ${walletId}`);
       return true;
     }
     if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+      logger.debug(`unsatisfying the {astrodao_id} rule walletId: ${walletId}`);
       return false;
     }
   }
