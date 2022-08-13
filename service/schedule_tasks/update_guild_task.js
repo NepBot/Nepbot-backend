@@ -3,7 +3,7 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const logger = require('../../pkg/utils/logger');
 const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
-const userUtils = require('../../pkg/utils/user_utils_backup');
+const userUtils = require('../../pkg/utils/user_utils');
 const update_guild_task = async function(receipts) {
   // the actions may include more than one transaction, so it should use for to get each one.
   const actions = await contractUtils.filterRoleActions(receipts);
