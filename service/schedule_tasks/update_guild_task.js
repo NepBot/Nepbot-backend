@@ -12,10 +12,12 @@ const update_guild_task = async function(receipts) {
   let usersInDB;
   let historyRules;
   for (const action of actions) {
+    logger.debug(`received action in update_guild_task ${JSON.stringify(action)}`);
     /**
      * An action can refer https://explorer.mainnet.near.org/transactions/7NxiCwL8i11cG9TpmqnyqX1iuuM2dJK4mGRAQdPqxRES
      */
     ruleFromAction = action.roles[0];
+    logger.debug(`ruleFromAction: ${JSON.stringify(ruleFromAction)}`);
     guildId = ruleFromAction.guild_id;
     usersInDB = await getUserFromDB(guildId);
     // get all rules that related to the role_id -> ruleFromAction.role_id
@@ -25,6 +27,7 @@ const update_guild_task = async function(receipts) {
       for (const user of usersInDB) {
         if (!discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
           try {
+            logger.debug(`the user is not in role ${ruleFromAction.role_id} & satisfy the rule ${JSON.stringify(ruleFromAction)} in set_roles`);
             const guildMember = await discordUtils.getMember(user.guild_id, user.user_id);
             await guildMember.roles.add(ruleFromAction.role_id).then(logger.info(`${guildMember.user.username} add role_id ${ruleFromAction.role_id} in update_guild_task`)).catch(e => logger.error(e));
             await userFields.addUserField ({
@@ -32,6 +35,7 @@ const update_guild_task = async function(receipts) {
               key: ruleFromAction.key_field[0],
               value: ruleFromAction.key_field[1],
             });
+            logger.debug(`${user.user_id} add role & addUserFields`);
           }
           catch (e) {
             logger.error(e);
@@ -44,9 +48,11 @@ const update_guild_task = async function(receipts) {
     else if (action.method_name == 'del_roles') {
       for (const user of usersInDB) {
         if (discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && !userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
+          logger.debug(`the user is in role ${ruleFromAction.role_id} & not satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
           let isDelRole = true;
           for (const rule of historyRules) {
             if (userUtils.isMemberSatisfyRule(user.near_wallet_id, rule)) {
+              logger.debug(`satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
               isDelRole = false;
             }
           }
@@ -59,6 +65,7 @@ const update_guild_task = async function(receipts) {
                 key: ruleFromAction.key_field[0],
                 value: ruleFromAction.key_field[1],
               });
+              logger.debug(`${user.user_id} remove role & deleteUserFields is finished`);
             }
             catch (e) {
               logger.error(e);
