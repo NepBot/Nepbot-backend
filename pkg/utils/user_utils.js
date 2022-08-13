@@ -1,11 +1,11 @@
-const logger = require('../../pkg/utils/logger');
-const contractUtils = require('../../pkg/utils/contract_utils');
-const discordUtils = require('../../pkg/utils/discord_utils');
-const parasUtils = require('../../pkg/utils/paras_api');
-const config = require('../../pkg/utils/config');
-const userInfos = require('../../pkg/models/object/user_infos');
-const userFields = require('../../pkg/models/object/user_fields');
-const astrodaoUtils = require('../../pkg/utils/astrodao_utils');
+const logger = require('./logger');
+const contractUtils = require('./contract_utils');
+const discordUtils = require('./discord_utils');
+const parasUtils = require('./paras_api');
+const config = require('./config');
+const userInfos = require('../models/object/user_infos');
+const userFields = require('../models/object/user_fields');
+const astrodaoUtils = require('./astrodao_utils');
 const BN = require('bn.js');
 const { verifySign } = require('./near_utils');
 
@@ -49,13 +49,17 @@ exports.setUser = async (args, accountId) => {
     guild_id: args.guild_id,
     near_wallet_id: accountId,
   });
+  // when user reverify another wallet, it will check the wallet id wether binding to other user, and then remove the role from the origin user
   for (const user_info of result) {
     if (user_info.user_id != args.user_id) {
       const member = await discordUtils.getMember(args.guild_id, args.user_id);
       if (member.roles) {
         for (const role of roleList) {
           try {
-            member.roles.remove(role);
+            await member.roles.remove(role).then(logger.info(`${member.user.username} add role_id ${role} in setUser`)).catch(e => logger.error(e));
+            await userFields.deleteUserField({
+              near_wallet_id: accountId,
+            });
           }
           catch (e) {
             logger.error(e);
@@ -73,172 +77,97 @@ exports.setUser = async (args, accountId) => {
     guild_id: args.guild_id,
   });
 
-  //
+  // add role for new user
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
-  const rulesMap = {
-    token: [],
-    oct: [],
-    balance: [],
-    nft: [],
-    paras: [],
-    astrodao: [],
-  };
   for (const rule of rules) {
-    if (rule.key_field[0] == 'token_id') {
-      rulesMap.token.push(rule);
+    if (!discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && this.isMemberSatisfyRule(accountId, rule)) {
+      try {
+        await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in setUser`)).catch(e => logger.error(e));
+        await userFields.addUserField({
+          near_wallet_id: accountId,
+          key: rule.key_field[0],
+          value: rule.key_field[1],
+        });
+      }
+      catch (e) {
+        logger.error(e);
+        continue;
+      }
     }
-    else if (rule.key_field[0] == 'appchain_id') {
-      rulesMap.oct.push(rule);
-    }
-    else if (rule.key_field[0] == 'near') {
-      rulesMap.balance.push(rule);
-    }
-    else if (rule.key_field[0] == 'nft_contract_id') {
-      rulesMap.nft.push(rule);
-    }
-    else if (rule.key_field[0] == config.paras.nft_contract) {
-      rulesMap.paras.push(rule);
-    }
-    else if (rule.key_field[0] == 'astrodao_id') {
-      rulesMap.astrodao.push(rule);
-    }
-    await userFields.addUserField({
-      near_wallet_id: accountId,
-      key: rule.key_field[0],
-      value: rule.key_field[1],
-    });
   }
-  const roles = [];
-  const delRoles = [];
-  for (const rule of rulesMap.token) {
-    try {
-      let stakedParas = new BN('0');
-      if (rule.key_field[1] === config.paras.token_contract) {
-        stakedParas = await contractUtils.getStakedParas(accountId);
-      }
-      const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], accountId);
-      const tokenAmount = new BN(newAmount).add(stakedParas);
+};
 
-      if (!member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && tokenAmount.cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(rule.role_id);
-      }
+
+/**
+ *
+ * @param {json} walletId near_wallet_id
+ * @param {json} rule
+ * @returns boolean
+ */
+exports.isMemberSatisfyRule = async (walletId, rule) => {
+  if (rule.key_field[0] == 'token_id') {
+
+    let stakedParas = new BN('0');
+    if (rule.key_field[1] === config.paras.token_contract) {
+      stakedParas = await contractUtils.getStakedParas(walletId);
     }
-    catch (e) {
-      logger.error(e);
-      continue;
+    const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], walletId);
+    const tokenAmount = new BN(newAmount).add(stakedParas);
+
+    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      return true;
+    }
+    else if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      return false;
     }
 
   }
-
-  for (const rule of rulesMap.oct) {
-    try {
-      const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], accountId);
-      if (!member._roles.includes(rule.role_id) && octRole == rule.fields.oct_role) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && octRole != rule.fields.oct_role) {
-        delRoles.push(rule.role_id);
-      }
+  else if (rule.key_field[0] == 'appchain_id') {
+    const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], walletId);
+    if (octRole == rule.fields.oct_role) {
+      return true;
     }
-    catch (e) {
-      logger.error(e);
-      continue;
+    if (octRole != rule.fields.oct_role) {
+      return false;
     }
   }
+  else if (rule.key_field[0] == 'near') {
 
-  for (const rule of rulesMap.balance) {
-    try {
-      const balance = await contractUtils.getNearBalanceOf(accountId);
-      const stakingBalance = await contractUtils.getStakingBalance(accountId);
-      const totalBalance = new BN(balance).add(new BN(stakingBalance));
+    const balance = await contractUtils.getNearBalanceOf(walletId);
+    const stakingBalance = await contractUtils.getStakingBalance(walletId);
+    const totalBalance = new BN(balance).add(new BN(stakingBalance));
 
-      if (!member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) != -1) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && totalBalance.cmp(new BN(rule.fields.balance)) == -1) {
-        delRoles.push(rule.role_id);
-      }
+    if (new BN(totalBalance).cmp(new BN(rule.fields.balance)) != -1) {
+      return true;
     }
-    catch (e) {
-      logger.error(e);
-      continue;
-    }
-
-  }
-
-  for (const rule of rulesMap.nft) {
-    try {
-      const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], accountId);
-      if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(rule.role_id);
-      }
-    }
-    catch (e) {
-      logger.error(e);
-      continue;
-    }
-
-  }
-
-  for (const rule of rulesMap.paras) {
-    try {
-      const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], accountId, rule.fields.token_amount);
-      if (!member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-        delRoles.push(rule.role_id);
-      }
-    }
-    catch (e) {
-      logger.error(e);
-      continue;
-    }
-
-  }
-
-  for (const rule of rulesMap.astrodao) {
-    try {
-      const _result = await astrodaoUtils.isMemberHaveRole(rule.key_field[1], accountId);
-
-      if (!member._roles.includes(rule.role_id) && _result) {
-        roles.push(rule.role_id);
-      }
-      if (member._roles.includes(rule.role_id) && _result) {
-        delRoles.push(rule.role_id);
-      }
-    }
-    catch (e) {
-      logger.error(e);
-		  continue;
+    if (new BN(totalBalance).cmp(new BN(rule.fields.balance)) == -1) {
+      return false;
     }
   }
-
-  for (const role of roles) {
-    try {
-      await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in setUser`));
+  else if (rule.key_field[0] == 'nft_contract_id') {
+    const tokenAmount = await contractUtils.getNftCountOf(rule.key_field[1], walletId);
+    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      return true;
     }
-    catch (e) {
-      logger.error(e);
-      continue;
+    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      return false;
     }
   }
-
-  for (const role of delRoles) {
-    try {
-      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in setUser`));
+  else if (rule.key_field[0] == config.paras.nft_contract) {
+    const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], walletId);
+    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
+      return true;
     }
-    catch (e) {
-      logger.error(e);
-      continue;
+    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
+      return false;
     }
-
   }
-
+  else if (rule.key_field[0] == 'astrodao_id') {
+    if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+      return true;
+    }
+    if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+      return false;
+    }
+  }
 };
