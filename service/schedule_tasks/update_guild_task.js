@@ -4,14 +4,14 @@ const logger = require('../../pkg/utils/logger');
 const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
-const update_guild_task = async function(receipts) {
+const update_guild_task = async (receipts) => {
   // the actions may include more than one transaction, so it should use for to get each one.
-  const actions = await contractUtils.filterRoleActions(receipts);
+  // const actions = await contractUtils.filterRoleActions(receipts);
   let ruleFromAction;
   let guildId;
   let usersInDB;
   let historyRules;
-  for (const action of actions) {
+  for (const action of receipts) {
     logger.debug(`received action in update_guild_task ${JSON.stringify(action)}`);
     /**
      * An action can refer https://explorer.mainnet.near.org/transactions/7NxiCwL8i11cG9TpmqnyqX1iuuM2dJK4mGRAQdPqxRES
@@ -21,8 +21,6 @@ const update_guild_task = async function(receipts) {
     guildId = ruleFromAction.guild_id;
     usersInDB = await getUserFromDB(guildId);
     // get all rules that related to the role_id -> ruleFromAction.role_id
-    historyRules = await contractUtils.getRules(guildId).then(e => e.some(e.role_id == ruleFromAction.role_id));
-
     if (action.method_name == 'set_roles') {
       for (const user of usersInDB) {
         if (!await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
@@ -46,6 +44,7 @@ const update_guild_task = async function(receipts) {
     }
 
     else if (action.method_name == 'del_roles') {
+      historyRules = await contractUtils.getRules(guildId).then(e => e.filter(d => d.role_id == ruleFromAction.role_id));
       for (const user of usersInDB) {
         if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id)) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & not satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
@@ -89,5 +88,7 @@ const getUserFromDB = async function(guildId) {
     near_wallet_id: { $ne: null },
   });
 };
+const reipte = '[{"method_name":"del_roles","roles":[{"guild_id":"923197936068861953","role_id":"1008008561617535026","key_field":["near","balance"],"fields":{"balance":"30000000000000000000000000"}}]}]';
 
 module.exports = update_guild_task;
+update_guild_task(JSON.parse(reipte));

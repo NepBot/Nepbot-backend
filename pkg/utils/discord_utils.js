@@ -94,4 +94,4 @@ exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
   return await member._roles.includes(roleId);
 };
 
-// this.isMemberIncludeRole('966966468774350948','912438768043196456','1004475262097952848').then(console.log);
+//this.isMemberIncludeRole('923197936068861953', '446580575353044993', '1004475262097952848').then(console.log);
