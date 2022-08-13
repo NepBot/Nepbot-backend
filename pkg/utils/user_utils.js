@@ -95,7 +95,6 @@ exports.setUser = async (args, accountId) => {
       }
     }
   }
-
 };
 
 
