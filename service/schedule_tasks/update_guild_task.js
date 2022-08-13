@@ -65,7 +65,7 @@ const update_guild_task = async (receipts) => {
                 key: ruleFromAction.key_field[0],
                 value: ruleFromAction.key_field[1],
               });
-              logger.debug(`${user.user_id} remove role & deleteUserFields is finished`);
+              logger.debug(`${user.user_id} remove role & deleteUserFields are finished`);
             }
             catch (e) {
               logger.error(e);
