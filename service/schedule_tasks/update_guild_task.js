@@ -51,7 +51,7 @@ const update_guild_task = async function(receipts) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & not satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
           let isDelRole = true;
           for (const rule of historyRules) {
-            if (userUtils.isMemberSatisfyRule(user.near_wallet_id, rule)) {
+            if (await userUtils.isMemberSatisfyRule(user.near_wallet_id, rule)) {
               logger.debug(`satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
               isDelRole = false;
             }
