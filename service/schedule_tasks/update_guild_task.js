@@ -6,12 +6,12 @@ const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
 const update_guild_task = async (receipts) => {
   // the actions may include more than one transaction, so it should use for to get each one.
-  // const actions = await contractUtils.filterRoleActions(receipts);
+  const actions = await contractUtils.filterRoleActions(receipts);
   let ruleFromAction;
   let guildId;
   let usersInDB;
   let historyRules;
-  for (const action of receipts) {
+  for (const action of actions) {
     logger.debug(`received action in update_guild_task ${JSON.stringify(action)}`);
     /**
      * An action can refer https://explorer.mainnet.near.org/transactions/7NxiCwL8i11cG9TpmqnyqX1iuuM2dJK4mGRAQdPqxRES
@@ -89,7 +89,7 @@ const getUserFromDB = async function(guildId) {
     near_wallet_id: { $ne: null },
   });
 };
-const reipte = '[{"method_name":"del_roles","roles":[{"guild_id":"923197936068861953","role_id":"1008008561617535026","key_field":["near","balance"],"fields":{"balance":"30000000000000000000000000"}}]}]';
+//const reipte = '[{"method_name":"del_roles","roles":[{"guild_id":"923197936068861953","role_id":"1008008561617535026","key_field":["near","balance"],"fields":{"balance":"30000000000000000000000000"}}]}]';
 
 module.exports = update_guild_task;
-update_guild_task(JSON.parse(reipte));
+//update_guild_task(JSON.parse(reipte));
