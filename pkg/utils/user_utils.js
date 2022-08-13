@@ -57,10 +57,6 @@ exports.setUser = async (args, accountId) => {
         for (const role of roleList) {
           try {
             await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in setUser`)).catch(e => logger.error(e));
-            await userFields.deleteUserField({
-              near_wallet_id: accountId,
-            });
-            logger.debug(`${args.user_id} remove role & addUserFields is finished`);
           }
           catch (e) {
             logger.error(e);
