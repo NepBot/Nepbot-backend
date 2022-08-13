@@ -15,6 +15,8 @@ exports.getGuild = async (guildId) => {
   return await client.guilds.fetch(guildId);
 };
 
+//this.getMember('966966468774350948', '912438768043196456').then(e => console.log(e.guild.id));
+
 exports.getRoles = async (guildId, roleId) => {
   const guild = await this.getGuild(guildId);
   if (roleId) {
@@ -76,4 +78,17 @@ exports.getMemberInGuild = async (guildId, userId) => {
 exports.getMemberNameById = async (guildId, userId) => {
   const guild = await this.getGuild(guildId);
   return await guild.members.fetch(userId).user.username;
+};
+
+/**
+ *
+ * @param {string} guildId
+ * @param {string} userId
+ * @param {String} roleId
+ * @returns boolean
+ */
+exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
+  const guild = await this.getGuild(guildId);
+  const member = await guild.members.fetch(userId);
+  return await member._roles.includes(roleId);
 };
