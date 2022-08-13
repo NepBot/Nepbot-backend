@@ -72,7 +72,7 @@ const disconnectAccount = async (ctx, next) => {
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
   for (const role of member._roles) {
     try {
-      await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
+      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
     }
     catch (e) {
       logger.debug(e);
