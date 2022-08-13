@@ -25,7 +25,7 @@ const update_guild_task = async function(receipts) {
 
     if (action.method_name == 'set_roles') {
       for (const user of usersInDB) {
-        if (!discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
+        if (!await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
           try {
             logger.debug(`the user is not in role ${ruleFromAction.role_id} & satisfy the rule ${JSON.stringify(ruleFromAction)} in set_roles`);
             const guildMember = await discordUtils.getMember(user.guild_id, user.user_id);
@@ -47,7 +47,7 @@ const update_guild_task = async function(receipts) {
 
     else if (action.method_name == 'del_roles') {
       for (const user of usersInDB) {
-        if (discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && !userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
+        if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && !await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & not satisfy the rule ${JSON.stringify(ruleFromAction)} in del_roles`);
           let isDelRole = true;
           for (const rule of historyRules) {

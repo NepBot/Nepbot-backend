@@ -56,7 +56,7 @@ exports.setUser = async (args, accountId) => {
       if (member.roles) {
         for (const role of roleList) {
           try {
-            await member.roles.remove(role).then(logger.info(`${member.user.username} add role_id ${role} in setUser`)).catch(e => logger.error(e));
+            await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in setUser`)).catch(e => logger.error(e));
             await userFields.deleteUserField({
               near_wallet_id: accountId,
             });
@@ -82,7 +82,7 @@ exports.setUser = async (args, accountId) => {
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
   for (const rule of rules) {
     logger.debug(`rule in setUser ${JSON.stringify(rule)}`);
-    if (!discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && this.isMemberSatisfyRule(accountId, rule)) {
+    if (!await discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && await this.isMemberSatisfyRule(accountId, rule)) {
       try {
         logger.debug(`the user is not in role ${rule.role_id} & it satisfy the rule ${JSON.stringify(rule)}`);
         await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in setUser`)).catch(e => logger.error(e));

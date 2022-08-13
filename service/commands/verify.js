@@ -38,8 +38,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  // store data into mysql
-  logger.debug('saving user info...');
+
   // replay message to discord user
   await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
   discordUtils.setInteraction(interaction);

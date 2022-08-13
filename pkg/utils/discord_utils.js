@@ -2,6 +2,7 @@ const client = require('../../service/discord_bot');
 const { Routes } = require('discord-api-types/v9');
 const { REST } = require('@discordjs/rest');
 const config = require('./config');
+const { ThreadChannel } = require('discord.js');
 const replies = {};
 
 const rest = new REST({ version: '9' }).setToken(config.bot_token);
@@ -15,7 +16,7 @@ exports.getGuild = async (guildId) => {
   return await client.guilds.fetch(guildId);
 };
 
-//this.getMember('966966468774350948', '912438768043196456').then(e => console.log(e.guild.id));
+// this.getMember('966966468774350948', '912438768043196456').then(e => console.log(e.guild.id));
 
 exports.getRoles = async (guildId, roleId) => {
   const guild = await this.getGuild(guildId);
@@ -92,3 +93,5 @@ exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
   const member = await guild.members.fetch(userId);
   return await member._roles.includes(roleId);
 };
+
+// this.isMemberIncludeRole('966966468774350948','912438768043196456','1004475262097952848').then(console.log);
