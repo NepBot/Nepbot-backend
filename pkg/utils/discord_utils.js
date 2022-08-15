@@ -95,3 +95,16 @@ exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
 };
 
 //this.isMemberIncludeRole('923197936068861953', '446580575353044993', '1004475262097952848').then(console.log);
+
+/**
+ * 
+ * @param {string} guildId;
+ * @param {string} roleId;
+ * @returns a list of user_id
+ */
+exports.getMembersInRole = async (guildId, roleId) => {
+  const role = await this.getRoles(guildId, roleId);
+  return role.members;
+};
+
+//this.getMembersInRole('966966468774350948', '1004439142899396638').then(console.log);
