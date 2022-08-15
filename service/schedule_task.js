@@ -7,7 +7,7 @@ const ntfTask = require('./schedule_tasks/nft_task');
 const octTask = require('./schedule_tasks/oct_task');
 const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
-const updeteGuildTask = require('./schedule_tasks/updete_guild_task');
+const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 
@@ -22,7 +22,7 @@ const resolveChunk = async (chunkHash) => {
 
     promises.push(resolveTxs(chunkData.transactions));
 
-    promises.push(updeteGuildTask(chunkData.receipts, txMap));
+    promises.push(updateGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
     promises.push(balanceTask(chunkData.receipts, txMap));
     promises.push(octTask(chunkData.receipts, txMap));

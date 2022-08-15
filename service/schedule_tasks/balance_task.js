@@ -16,7 +16,7 @@ const balance_task = async function(receipts) {
   for (const action of _actions) {
     _accountIds.push(action.account_id);
   }
-  logger.debug(`accountIds: ${_accountIds}`);
+  // logger.debug(`accountIds: ${_accountIds}`);
   const rolesByField = await contractUtils.getRulesByField('near', 'balance');
   const guild_ids = [];
   const guildMap = {};

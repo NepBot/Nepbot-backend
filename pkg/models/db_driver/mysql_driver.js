@@ -17,7 +17,7 @@ const operatorsAliases = {
 };
 
 const mysql = new Sequelize(`${config.mysql_url}`, {
-  logging: msg => logger.debug(msg),
+  logging: msg => logger.trace(msg),
   operatorsAliases,
 });
 

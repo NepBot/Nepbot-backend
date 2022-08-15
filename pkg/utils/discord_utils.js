@@ -2,6 +2,7 @@ const client = require('../../service/discord_bot');
 const { Routes } = require('discord-api-types/v9');
 const { REST } = require('@discordjs/rest');
 const config = require('./config');
+const { ThreadChannel } = require('discord.js');
 const replies = {};
 
 const rest = new REST({ version: '9' }).setToken(config.bot_token);
@@ -14,6 +15,8 @@ exports.getMember = async (guildId, userId) => {
 exports.getGuild = async (guildId) => {
   return await client.guilds.fetch(guildId);
 };
+
+// this.getMember('966966468774350948', '912438768043196456').then(e => console.log(e.guild.id));
 
 exports.getRoles = async (guildId, roleId) => {
   const guild = await this.getGuild(guildId);
@@ -77,3 +80,31 @@ exports.getMemberNameById = async (guildId, userId) => {
   const guild = await this.getGuild(guildId);
   return await guild.members.fetch(userId).user.username;
 };
+
+/**
+ *
+ * @param {string} guildId
+ * @param {string} userId
+ * @param {String} roleId
+ * @returns boolean
+ */
+exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
+  const guild = await this.getGuild(guildId);
+  const member = await guild.members.fetch(userId);
+  return await member._roles.includes(roleId);
+};
+
+//this.isMemberIncludeRole('923197936068861953', '446580575353044993', '1004475262097952848').then(console.log);
+
+/**
+ * 
+ * @param {string} guildId;
+ * @param {string} roleId;
+ * @returns a list of user_id
+ */
+exports.getMembersInRole = async (guildId, roleId) => {
+  const role = await this.getRoles(guildId, roleId);
+  return role.members;
+};
+
+//this.getMembersInRole('966966468774350948', '1004439142899396638').then(console.log);

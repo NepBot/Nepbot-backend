@@ -4,6 +4,7 @@ const nearUtils = require('../../pkg/utils/near_utils');
 const userUtils = require('../../pkg/utils/user_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
+const contractUtils = require('../../pkg/utils/contract_utils');
 const { MessageEmbed } = require('discord.js');
 
 const embed = new MessageEmbed()
@@ -67,6 +68,20 @@ const disconnectAccount = async (ctx, next) => {
     guild_id: args.guild_id,
     near_wallet_id: null,
   });
+
+  // remove all roles for user
+  const rules = await contractUtils.getRules(args.guild_id);
+  const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
+  const member = await discordUtils.getMember(args.guild_id, args.user_id);
+  for (const role of roleList) {
+    try {
+      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
+    }
+    catch (e) {
+      logger.debug(e);
+      continue;
+    }
+  }
   ctx.body = new Resp({});
 };
 
