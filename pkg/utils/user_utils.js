@@ -116,11 +116,6 @@ exports.setUser = async (args, accountId) => {
         try {
           if (await this.isMemberSatisfyRule(accountId, rule)) {
             notDelRole = notDelRole || true;
-            await userFields.deleteUserField({
-              near_wallet_id: accountId,
-              key: rule.key_field[0],
-              value: rule.key_field[1],
-            }).catch(e => logger.error(e));
           }
           else {
             notDelRole = notDelRole || false;
