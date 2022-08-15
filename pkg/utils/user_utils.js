@@ -66,13 +66,12 @@ exports.setUser = async (args, accountId) => {
       }
     }
   }
-
   // update user
   await userInfos.addUser({
     near_wallet_id: accountId,
     user_id: args.user_id,
     guild_id: args.guild_id,
-  });
+  }).catch(e => console.log(e));
 
   // add role for new user
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
@@ -87,7 +86,17 @@ exports.setUser = async (args, accountId) => {
           key: rule.key_field[0],
           value: rule.key_field[1],
         });
-        logger.debug(`${args.user_id} add role & addUserFields`);
+        logger.info(`${args.user_id} add role & addUserFields`);
+      }
+      else if (await discordUtils.isMemberIncludeRole(args.guild_id, args.user_id, rule.role_id) && !await this.isMemberSatisfyRule(accountId, rule)) {
+        logger.debug(`the user is in role ${rule.role_id}, but not satisfy the rule ${JSON.stringify(rule)}`);
+        await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in setUser`)).catch(e => logger.error(e));
+        await userFields.deleteUserField({
+          near_wallet_id: accountId,
+          key: rule.key_field[0],
+          value: rule.key_field[1],
+        });
+        logger.info(`${args.user_id} remove role & removeUserFields`);
       }
 
     }

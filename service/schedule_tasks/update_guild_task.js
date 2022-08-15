@@ -46,7 +46,7 @@ const update_guild_task = async (receipts) => {
     else if (action.method_name == 'del_roles') {
       historyRules = await contractUtils.getRules(guildId).then(e => e.filter(d => d.role_id == ruleFromAction.role_id));
       for (const user of usersInDB) {
-        if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
+        if (await discordUtils.isMemberIncludeRole(user.guild_id, user.user_id, ruleFromAction.role_id) && await userUtils.isMemberSatisfyRule(user.near_wallet_id, ruleFromAction)) {
           logger.debug(`the user is in role ${ruleFromAction.role_id} & satisfy the deleted rule ${JSON.stringify(ruleFromAction)} in del_roles`);
           let isDelRole = true;
           for (const rule of historyRules) {

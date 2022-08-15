@@ -9,7 +9,7 @@ const logger = require('../pkg/utils/logger');
 const fs = require('node:fs');
 // Require the necessary discord.js classes
 const { Client, Intents, Collection } = require('discord.js');
-const intents = [Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS];
+const intents = [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS];
 // Create a new client instance
 const client = new Client({ intents: intents });
 
