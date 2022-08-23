@@ -124,8 +124,74 @@ const getMintSign = async (ctx, next) => {
   });
 };
 
+const getSnapshotSign = async (ctx, next) => {
+  const req = ctx.request.body;
+  const args = req.args;
+  if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+    logger.error('fn verifyAccountOwner failed in api/getSnapshotSign');
+    ctx.body = new Resp({
+      code: 500,
+      message: 'fn verifyAccountOwner failed in api/getSnapshotSign',
+      success: false,
+    });
+    return;
+  }
+
+  const nonce = await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id, contract_address: args.contract_address }, args.sign);
+  if (!nonce) {
+    ctx.body = new Resp({
+      code: 500,
+      message: 'nonce expired',
+      success: false,
+    });
+    return;
+  }
+
+  const timestamp = Date.now() + '000000';
+  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address);
+  ctx.body = new Resp({ data: {
+    sign,
+    timestamp,
+  },
+  });
+};
+
+const getVoteSign = async (ctx, next) => {
+  const req = ctx.request.body;
+  const args = req.args;
+  if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+    logger.error('fn verifyAccountOwner failed in api/getVoteSign');
+    ctx.body = new Resp({
+      code: 500,
+      message: 'fn verifyAccountOwner failed in api/getVoteSign',
+      success: false,
+    });
+    return;
+  }
+
+  const nonce = await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id, proposal_id: args.proposal_id, action: args.action }, args.sign);
+  if (!nonce) {
+    ctx.body = new Resp({
+      code: 500,
+      message: 'nonce expired',
+      success: false,
+    });
+    return;
+  }
+
+  const timestamp = Date.now() + '000000';
+  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address);
+  ctx.body = new Resp({ data: {
+    sign,
+    timestamp,
+  },
+  });
+};
+
 module.exports = {
   'POST /api/getOwnerSign': getOwnerSign,
   'POST /api/getOperationSign': getOperationSign,
   'POST /api/getMintSign': getMintSign,
+  'POST /api/getSnapshotSign': getSnapshotSign,
+  'POST /api/getVoteSign': getVoteSign,
 };
