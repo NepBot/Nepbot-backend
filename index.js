@@ -10,7 +10,6 @@ require('./pkg/models/db_driver/mysql_driver');
 // Sync models to mysql
 require('./pkg/utils/sync_models');
 
-
 // Run backend app
 const app = require('./service/app');
 app.listen(config.port, () => {
@@ -19,6 +18,7 @@ app.listen(config.port, () => {
 
 // Run discord bot
 require('./service/discord_bot');
+
 
 // Run schedule task
 const task = require('./service/schedule_task');

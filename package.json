@@ -34,6 +34,7 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "sequelize": "^6.21.3",
+    "snake-case": "^3.0.4",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
