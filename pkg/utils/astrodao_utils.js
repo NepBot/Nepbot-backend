@@ -3,7 +3,6 @@ const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 const contractUtils = require('./contract_utils');
 const { snakeCase } = require('snake-case');
-const { from } = require('form-data');
 
 // this is just a backup for using astrodao API, it's not used in anywhere 2022-08-05
 const getMemberInfo = async (daoId) => {
@@ -61,18 +60,22 @@ exports.getLastProposalId = async (daoId) => {
  * @param {string} daoId
  * @returns array
  */
-exports.listActiveProposals = async (daoId) => {
+exports.listActiveProposals = async (daoId, fromIndex, limit) => {
   const account = await contractUtils.contract();
-  const lastProposalId = await this.getLastProposalId(daoId);
-  const proposals = await account.viewFunction(daoId, 'get_proposals', { 'from_index': 0, 'limit': lastProposalId });
+  const proposals = await account.viewFunction(daoId, 'get_proposals', { 'from_index': fromIndex, 'limit': limit }).then(p => p.reverse());
   const activeProposals = [];
   for (const proposal of proposals) {
 
-    if (await isProposalExpired(proposal.submission_time) && proposal.status == 'InProgress') {
-      activeProposals.push(proposal);
+    if (await isProposalExpired(proposal.submission_time)) {
+      if (proposal.status == 'InProgress') {
+        activeProposals.push(proposal);
+      }
+    }
+    else {
+      break;
     }
   }
-  return activeProposals.reverse();
+  return activeProposals;
 };
 
 //this.listActiveProposals('jacktest.sputnikv2.testnet', 86, 25).then(e => console.log(e.length));
