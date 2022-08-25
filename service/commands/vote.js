@@ -14,18 +14,20 @@ const data = new SlashCommandBuilder()
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')
       .setRequired(true))
-  .addStringOption(option =>
+  .addIntegerOption(option =>
     option.setName('proposal_id')
       .setDescription('The proposal id')
       .setRequired(true));
 
 const approve = new MessageButton()
   .setStyle('LINK')
-  .setLabel('👍 For');
+  .setLabel('👍 For')
+  .setURL(`${config.wallet_auth_url}`);
 
 const against = new MessageButton()
   .setLabel('👎 Against')
-  .setStyle('LINK');
+  .setStyle('LINK')
+  .setURL(`${config.wallet_auth_url}`);
 
 const content = new MessageEmbed();
 
@@ -33,7 +35,7 @@ const action = new MessageActionRow()
   .addComponents(approve, against);
 const execute = async interaction => {
   const address = interaction.options.get('contract_address').value;
-  const proposalId = parseInt(interaction.options.get('proposal_id').value);
+  const proposalId = interaction.options.get('proposal_id').value;
   const userId = interaction.user.id;
   const userInfo = await userInfos.getUser({
     guild_id: interaction.guildId,

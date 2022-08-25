@@ -6,12 +6,20 @@ const { MessageEmbed } = require('discord.js');
 const logger = require('../../pkg/utils/logger');
 
 const data = new SlashCommandBuilder()
-  .setName('checkproposal')
-  .setDescription('List the active proposal for the dao')
+  .setName('check_proposal')
+  .setDescription('List active proposal; Nepbot will automatically set a range from last 50 proposal')
   .addStringOption(option =>
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')
-      .setRequired(true));
+      .setRequired(true))
+  .addIntegerOption(option =>
+    option.setName('from')
+      .setDescription('The from index tell Nepbot from which number to get proposal')
+      .setRequired(false))
+  .addIntegerOption(option =>
+    option.setName('to')
+      .setDescription('The to index tell Nepbot which position should stop to get proposal')
+      .setRequired(false));
 
 
 const execute = async interaction => {
@@ -31,7 +39,27 @@ const execute = async interaction => {
     return;
   }
   logger.debug(`The address is ${address}`);
-  const activeProposals = await astrodao_utils.listActiveProposals(address);
+  let fromIndex = 0;
+  let limit = 0;
+  let activeProposals = [];
+  try {
+    fromIndex = interaction.options.get('from').value;
+    limit = interaction.options.get('to').value;
+    if (limit < fromIndex) {
+      await interaction.reply({
+        content:`The argument TO: ${limit} is less than FROM: ${fromIndex}`,
+        ephemeral: true,
+      });
+      return;
+    }
+    activeProposals = await astrodao_utils.listActiveProposals(address, fromIndex, limit - fromIndex);
+  }
+  catch (e) {
+    logger.debug(e);
+    const lastProposalId = await astrodao_utils.getLastProposalId(address);
+    activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
+  }
+
   const descriptions = [];
 
   if (activeProposals.length == 0) {
@@ -39,6 +67,7 @@ const execute = async interaction => {
       content:'There is no more active proposal.\n',
       ephemeral: true,
     });
+    return;
   }
   for (const proposal of activeProposals) {
     try {
