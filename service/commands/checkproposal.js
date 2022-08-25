@@ -60,8 +60,6 @@ const execute = async interaction => {
     activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
   }
 
-  const descriptions = [];
-
   if (activeProposals.length == 0) {
     await interaction.reply({
       content:'There is no more active proposal.\n',
@@ -69,21 +67,26 @@ const execute = async interaction => {
     });
     return;
   }
+  const content = new MessageEmbed().setTitle(`AstroDao Contract Address:\n ${address}`);
   for (const proposal of activeProposals) {
     try {
-      descriptions.push('Proposal Id: ' + proposal.id + '\n' + proposal.description.split('$$$')[0]);
+      content.addFields({ name: `Proposal Id: ${proposal.id}`, value: proposal.description.split('$$$')[0] });
     }
     catch (e) {
       logger.error(e);
       continue;
     }
   }
-  const content = new MessageEmbed().setDescription(`All active proposal with ${address} are: \n${descriptions.join('\n')}`);
-  await interaction.reply({
-    content:'\n',
-    ephemeral: true,
-    embeds: [content],
-  });
+  try {
+    await interaction.reply({
+      content:'\n',
+      ephemeral: true,
+      embeds: [content],
+    });
+  }
+  catch (e) {
+    logger.error(e);
+  }
 };
 
 module.exports = {
