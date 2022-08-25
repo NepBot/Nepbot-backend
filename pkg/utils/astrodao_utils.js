@@ -3,6 +3,7 @@ const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 const contractUtils = require('./contract_utils');
 const { snakeCase } = require('snake-case');
+const { from } = require('form-data');
 
 // this is just a backup for using astrodao API, it's not used in anywhere 2022-08-05
 const getMemberInfo = async (daoId) => {
@@ -56,11 +57,11 @@ exports.getLastProposalId = async (daoId) => {
 };
 
 /**
- *
- * @param {String} daoId
- * @returns
+ * 
+ * @param {string} daoId
+ * @returns array
  */
-exports.getActiveProposals = async (daoId) => {
+exports.listActiveProposals = async (daoId) => {
   const account = await contractUtils.contract();
   const lastProposalId = await this.getLastProposalId(daoId);
   const proposals = await account.viewFunction(daoId, 'get_proposals', { 'from_index': 0, 'limit': lastProposalId });
@@ -73,7 +74,15 @@ exports.getActiveProposals = async (daoId) => {
   }
   return activeProposals.reverse();
 };
-// this.getActiveProposalForAccount('jacktest.sputnikv2.testnet');
+
+//this.listActiveProposals('jacktest.sputnikv2.testnet', 86, 25).then(e => console.log(e.length));
+
+exports.isActiveProposal = async (proposal) => {
+  if (await isProposalExpired(proposal.submission_time) && proposal.status == 'InProgress') {
+    return true;
+  }
+  return false;
+};
 
 const isProposalExpired = async (time) =>{
   const curTime = new Date();
