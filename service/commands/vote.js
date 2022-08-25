@@ -33,6 +33,7 @@ const content = new MessageEmbed();
 
 const action = new MessageActionRow()
   .addComponents(approve, against);
+
 const execute = async interaction => {
   const address = interaction.options.get('contract_address').value;
   const proposalId = interaction.options.get('proposal_id').value;
@@ -43,7 +44,7 @@ const execute = async interaction => {
   });
   // if the user doesn't connect to any near wallet, it will reply the following content.
   if (!userInfo.near_wallet_id.trim()) {
-    interaction.reply({
+    await interaction.reply({
       content:'You are not connected to any Near wallet.',
       ephemeral: true,
     });
@@ -58,7 +59,8 @@ const execute = async interaction => {
   if (isAlreadyVote) {
     approve.setDisabled();
     against.setDisabled();
-    content.setDescription(`You already voted this proposal\n${JSON.stringify(proposal)}`);
+    content.setTitle('You already voted this proposal\n');
+    content.setDescription(JSON.stringify(proposal));
     await interaction.reply({
       content:'\n',
       ephemeral: true,
@@ -72,11 +74,11 @@ const execute = async interaction => {
   // Check the user whether have permission to vote.
   const afterProposal = await astrodao_utils.formatProposal(proposal);
   const checkPermission = await astrodao_utils.checkPermissions(policy, afterProposal, userInfo.near_wallet_id);
-  content.setDescription(afterProposal.description);
   if (!checkPermission) {
     approve.setDisabled();
     against.setDisabled();
-    content.setDescription(`You don't have permission to vote this proposal\n${JSON.stringify(proposal)}`);
+    content.setTitle('You don\'t have permission to vote this proposal\n');
+    content.setDescription(afterProposal.description);
     await interaction.reply({
       content:'\n',
       ephemeral: true,
