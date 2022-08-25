@@ -67,7 +67,7 @@ const execute = async interaction => {
     });
     return;
   }
-  const content = new MessageEmbed().setTitle(`AstroDao Contract Address:\n ${address}`);
+  const content = new MessageEmbed().setTitle(`AstroDao Contract Address:\n${address}`);
   for (const proposal of activeProposals) {
     try {
       content.addFields({ name: `Proposal Id: ${proposal.id}`, value: proposal.description.split('$$$')[0] });
