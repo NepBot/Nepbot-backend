@@ -169,7 +169,7 @@ const getVoteSign = async (ctx, next) => {
     return;
   }
 
-  const nonce = await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id, proposal_id: args.proposal_id, action: args.action }, args.sign);
+  const nonce = await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id, contract_address: args.contract_address, proposal_id: args.proposal_id, action: args.action }, args.sign);
   if (!nonce) {
     ctx.body = new Resp({
       code: 500,
@@ -180,7 +180,7 @@ const getVoteSign = async (ctx, next) => {
   }
 
   const timestamp = Date.now() + '000000';
-  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address);
+  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.proposal_id + args.action);
   ctx.body = new Resp({ data: {
     sign,
     timestamp,
