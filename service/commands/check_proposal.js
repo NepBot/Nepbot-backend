@@ -57,7 +57,12 @@ const execute = async interaction => {
   catch (e) {
     logger.debug(e);
     const lastProposalId = await astrodao_utils.getLastProposalId(address);
-    activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
+    if (lastProposalId <= 50) {
+      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId, 0);
+    }
+    else {
+      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
+    }
   }
 
   if (activeProposals.length == 0) {
