@@ -15,7 +15,6 @@ const callback = async (ctx, next) => {
   logger.info(`revice request by access 'api/twitter/callback': ${JSON.stringify(req)}`);
   const state = args.state;
   const code = args.code;
-  //const { state, code } = ctx.query;
   // Get the saved codeVerifier from session
   const codeVerifier = await oauthCache.get({ state: state })
     .then(e => e.code_verifier)
