@@ -12,7 +12,7 @@ const callback = async (ctx, next) => {
   // Extract state and code from query string
   const req = ctx.request.body;
   const args = req.args;
-  logger.info(`revice request by access 'api/twitter/callback': ${JSON.stringify(req)}`);
+  logger.info(`receive request by access 'api/twitter/callback': ${JSON.stringify(req)}`);
   const state = args.state;
   const code = args.code;
   // Get the saved codeVerifier from session
