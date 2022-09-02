@@ -8,6 +8,7 @@
   "port": 3000,
   "rule_contract": "app.dev-nepbot.testnet",
   "nft_contract": "nft.dev-nepbot.testnet",
+  "snapshot_contract": "dev-1661250591703-95464982614704",
   "linkdrop": "linkdrop6.bhc8521.testnet",
   "account_id": "sign.nepbot.testnet",
   "oct_contract": "registry.test_oct.testnet",
@@ -23,5 +24,8 @@
   "astrodao":{
     "api":"https://testnet.app.astrodao.com/api/server/v1/daos",
     "contract":"sputnikv2.testnet"
+  },
+  "twitter":{
+    "callback_url": "callback"
   }
 }

@@ -2,7 +2,7 @@ const discordUtils = require('../../../pkg/utils/discord_utils');
 const config = require('../../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
 
-const embed = new MessageEmbed()
+const verifyNearEmbed = new MessageEmbed()
   .setColor('#0099ff')
   .setTitle('Verify your on-chain assets')
   .setDescription(`1. Click the button below.\n
@@ -12,13 +12,26 @@ const embed = new MessageEmbed()
   5. Successfully verified!\n 
   *This is a read-only connection. Do not share your private keys. We will never ask for your seed phrase. We will never DM you.*`);
 
-const button = new MessageButton()
+const verifyNearButton = new MessageButton()
   .setCustomId('command.verify')
   .setLabel('Verify')
   .setStyle('SECONDARY');
 
-const action = new MessageActionRow()
-  .addComponents(button);
+const verifyNearAction = new MessageActionRow()
+  .addComponents(verifyNearButton);
+
+const verifyTwitterEmbed = new MessageEmbed()
+  .setTitle('Verify your twitter account')
+  .setDescription('Click the button below to generate a link for auth your twitter.')
+  .setColor('PURPLE');
+
+const verifyTwitterButton = new MessageButton()
+  .setCustomId('command.verify_twitter')
+  .setLabel('Verify twitter account')
+  .setStyle('SECONDARY');
+
+const verifyTwitterAction = new MessageActionRow()
+  .addComponents(verifyTwitterButton);
 
 const execute = async guild => {
   const channelName = 'nepbot-join';
@@ -43,7 +56,8 @@ const execute = async guild => {
     for (const _value of messages.values()) {
       _value.delete();
     }
-    await guildChannel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+    await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
+    await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyTwitterEmbed], components: [verifyTwitterAction] });
     return;
   }
   const channel = await guild.channels.create(channelName,
@@ -58,7 +72,8 @@ const execute = async guild => {
         allow: [Permissions.FLAGS.VIEW_CHANNEL],
       },
     ] });
-  await channel.send({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+  await channel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
+  await channel.send({ content: '\n', ephemeral:true, embeds:[verifyTwitterEmbed], components: [verifyTwitterAction] });
 };
 module.exports = {
   execute,

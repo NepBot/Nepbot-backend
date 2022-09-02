@@ -18,5 +18,10 @@ config.bot_appid = process.env.BOT_APPID;
 config.mysql_url = process.env.MYSQL_URL;
 config.runtime_env = process.env.RUNTIME_ENV;
 config.logger_mode = process.env.LOGGER_MODE;
+config.consumer_key = process.env.CONSUMER_KEY;
+config.consumer_secret = process.env.CONSUMER_SECRET;
+config.bearer_token = process.env.BEARER_TOKEN;
+config.client_id = process.env.CLIENT_ID;
+config.client_secret = process.env.CLIENT_SECRET;
 
 module.exports = config;
