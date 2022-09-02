@@ -1,0 +1,146 @@
+const { TwitterApi } = require('twitter-api-v2');
+const twitterClient = require('../../service/twitter_app');
+const oauthCache = require('../../pkg/models/object/oauth_cache');
+const fecha = require('fecha');
+const config = require('../../pkg/utils/config');
+const twitterUsers = require('../../pkg/models/object/twitter_users');
+const logger = require('./logger');
+
+
+exports.generateOAuthLink = async (guildId, userId) => {
+  const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(config.twitter.callback_url, { scope: ['tweet.read', 'users.read', 'offline.access', 'follows.read'] });
+  await oauthCache.add({
+    state: state,
+    code_verifier: codeVerifier,
+  });
+  await twitterUsers.add({
+    user_id: userId,
+    guild_id: guildId,
+    state: state,
+  });
+  return url;
+};
+//this.generateOAuthLink().then(console.log);
+
+exports.getClient = async (guildId, userId) => {
+  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+  if (await this.isTimeExpired(twitterUser.expired_at)) {
+    const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
+    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7200) };
+    const condition = { guild_id: guildId, user_id: userId };
+    await twitterUsers.update(params, condition);
+    return refreshedClient;
+  }
+  return new TwitterApi(twitterUser.access_token);
+};
+//this.getClient('966966468774350948', '979297268165390346');
+
+/**
+ * @description https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers
+ * @param {string} userId
+ * @param {string} next_token
+ * @returns
+ */
+exports.listUserFollowing = async (userClient, userId, next_token) => {
+  if (next_token) {
+    return await userClient.v2.get(`users/${userId}/following`, { pagination_token: next_token, max_results: 1000 });
+  }
+  return await userClient.v2.get(`users/${userId}/following`, { max_results: 1000 });
+};
+// this.listUserFollower('1169439457').then(console.log);
+
+/**
+ *
+ * @param {string} userId
+ * @param {string} followerId
+ * @returns boolean
+ */
+exports.isUserFollowing = async (userClient, userId, followerId) => {
+  try {
+    let result = await this.listUserFollowing(userClient, userId);
+    let isUserFollowing = result.data.some(element => element.id == followerId);
+    if (isUserFollowing) {
+      return true;
+    }
+    else {
+      do {
+        result = await this.listUserFollowing(userClient, userId, result.meta.next_token);
+        if (result.data && result.data.some(element => element.id == followerId)) {
+          isUserFollowing = true;
+          break;
+        }
+      } while (result.meta.next_token);
+    }
+    return isUserFollowing;
+  }
+  catch (e) {
+    return false;
+  }
+
+};
+// this.isUserFollowing('430789183', '1169439457').then(console.log);
+
+/**
+ * @description https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by
+ * @param {string} tweetId
+ * @param {string} next_token
+ * @returns
+ */
+exports.listRetweetedById = async (userClient, tweetId, next_token) => {
+  if (next_token) {
+    return await userClient.v2.get(`tweets/${tweetId}/retweeted_by`, { pagination_token: next_token, max_results: 100 });
+  }
+  return await userClient.v2.get(`tweets/${tweetId}/retweeted_by`, { max_results: 100 });
+};
+// this.listRetweetedById('1564034348881367040').then(e => console.log(e.data.length));
+
+/**
+ *
+ * @param {string} tweetId
+ * @param {string} userId
+ * @returns boolean
+ */
+exports.isUserRetweeted = async (userClient, tweetId, userId) => {
+  try {
+    let result = await this.listRetweetedById(userClient, tweetId);
+    let isUserRetweeted = result.data.some(element => element.id == userId);
+    if (isUserRetweeted) {
+      return true;
+    }
+    else {
+      do {
+        result = await this.listRetweetedById(userClient, tweetId, result.meta.next_token);
+        if (result.data && result.data.some(element => element.id == userId)) {
+          isUserRetweeted = true;
+          break;
+        }
+      } while (result.meta.next_token);
+    }
+    return isUserRetweeted;
+  }
+  catch (e) {
+    logger.error(e);
+    return false;
+  }
+
+};
+// this.isUserRetweeted('1564034348881367040', '430789183').then(console.log);
+
+
+exports.getExpiredTime = async (second) => {
+  return fecha.format(Date.now() + second * 1000, 'YYYY-MM-DD HH:mm:ss');
+};
+
+//this.getExpiredTime(7200).then(console.log);
+
+exports.isTimeExpired = async (time) => {
+  const date = new Date(time).getTime();
+  const currDate = new Date().getTime();
+  if (date < currDate) {
+    return true;
+  }
+  else {
+    return false;
+  }
+};
+//this.isTimeExpired('2022-09-01 05:53:22').then(console.log);

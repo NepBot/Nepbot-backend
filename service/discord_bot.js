@@ -32,7 +32,7 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '9' }).setToken(config.bot_token);
 
 rest.put(Routes.applicationCommands(config.bot_appid), { body: commands })
-  .then(() => logger.debug('Successfully registered application commands.'))
+  .then(() => logger.info('Successfully registered application commands.'))
   .catch(logger.error);
 
 client.on('interactionCreate', async interaction => {

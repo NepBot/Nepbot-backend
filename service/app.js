@@ -15,12 +15,28 @@ const bodyParser = require('koa-bodyparser');
 // resolve the cross region problem
 const cors = require('koa2-cors');
 
+const session = require('koa-session');
+
 const app = new Koa();
 
 app.use(cors());
 
 // parse request body:
 app.use(bodyParser());
+
+
+app.keys = ['6987-139-168-173-228.au.ngrok.io'];
+const CONFIG = {
+  key: 'koa:sess',
+  maxAge: 86400000,
+  overwrite: true,
+  httpOnly: true,
+  signed: true,
+  rolling: false,
+  renew: true,
+};
+app.use(session(CONFIG, app));
+
 
 // log request URL:
 app.use(async (ctx, next) => {

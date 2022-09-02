@@ -3,6 +3,7 @@ const config = require('../../pkg/utils/config');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const logger = require('../../pkg/utils/logger');
+const userInfos = require('../../pkg/models/object/user_infos');
 
 const content = new MessageEmbed()
   .setColor('BLUE');
@@ -36,6 +37,11 @@ const execute = async interaction => {
     user_id: interaction.user.id,
     guild_id: interaction.guildId,
     contract_address: contractAddress,
+  });
+  await userInfos.addUser({
+    user_id: interaction.user.id,
+    guild_id: interaction.guildId,
+    nonce: nonce,
   });
   button.setURL(`${config.wallet_auth_url}/createsnapshot/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&contract_address=${contractAddress}&sign=${sign}`);
   content.setDescription(`Click the button below to create a snapshot.\n

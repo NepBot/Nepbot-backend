@@ -19,6 +19,8 @@ app.listen(config.port, () => {
 // Run discord bot
 require('./service/discord_bot');
 
+// Run twitter app
+require('./service/twitter_app');
 
 // Run schedule task
 const task = require('./service/schedule_task');

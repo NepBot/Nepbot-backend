@@ -38,6 +38,7 @@ exports.verifyUserSign = async (args, sign) => {
   }, sign, keyPair.publicKey.toString().replace('ed25519:', ''));
   return ret;
 };
+//this.verifyUserId({ user_id: '912438768043196456', guild_id: '966966468774350948', contract_address: 'jacktest.sputnikv2.testnet' }, '5CcghkEQAaYHmjZwYTFyKgfgwNNJNAde7CwodnLWJPLQeWULtdN5GkWJ98xPiK1Hb2BKkndiEWn8gJDCrSvZj1tA').then(console.log);
 
 exports.setUser = async (args, accountId) => {
   if (!accountId) {

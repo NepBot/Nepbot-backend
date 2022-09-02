@@ -140,7 +140,7 @@ exports.checkPermissions = async (policy, afterProposal, accountId) => {
       }
       continue;
     }
-    else if (role.kind.Group.some(item => item === accountId)) {
+    else if (role.kind.Group.some(item => item == accountId)) {
       if (permissions.findIndex(permission => permission == afterProposal.proposal_type) > -1) {
         return true;
       }

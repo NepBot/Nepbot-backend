@@ -73,7 +73,11 @@ const execute = async interaction => {
 
   // Check the user whether have permission to vote.
   const afterProposal = await astrodao_utils.formatProposal(proposal);
+  logger.debug(`afterProposal: ${afterProposal}`);
+  logger.debug(`policy: ${policy}`);
+  logger.debug(`near_wallet_id: ${userInfo.near_wallet_id}`);
   const checkPermission = await astrodao_utils.checkPermissions(policy, afterProposal, userInfo.near_wallet_id);
+  logger.debug(`checkPermission: ${checkPermission}`);
   if (!checkPermission) {
     approve.setDisabled();
     against.setDisabled();
@@ -90,6 +94,11 @@ const execute = async interaction => {
 
   // Generate sign and main info for the both of the button
   const nonce = Date.now();
+  await userInfos.addUser({
+    user_id: interaction.user.id,
+    guild_id: interaction.guildId,
+    nonce: nonce,
+  });
   const approveSign = await nearUtils.getSign({
     nonce: nonce,
     user_id: interaction.user.id,
@@ -98,6 +107,7 @@ const execute = async interaction => {
     contract_addr: address,
     action: 'VoteApprove',
   });
+  content.setDescription(afterProposal.description);
   const approveUrl = `${config.wallet_auth_url}/vote/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&proposal_id=${proposalId}&contract_address=${address}&action=VoteApprove&sign=${approveSign}`;
   approve.setURL(approveUrl);
   logger.info(`${interaction.user.tag} in #${interaction.channel.name} generate an approve button & url\n ${approveUrl}`);
