@@ -73,8 +73,8 @@ const execute = async interaction => {
 
   // Check the user whether have permission to vote.
   const afterProposal = await astrodao_utils.formatProposal(proposal);
-  logger.debug(`afterProposal: ${afterProposal}`);
-  logger.debug(`policy: ${policy}`);
+  logger.debug(`afterProposal: ${JSON.stringify(afterProposal)}`);
+  logger.debug(`policy: ${JSON.stringify(policy)}`);
   logger.debug(`near_wallet_id: ${userInfo.near_wallet_id}`);
   const checkPermission = await astrodao_utils.checkPermissions(policy, afterProposal, userInfo.near_wallet_id);
   logger.debug(`checkPermission: ${checkPermission}`);
