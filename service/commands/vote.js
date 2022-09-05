@@ -19,21 +19,6 @@ const data = new SlashCommandBuilder()
       .setDescription('The proposal id')
       .setRequired(true));
 
-const approve = new MessageButton()
-  .setStyle('LINK')
-  .setLabel('👍 For')
-  .setURL(`${config.wallet_auth_url}`);
-
-const against = new MessageButton()
-  .setLabel('👎 Against')
-  .setStyle('LINK')
-  .setURL(`${config.wallet_auth_url}`);
-
-const content = new MessageEmbed();
-
-const action = new MessageActionRow()
-  .addComponents(approve, against);
-
 const execute = async interaction => {
   const address = interaction.options.get('contract_address').value;
   const proposalId = interaction.options.get('proposal_id').value;
@@ -51,6 +36,19 @@ const execute = async interaction => {
     // break hear;
     return;
   }
+
+  const approve = new MessageButton()
+    .setStyle('LINK')
+    .setLabel('👍 For');
+
+  const against = new MessageButton()
+    .setLabel('👎 Against')
+    .setStyle('LINK');
+
+  const content = new MessageEmbed();
+
+  const action = new MessageActionRow()
+    .addComponents(approve, against);
 
   // If the user already voted to with the proposal
   const policy = await astrodao_utils.getAstrodaoPolicy(address);
@@ -91,7 +89,6 @@ const execute = async interaction => {
     });
     return;
   }
-
   // Generate sign and main info for the both of the button
   const nonce = Date.now();
   await userInfos.addUser({
