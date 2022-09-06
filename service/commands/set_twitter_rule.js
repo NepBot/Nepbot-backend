@@ -29,25 +29,30 @@ const execute = async interaction => {
       ephemeral:true,
     });
   }
+
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
+  let showRule = `role_id: ${roleId}\n`;
   try {
     followUserName = interaction.options.get('follow_user_name').value;
+    showRule += `follow_user_name: ${followUserName}\n`;
   }
   catch (e) {
     logger.debug('no follow_user_name');
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
+    showRule += `like_tweet_link: ${likeTweetLink}\n`;
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
+    showRule += `rt_tweet_link: ${rtTweetLink}\n`;
   }
   catch (e) {
     logger.debug('no like_tweet_link');
@@ -65,12 +70,7 @@ const execute = async interaction => {
   const content = new MessageEmbed()
     .setDescription(`If you already have a verified Twitter account, click the button below to verify that you meet this rule.\n
     If you have not verified a Twitter account, the button generates a verification link, and when you have verified it, click the button again and the Nepbot will start verifying that you have met the conditions.`)
-    .addFields({ name: 'Set new rule success',
-      value:
-  `role_id: ${roleId}\n
-  follow_user_name: ${followUserName}\n
-  rt_tweet_link: ${rtTweetLink}\n
-  like_tweet_link: ${likeTweetLink}` });
+    .addFields({ name: 'Set new rule success', value: showRule });
   await interaction.reply({
     content:'\n',
     embeds:[content],
