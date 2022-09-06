@@ -20,19 +20,6 @@ const verifyNearButton = new MessageButton()
 const verifyNearAction = new MessageActionRow()
   .addComponents(verifyNearButton);
 
-const verifyTwitterEmbed = new MessageEmbed()
-  .setTitle('Verify your twitter account')
-  .setDescription('Click the button below to generate a link for auth your twitter.')
-  .setColor('PURPLE');
-
-const verifyTwitterButton = new MessageButton()
-  .setCustomId('command.verify_twitter')
-  .setLabel('Verify twitter account')
-  .setStyle('SECONDARY');
-
-const verifyTwitterAction = new MessageActionRow()
-  .addComponents(verifyTwitterButton);
-
 const execute = async guild => {
   const channelName = 'nepbot-join';
   let guildChannel = guild.channels.cache.find(channel =>
@@ -57,7 +44,6 @@ const execute = async guild => {
       _value.delete();
     }
     await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
-    await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyTwitterEmbed], components: [verifyTwitterAction] });
     return;
   }
   const channel = await guild.channels.create(channelName,
@@ -73,7 +59,6 @@ const execute = async guild => {
       },
     ] });
   await channel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
-  await channel.send({ content: '\n', ephemeral:true, embeds:[verifyTwitterEmbed], components: [verifyTwitterAction] });
 };
 module.exports = {
   execute,

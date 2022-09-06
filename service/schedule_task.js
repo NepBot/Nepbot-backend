@@ -10,6 +10,7 @@ const tokenTask = require('./schedule_tasks/token_task');
 const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
+const twitterTask = require('./schedule_tasks/twitter_task');
 
 
 const txMap = [];
@@ -101,6 +102,7 @@ module.exports.scheduleTask = function(fromBlockHeight = 0) {
   else {
     schedule.scheduleJob('*/1 * * * * *', function() {
       resolveNewBlock();
+      twitterTask.refreshToken();
     });
   }
 };
