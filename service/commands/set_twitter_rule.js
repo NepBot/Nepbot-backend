@@ -1,39 +1,27 @@
 const twitterRule = require('../../pkg/models/object/twitter_rules');
 const logger = require('../../pkg/utils/logger');
-const twitterUsers = require('../../pkg/models/object/twitter_users');
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+
+const button = new MessageButton()
+  .setCustomId('action.verify_twitter')
+  .setLabel('Verify Twitter')
+  .setStyle('PRIMARY');
+
+const action = new MessageActionRow()
+  .addComponents(button);
 
 const data = new SlashCommandBuilder()
   .setName('set_twitter_rule')
   .setDescription('Set twitter rules for roles in this server.')
-  .addStringOption(option =>
-    option.setName('rule_type')
-      .setDescription('The rule type that the user need finished.')
-      .setRequired(true)
-      .addChoices(
-        { name: 'Retweet', value: 'retweet' },
-        { name: 'Follow', value: 'follow' },
-      ))
-  .addStringOption(option =>
-    option.setName('role_id')
-      .setDescription('which role the user can join')
-      .setRequired(true))
-  .addStringOption(option =>
-    option.setName('tweet_id')
-      .setDescription('the tweet id can find in http link, when click a tweet on twitter')
-      .setRequired(false));
-
-
+  .addRoleOption(option => option.setName('role').setDescription('which role the user can join').setRequired(true))
+  .addStringOption(option => option.setName('follow_user_name').setDescription('Using \'+\' to septate different user name, like a + b').setRequired(false))
+  .addStringOption(option => option.setName('rt_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false))
+  .addStringOption(option => option.setName('like_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false));
 const execute = async interaction => {
   const { ownerId } = interaction.guild;
   const userId = interaction.user.id;
-  const ruleType = interaction.options.get('rule_type').value;
-  const roleId = interaction.options.get('role_id').value;
-  const guildId = interaction.guildId;
-  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
-
   if (userId != ownerId) {
     return await interaction.reply({
       content:'\n',
@@ -41,57 +29,53 @@ const execute = async interaction => {
       ephemeral:true,
     });
   }
-  else if (!twitterUser) {
-    return await interaction.reply({
-      content:'\n',
-      embeds:[new MessageEmbed().setDescription('You have not verify twitter account.\n Using /verify_twitter to verify.').setColor('RED')],
-      ephemeral:true,
-    });
+  const guildId = interaction.guildId;
+  const roleId = interaction.options.get('role').value;
+  let followUserName = '';
+  let rtTweetLink = '';
+  let likeTweetLink = '';
+  try {
+    followUserName = interaction.options.get('follow_user_name').value;
   }
-  if (ruleType == 'retweet') {
-    try {
-      const tweetId = interaction.options.get('tweet_id').value;
-      await twitterRule.add({
-        guild_id: guildId,
-        user_id: userId,
-        role_id: roleId,
-        type: ruleType,
-        tweet_id: tweetId,
-      });
-      await interaction.reply({
-        content:'\n',
-        embeds:[new MessageEmbed().setDescription('Set twitter rule success.\n Using command: \'/list_twitter_rule\' to check.')],
-        ephemeral:true,
-      });
-    }
-    catch (e) {
-      interaction.reply({
-        content:'\n',
-        ephemeral:true,
-        embeds:[new MessageEmbed().setDescription(`Tweet_id can't not be null.\n 
-        The tweet id can find in http link, when click a tweet on twitter.\n
-        For example, the link 'https://twitter.com/pluwen/status/1564844510613360640', 1564844510613360640 is the tweet id.`)],
-      });
-    }
+  catch (e) {
+    logger.debug('no follow_user_name');
   }
-  else if (ruleType == 'follow') {
-    try {
-      await twitterRule.add({
-        guild_id: guildId,
-        user_id: userId,
-        role_id: roleId,
-        type: ruleType,
-      });
-      await interaction.reply({
-        content:'\n',
-        embeds:[new MessageEmbed().setDescription('Set twitter rule success.\n Using command: \'/list_twitter_rule\' to check.')],
-        ephemeral:true,
-      });
-    }
-    catch (e) {
-      logger.error(e);
-    }
+  try {
+    rtTweetLink = interaction.options.get('rt_tweet_link').value;
   }
+  catch (e) {
+    logger.debug('no rt_tweet_link');
+  }
+  try {
+    likeTweetLink = interaction.options.get('like_tweet_link').value;
+  }
+  catch (e) {
+    logger.debug('no like_tweet_link');
+  }
+
+  await twitterRule.add({
+    guild_id: guildId,
+    user_id: userId,
+    role_id: roleId,
+    follow_user_name: followUserName,
+    rt_tweet_link: rtTweetLink,
+    like_tweet_link: likeTweetLink,
+  });
+
+  const content = new MessageEmbed()
+    .setDescription(`If you already have a verified Twitter account, click the button below to verify that you meet this rule.\n
+    If you have not verified a Twitter account, the button generates a verification link, and when you have verified it, click the button again and the Nepbot will start verifying that you have met the conditions.`)
+    .addFields({ name: 'Set new rule success',
+      value:
+  `role_id: ${roleId}\n
+  follow_user_name: ${followUserName}\n
+  rt_tweet_link: ${rtTweetLink}\n
+  like_tweet_link: ${likeTweetLink}` });
+  await interaction.reply({
+    content:'\n',
+    embeds:[content],
+    components: [action],
+  });
 };
 
 module.exports = {

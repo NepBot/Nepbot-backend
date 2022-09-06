@@ -11,17 +11,15 @@ const callback = async (ctx, next) => {
   const callbackUrl = config.twitter.callback_url;
   // Extract state and code from query string
   const req = ctx.request.body;
-  const args = req.args;
   logger.info(`receive request by access 'api/twitter/callback': ${JSON.stringify(req)}`);
-  const state = args.state;
-  const code = args.code;
+  const state = req.state;
+  const code = req.code;
   // Get the saved codeVerifier from session
   const codeVerifier = await oauthCache.get({ state: state })
     .then(e => e.code_verifier)
-    .catch(() => ctx.body = new Resp());
-
+    .catch(() => ctx.body = new Resp({ code: 500 }));
   if (!codeVerifier || !state || !code) {
-    return ctx.body = new Resp();
+    return ctx.body = new Resp({ code: 500 });
   }
 
   await twitterClient.loginWithOAuth2({ code, codeVerifier, redirectUri: callbackUrl })
@@ -35,11 +33,47 @@ const callback = async (ctx, next) => {
       const condition = { state: state };
       await twitterUsers.update(params, condition);
       await oauthCache.delete({ state: state });
-      return ctx.body = new Resp();
+      return ctx.body = new Resp({});
     })
-    .catch(e => logger.error(e));
+    .catch(() => ctx.body = new Resp({ code: 500 }));
 };
 
 module.exports = {
   'POST /api/twitter/callback': callback,
 };
+
+// const callback = async (ctx, next) => {
+//   const callbackUrl = config.twitter.callback_url;
+//   // Extract state and code from query string
+//   const { state, code } = ctx.query;
+//   logger.info(`receive request by access 'api/twitter/callback': ${JSON.stringify(ctx.query)}`);
+//   // const state = req.state;
+//   // const code = req.code;
+//   console.log(state, code);
+//   // Get the saved codeVerifier from session
+//   const codeVerifier = await oauthCache.get({ state: state })
+//     .then(e => e.code_verifier)
+//     .catch(() => ctx.statue = 500);
+//   if (!codeVerifier || !state || !code) {
+//     return ctx.statue = 500;
+//   }
+
+//   await twitterClient.loginWithOAuth2({ code, codeVerifier, redirectUri: callbackUrl })
+//     .then(async ({ client: loggedClient, accessToken, refreshToken, expiresIn }) => {
+//     // {loggedClient} is an authenticated client in behalf of some user
+//     // Store {accessToken} somewhere, it will be valid until {expiresIn} is hit.
+//     // If you want to refresh your token later, store {refreshToken} (it is present if 'offline.access' has been given as scope)
+//       const { data: userObject } = await loggedClient.v2.me();
+//       const expiredAt = await twitterUtils.getExpiredTime(expiresIn);
+//       const params = { access_token: accessToken, refresh_token: refreshToken, expired_at: expiredAt, twitter_id: userObject.id, twitter_username: userObject.username };
+//       const condition = { state: state };
+//       await twitterUsers.update(params, condition);
+//       await oauthCache.delete({ state: state });
+//       return ctx.statue = 200;
+//     })
+//     .catch(() => ctx.statue = 500);
+// };
+
+// module.exports = {
+//   'GET /api/twitter/callback': callback,
+// };

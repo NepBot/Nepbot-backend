@@ -14,11 +14,15 @@ const TwitterRules = mysql.define('twitter_rules', {
     type:DataTypes.STRING,
     allowNull: false,
   },
-  type:{
+  follow_user_name:{
     type:DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  tweet_id:{
+  rt_tweet_link:{
+    type:DataTypes.STRING,
+    allowNull: true,
+  },
+  like_tweet_link:{
     type:DataTypes.STRING,
     allowNull: true,
   },
