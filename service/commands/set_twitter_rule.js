@@ -32,10 +32,11 @@ const execute = async interaction => {
 
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
+  const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name);
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  let showRule = `role_id: ${roleId}\n`;
+  let showRule = `role: ${roleName}\n`;
   try {
     followUserName = interaction.options.get('follow_user_name').value;
     showRule += `follow_user_name: ${followUserName}\n`;
@@ -45,14 +46,14 @@ const execute = async interaction => {
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
-    showRule += `like_tweet_link: ${likeTweetLink}\n`;
+    showRule += `rt_tweet_link: ${rtTweetLink}\n`;
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
-    showRule += `rt_tweet_link: ${rtTweetLink}\n`;
+    showRule += `like_tweet_link: ${likeTweetLink}\n`;
   }
   catch (e) {
     logger.debug('no like_tweet_link');
