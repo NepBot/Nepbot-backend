@@ -166,16 +166,16 @@ exports.listLikedTweetById = async (userClient, userId, next_token) => {
  * @param {string} userId
  * @returns boolean
  */
-exports.isUserLikedTweet = async (userClient, tweetId, userId) => {
+exports.isUserLikedTweet = async (userClient, tweetId, twitterId) => {
   try {
-    let result = await this.listLikedTweetById(userClient, userId);
+    let result = await this.listLikedTweetById(userClient, twitterId);
     let isUserLiked = result.data.some(element => element.id == tweetId);
     if (isUserLiked) {
       return true;
     }
     else {
       do {
-        result = await this.listLikedTweetById(userClient, userId, result.meta.next_token);
+        result = await this.listLikedTweetById(userClient, twitterId, result.meta.next_token);
         if (result.data && result.data.some(element => element.id == tweetId)) {
           isUserLiked = true;
           break;
@@ -246,7 +246,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
     else if (key == 'rt_tweet_link') {
       const rtTweetIds = await this.listTweetLink(value);
       for (const rtTweetId of rtTweetIds) {
-        isMeetAllRule = isMeetAllRule && await this.isUserRetweeted(userClient, rtTweetId, twitterId);
+        isMeetAllRule = isMeetAllRule && await this.isUserRetweeted(userClient, rtTweetId, twitterUser.twitter_id);
         if (!isMeetAllRule) {
           logger.info(`tweet ${rtTweetId} rt not find user ${twitterUser.twitter_username}`);
           break;
@@ -260,10 +260,10 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
     // like_tweet_link
     else if (key == 'like_tweet_link') {
       const likeTweetIds = await this.listTweetLink(value);
-      for (const likeTweetId of likeTweetIds) {
-        isMeetAllRule = isMeetAllRule && await this.isUserLikedTweet(userClient, likeTweetId, twitterId);
+      for (const tweetId of likeTweetIds) {
+        isMeetAllRule = isMeetAllRule && await this.isUserLikedTweet(userClient, tweetId, twitterId);
         if (!isMeetAllRule) {
-          logger.info(`tweet ${likeTweetId} like not find user ${twitterUser.twitter_username}`);
+          logger.info(`tweet ${tweetId} like not find user ${twitterUser.twitter_username}`);
           break;
         }
       }
