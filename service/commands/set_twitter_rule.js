@@ -30,30 +30,34 @@ const execute = async interaction => {
     });
   }
 
+  const content = new MessageEmbed()
+    .setDescription(`If you already have a verified Twitter account, click the button below to verify that you meet this rule.\n
+  If you have not verified a Twitter account, the button generates a verification link, and when you have verified it, click the button again and the Nepbot will start verifying that you have met the conditions.`);
+
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
   const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name);
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  let showRule = `role: ${roleName}\n`;
+  content.addFields({ name: 'Role', value: roleName });
   try {
-    followUserName = interaction.options.get('follow_user_name').value;
-    showRule += `follow_user_name: ${followUserName}\n`;
+    followUserName = interaction.options.get('follow_username').value;
+    content.addFields({ name: 'Follow', value: followUserName });
   }
   catch (e) {
-    logger.debug('no follow_user_name');
+    logger.debug('no follow_username');
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
-    showRule += `rt_tweet_link: ${rtTweetLink}\n`;
+    content.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
-    showRule += `like_tweet_link: ${likeTweetLink}\n`;
+    content.addFields({ name: 'Like_Tweet', value: likeTweetLink });
   }
   catch (e) {
     logger.debug('no like_tweet_link');
@@ -68,10 +72,7 @@ const execute = async interaction => {
     like_tweet_link: likeTweetLink,
   });
 
-  const content = new MessageEmbed()
-    .setDescription(`If you already have a verified Twitter account, click the button below to verify that you meet this rule.\n
-    If you have not verified a Twitter account, the button generates a verification link, and when you have verified it, click the button again and the Nepbot will start verifying that you have met the conditions.`)
-    .addFields({ name: 'Set new rule success', value: showRule });
+
   await interaction.reply({
     content:'\n',
     embeds:[content],
