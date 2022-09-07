@@ -146,18 +146,17 @@ exports.isUserRetweeted = async (userClient, tweetId, userId) => {
 };
 // this.isUserRetweeted('1564034348881367040', '430789183').then(console.log);
 
-
 /**
  * @description https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by
  * @param {string} tweetId
  * @param {string} next_token
  * @returns
  */
-exports.listLikedTweetById = async (userClient, tweetId, next_token) => {
+exports.listLikedTweetById = async (userClient, userId, next_token) => {
   if (next_token) {
-    return await userClient.v2.get(`tweets/${tweetId}/liked_tweets`, { pagination_token: next_token, max_results: 100 });
+    return await userClient.v2.get(`users/${userId}/liked_tweets`, { pagination_token: next_token, max_results: 100 });
   }
-  return await userClient.v2.get(`tweets/${tweetId}/liked_tweets`, { max_results: 100 });
+  return await userClient.v2.get(`users/${userId}/liked_tweets`, { max_results: 100 });
 };
 // this.listRetweetedById('1564034348881367040').then(e => console.log(e.data.length));
 
@@ -169,21 +168,21 @@ exports.listLikedTweetById = async (userClient, tweetId, next_token) => {
  */
 exports.isUserLikedTweet = async (userClient, tweetId, userId) => {
   try {
-    let result = await this.listLikedTweetById(userClient, tweetId);
-    let isUserRetweeted = result.data.some(element => element.id == userId);
-    if (isUserRetweeted) {
+    let result = await this.listLikedTweetById(userClient, userId);
+    let isUserLiked = result.data.some(element => element.id == tweetId);
+    if (isUserLiked) {
       return true;
     }
     else {
       do {
-        result = await this.listLikedTweetById(userClient, tweetId, result.meta.next_token);
-        if (result.data && result.data.some(element => element.id == userId)) {
-          isUserRetweeted = true;
+        result = await this.listLikedTweetById(userClient, userId, result.meta.next_token);
+        if (result.data && result.data.some(element => element.id == tweetId)) {
+          isUserLiked = true;
           break;
         }
       } while (result.meta.next_token);
     }
-    return isUserRetweeted;
+    return isUserLiked;
   }
   catch (e) {
     logger.error(e);
@@ -206,7 +205,7 @@ exports.listTweetLink = async (tweetLink) => {
     return element.split('/').at(-1).split('?')[0];
   });
 };
-// this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473').then(console.log);
+// this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473?s=20&t=OaDUKnttKJcv9-0ajBseCQ').then(console.log);
 
 exports.verifyTwitterRule = async (userClient, interaction) => {
   const guildId = interaction.guildId;
@@ -239,7 +238,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
         }
       }
       if (!isMeetAllRule) {
-        return;
+        break;
       }
     }
 
@@ -254,7 +253,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
         }
       }
       if (!isMeetAllRule) {
-        return;
+        break;
       }
     }
 
@@ -270,7 +269,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
       }
 
       if (!isMeetAllRule) {
-        return;
+        break;
       }
     }
     const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
