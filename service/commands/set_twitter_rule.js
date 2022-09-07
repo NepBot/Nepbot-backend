@@ -16,7 +16,7 @@ const data = new SlashCommandBuilder()
   .setName('set_twitter_rule')
   .setDescription('Set twitter rules for roles in this server.')
   .addRoleOption(option => option.setName('role').setDescription('which role the user can join').setRequired(true))
-  .addStringOption(option => option.setName('follow_user_name').setDescription('Using \'+\' to septate different user name, like a + b').setRequired(false))
+  .addStringOption(option => option.setName('follow_username').setDescription('Using \'+\' to septate different user name, like a + b').setRequired(false))
   .addStringOption(option => option.setName('rt_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false))
   .addStringOption(option => option.setName('like_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false));
 const execute = async interaction => {
