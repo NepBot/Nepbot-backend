@@ -43,20 +43,15 @@ exports.isTimeExpired = async (time) => {
 // this.isTimeExpired('2022-09-01 05:53:22').then(console.log);
 
 exports.getClient = async (guildId, userId) => {
-  try {
-    const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
-    if (await this.isTimeExpired(twitterUser.expired_at)) {
-      const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
-      const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7000) }; // the expired time in twitter office API is 7200ms (2 hours), using 7000 can let the program have some time to refresh the token.
-      const condition = { guild_id: guildId, user_id: userId };
-      await twitterUsers.update(params, condition);
-      return refreshedClient;
-    }
-    return new TwitterApi(twitterUser.access_token);
+  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+  if (await this.isTimeExpired(twitterUser.expired_at)) {
+    const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
+    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7000) }; // the expired time in twitter office API is 7200ms (2 hours), using 7000 can let the program have some time to refresh the token.
+    const condition = { guild_id: guildId, user_id: userId };
+    await twitterUsers.update(params, condition);
+    return refreshedClient;
   }
-  catch (e) {
-    logger.error('get user client failed', e);
-  }
+  return new TwitterApi(twitterUser.access_token);
 };
 // this.getClient('966966468774350948', '912438768043196456');
 
@@ -200,78 +195,85 @@ exports.isUserLikedTweet = async (userClient, tweetId, userId) => {
 
 
 exports.listFollowUserName = async (followUerName) => {
-  if (followUerName.length > 0) {
-    return followUerName.split('+').map(element => {
-      return element.trim();
-    });
-  }
-  return [];
+  return followUerName.split('+').map(element => {
+    return element.trim();
+  });
 };
 // this.listFollowUserName('test + test  ').then(console.log);
 
 exports.listTweetLink = async (tweetLink) => {
-  if (tweetLink.length > 0) {
-    return tweetLink.split('+').map(element => {
-      return element.split('/').at(-1).split('?')[0];
-    });
-  }
-  return [];
+  return tweetLink.split('+').map(element => {
+    return element.split('/').at(-1).split('?')[0];
+  });
 };
-//this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473').then(console.log);
+// this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473').then(console.log);
 
-exports.verifyTwitterRule = async (guildId, userId) => {
-  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
-  const twitterId = twitterUser.twitter_id;
-  const listTwitterRules = await twitterRules.list({ guild_id: twitterUser.guild_id });
-  const userClient = await this.getClient(guildId, userId);
-  for (const twitterRule of listTwitterRules) {
-    if (await discordUtils.isMemberIncludeRole(guildId, userId, twitterRule.role_id)) {
-      continue;
+exports.verifyTwitterRule = async (userClient, interaction) => {
+  const guildId = interaction.guildId;
+  const userId = interaction.user.id;
+  const attachedMsg = interaction.message.embeds[0].fields[0].value;
+  for (const msg of attachedMsg.split('\n')) {
+    const key = msg.split(':')[0];
+    const value = msg.split(':')[1].trim();
+    let roleId = '';
+    let roleName = '';
+    if (key == 'role') {
+      roleName = value;
+      roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === value).id);
+      if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
+        return;
+      }
     }
-
-    // listFollowUserName
+    const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+    const twitterId = twitterUser.twitter_id;
     let isMeetAllRule = true;
-    const followUsers = await this.listFollowUserName(twitterRule?.follow_user_name || []);
-    for (const followUser of followUsers) {
-      isMeetAllRule = isMeetAllRule && await this.isUserFollowing(userClient, twitterId, followUser);
-      if (!isMeetAllRule) {
-        logger.info(`${followUser} can not find in ${twitterUser.twitter_username} following`);
-        break;
-      }
-    }
-    if (!isMeetAllRule) {
-      continue;
-    }
 
-    // listTweetLink
-    const rtTweetIds = await this.listTweetLink(twitterRule?.rt_tweet_link || []);
-    for (const rtTweetId of rtTweetIds) {
-      isMeetAllRule = isMeetAllRule && await this.isUserRetweeted(userClient, rtTweetId, twitterId);
-      if (!isMeetAllRule) {
-        logger.info(`tweet ${rtTweetId} rt not find user ${twitterUser.twitter_username}`);
-        break;
+    // follow_user_name
+    if (key == 'follow_user_name') {
+      const followUsers = await this.listFollowUserName(value);
+      for (const followUser of followUsers) {
+        isMeetAllRule = isMeetAllRule && await this.isUserFollowing(userClient, twitterId, followUser);
+        if (!isMeetAllRule) {
+          logger.info(`${followUser} can not find in ${twitterUser.twitter_username} following`);
+          break;
+        }
       }
-    }
-    if (!isMeetAllRule) {
-      continue;
-    }
-
-    // listTweetLink
-    const likeTweetIds = await this.listTweetLink(twitterRule?.like_tweet_link || []);
-    for (const likeTweetId of likeTweetIds) {
-      isMeetAllRule = isMeetAllRule && await this.isUserLikedTweet(userClient, likeTweetId, twitterId);
       if (!isMeetAllRule) {
-        logger.info(`tweet ${likeTweetId} like not find user ${twitterUser.twitter_username}`);
-        break;
+        return;
       }
     }
 
-    if (!isMeetAllRule) {
-      continue;
+    // rt_tweet_link
+    else if (key == 'rt_tweet_link') {
+      const rtTweetIds = await this.listTweetLink(value);
+      for (const rtTweetId of rtTweetIds) {
+        isMeetAllRule = isMeetAllRule && await this.isUserRetweeted(userClient, rtTweetId, twitterId);
+        if (!isMeetAllRule) {
+          logger.info(`tweet ${rtTweetId} rt not find user ${twitterUser.twitter_username}`);
+          break;
+        }
+      }
+      if (!isMeetAllRule) {
+        return;
+      }
     }
-    else {
-      const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
-      await memberInGuild.roles.add(twitterRule.role_id).then(logger.info(`${memberInGuild.user.username} add role_id ${twitterRule.role_id} in twitter_utils`)).catch(e => logger.error(e));
+
+    // like_tweet_link
+    else if (key == 'like_tweet_link') {
+      const likeTweetIds = await this.listTweetLink(value);
+      for (const likeTweetId of likeTweetIds) {
+        isMeetAllRule = isMeetAllRule && await this.isUserLikedTweet(userClient, likeTweetId, twitterId);
+        if (!isMeetAllRule) {
+          logger.info(`tweet ${likeTweetId} like not find user ${twitterUser.twitter_username}`);
+          break;
+        }
+      }
+
+      if (!isMeetAllRule) {
+        return;
+      }
     }
+    const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
+    await memberInGuild.roles.add(roleId).then(logger.info(`${memberInGuild.user.username} add role_id ${roleId}(name: ${roleName}) in twitter_utils`)).catch(e => logger.error(e));
   }
 };
