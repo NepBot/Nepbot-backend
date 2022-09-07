@@ -102,7 +102,7 @@ module.exports.scheduleTask = function(fromBlockHeight = 0) {
   else {
     schedule.scheduleJob('*/1 * * * * *', function() {
       resolveNewBlock();
-      twitterTask.refreshToken();
+      //twitterTask.refreshToken();
     });
   }
 };

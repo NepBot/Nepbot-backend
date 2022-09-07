@@ -212,12 +212,12 @@ exports.listFollowUserName = async (followUerName) => {
 exports.listTweetLink = async (tweetLink) => {
   if (tweetLink.length > 0) {
     return tweetLink.split('+').map(element => {
-      return element.split('/').at(-1);
+      return element.split('/').at(-1).split('?')[0];
     });
   }
   return [];
 };
-// this.listTweetLink('').then(console.log);
+//this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473').then(console.log);
 
 exports.verifyTwitterRule = async (guildId, userId) => {
   const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
