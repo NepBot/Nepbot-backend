@@ -21,18 +21,19 @@ const execute = async interaction => {
   const twitterUser = await twitterUsers.get({ guild_id: interaction.guildId, user_id: interaction.user.id });
   let userClient;
   try {
-    if (twitterUser && twitterUser.access_token) {
-      userClient = await twitterUtils.getClient(interaction.guildId, interaction.user.id);
-      await interaction.reply({
-        content: '\n',
-        embeds:[new MessageEmbed()
-          .setDescription(`You already verified twitter account, Nepbot will start to check the rule that you satisfied.\n 
-        Once the process finished you can see the new role in your profile.\n
-        It usually will take a few seconds`)],
-        ephemeral:true });
-      twitterUtils.verifyTwitterRule(userClient, interaction);
-      return;
-    }
+    // if (twitterUser && twitterUser.access_token) {
+    //   userClient = await twitterUtils.getClient(interaction.guildId, interaction.user.id);
+    //   await interaction.reply({
+    //     content: '\n',
+    //     embeds:[new MessageEmbed()
+    //       .setDescription(`You already verified twitter account, Nepbot will start to check the rule that you satisfied.\n 
+    //     Once the process finished you can see the new role in your profile.\n
+    //     It usually will take a few seconds`)],
+    //     ephemeral:true });
+    //   twitterUtils.verifyTwitterRule(userClient, interaction);
+    //   return;
+    // }
+    twitterUtils.verifyTwitterRule(userClient, interaction);
     button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
     // replay message to discord user
     await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
