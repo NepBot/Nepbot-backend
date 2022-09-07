@@ -211,9 +211,11 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
   const guildId = interaction.guildId;
   const userId = interaction.user.id;
   const attachedMsgs = interaction.message.embeds[0].fields;
-
+  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+  const twitterId = twitterUser.twitter_id;
+  let roleId, roleName;
+  let isMeetAllRule = true;
   for (const attachMsg of attachedMsgs) {
-    let roleId, roleName;
     if (attachMsg.name == 'Role') {
       roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value).id);
       roleName = attachMsg.value;
@@ -221,13 +223,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
         break;
       }
     }
-
-    const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
-    const twitterId = twitterUser.twitter_id;
-    let isMeetAllRule = true;
-
-    // follow_user_name
-    if (attachMsg.name == 'Follow') {
+    else if (attachMsg.name == 'Follow') {
       const followUsers = await this.listFollowUserName(attachMsg.value);
       for (const followUser of followUsers) {
         isMeetAllRule = isMeetAllRule && await this.isUserFollowing(userClient, twitterId, followUser);
@@ -236,14 +232,11 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
           break;
         }
       }
+      if (!isMeetAllRule) {
+        break;
+      }
     }
-    if (!isMeetAllRule) {
-      break;
-    }
-
-
-    // rt_tweet_link
-    if (attachMsg.name == 'Rt_Tweet') {
+    else if (attachMsg.name == 'Rt_Tweet') {
       const rtTweetIds = await this.listTweetLink(attachMsg.value);
       for (const rtTweetId of rtTweetIds) {
         isMeetAllRule = isMeetAllRule && await this.isUserRetweeted(userClient, rtTweetId, twitterUser.twitter_id);
@@ -252,13 +245,11 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
           break;
         }
       }
+      if (!isMeetAllRule) {
+        break;
+      }
     }
-    if (!isMeetAllRule) {
-      break;
-    }
-
-    // like_tweet_link
-    if (attachMsg.name == 'Like_Tweet') {
+    else if (attachMsg.name == 'Like_Tweet') {
       const likeTweetIds = await this.listTweetLink(attachMsg.value);
       for (const tweetId of likeTweetIds) {
         isMeetAllRule = isMeetAllRule && await this.isUserLikedTweet(userClient, tweetId, twitterId);
@@ -267,10 +258,14 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
           break;
         }
       }
+      if (!isMeetAllRule) {
+        break;
+      }
     }
-    if (!isMeetAllRule) {
-      break;
-    }
+
+  }
+
+  if (isMeetAllRule) {
     const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
     await memberInGuild.roles.add(roleId).then(logger.info(`${memberInGuild.user.username} add role_id ${roleId}(name: ${roleName}) in twitter_utils`)).catch(e => logger.error(e));
   }
