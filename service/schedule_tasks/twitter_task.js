@@ -9,7 +9,7 @@ exports.refreshToken = async () => {
   });
   for (const twitterUser of listTwitterUsers) {
     try {
-      const { client: accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
+      const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
       const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await twitterUtils.getExpiredTime(7200) };
       const condition = { guild_id: twitterUser.guildId, user_id: twitterUser.userId };
       await twitterUsers.update(params, condition);
