@@ -237,7 +237,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
         resultMsg.value = `✅ You already in this role ${roleName}.`;
         resultMsgs.push(resultMsg);
         logger.info(`${JSON.stringify(resultMsg)}`);
-        return;
+        return resultMsgs;
       }
     }
     // Follow

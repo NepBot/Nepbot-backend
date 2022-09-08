@@ -25,11 +25,9 @@ const execute = async interaction => {
           Nepbot is checking whether you are eligible for the rule. It usually will take a few seconds.
           The role will be assigned to you if you satisfy the requirement.`)],
         ephemeral:true });
-      const results = await twitterUtils.verifyTwitterRule(userClient, interaction);
+
       const embed = new MessageEmbed();
-      for (const result of results) {
-        embed.addFields(result);
-      }
+      await twitterUtils.verifyTwitterRule(userClient, interaction).forEach(r => embed.addFields(r));
       await interaction.followUp({
         content: '\n',
         embeds:[embed],
@@ -53,7 +51,7 @@ const execute = async interaction => {
     discordUtils.setInteraction(interaction);
   }
   catch (e) {
-    logger.error(`get twitter client by user ${twitterUser.twitter_username}`, e);
+    logger.error(e);
     await twitterUsers.delete({ guild_id: interaction.guildId, user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
     button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
     // replay message to discord user
