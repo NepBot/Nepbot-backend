@@ -48,7 +48,7 @@ const execute = async interaction => {
   content.addFields({ name: 'Role', value: `@${roleName}` });
   try {
     followUserName = interaction.options.get('follow_username').value;
-    content.addFields({ name: 'Follow', value: followUserName });
+    content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
   }
   catch (e) {
     logger.debug('no follow_username');

@@ -24,8 +24,7 @@ const execute = async interaction => {
   const twitterUser = await twitterUsers.get({ guild_id: interaction.guildId, user_id: interaction.user.id });
   let userClient;
   try {
-    if (twitterUser && twitterUser.access_token) {
-      console.log('123');
+    if (!twitterUser && !twitterUser.access_token) {
       userClient = await twitterUtils.getClient(interaction.guildId, interaction.user.id);
       await interaction.reply({
         content: '\n',
@@ -34,7 +33,13 @@ const execute = async interaction => {
           Nepbot is checking whether you are eligible for the rule. It usually will take a few seconds.
           The role will be assigned to you if you satisfy the requirement.`)],
         ephemeral:true });
-      twitterUtils.verifyTwitterRule(userClient, interaction);
+      const result = await twitterUtils.verifyTwitterRule(userClient, interaction);
+      await interaction.followUp({
+        content: '\n',
+        embeds:[new MessageEmbed()
+          .addFields(result)],
+        ephemeral:true,
+      });
       return;
     }
     button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
