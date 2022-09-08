@@ -4,14 +4,6 @@ const twitterUtils = require('../../../pkg/utils/twitter_utils');
 const twitterUsers = require('../../../pkg/models/object/twitter_users');
 const logger = require('../../../pkg/utils/logger');
 
-const embed = new MessageEmbed()
-  .setColor('#0099ff')
-  .setTitle('Connect Twitter Account')
-  .setDescription(`🔴 Twitter Not Connected\n
-  You haven't connected to your twitter account.\n
-  Click the button below to connect. You'll be directed to twitter to authorize Nepbot.\n
-  Once finished, please use the above button 'Verify Twitter' again to verify if you meet the requirements for the role.`);
-
 const button = new MessageButton()
   .setLabel('Connect Twitter')
   .setStyle('LINK');
@@ -24,7 +16,7 @@ const execute = async interaction => {
   const twitterUser = await twitterUsers.get({ guild_id: interaction.guildId, user_id: interaction.user.id });
   let userClient;
   try {
-    if (!twitterUser && !twitterUser.access_token) {
+    if (twitterUser && twitterUser.access_token) {
       userClient = await twitterUtils.getClient(interaction.guildId, interaction.user.id);
       await interaction.reply({
         content: '\n',
@@ -33,18 +25,31 @@ const execute = async interaction => {
           Nepbot is checking whether you are eligible for the rule. It usually will take a few seconds.
           The role will be assigned to you if you satisfy the requirement.`)],
         ephemeral:true });
-      const result = await twitterUtils.verifyTwitterRule(userClient, interaction);
+      const results = await twitterUtils.verifyTwitterRule(userClient, interaction);
+      const embed = new MessageEmbed();
+      for (const result of results) {
+        embed.addFields(result);
+      }
       await interaction.followUp({
         content: '\n',
-        embeds:[new MessageEmbed()
-          .addFields(result)],
+        embeds:[embed],
         ephemeral:true,
       });
       return;
     }
     button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
     // replay message to discord user
-    await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+    await interaction.reply({ content: '\n',
+      ephemeral:true,
+      embeds:[new MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('Connect Twitter Account')
+        .setDescription(`🔴 Twitter Not Connected\n
+      You haven't connected to your twitter account.\n
+      Click the button below to connect. You'll be directed to twitter to authorize Nepbot.\n
+      Once finished, please use the above button 'Verify Twitter' again to verify if you meet the requirements for the role.`)],
+      components: [action],
+    });
     discordUtils.setInteraction(interaction);
   }
   catch (e) {

@@ -226,54 +226,73 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
   const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
   const twitterId = twitterUser.twitter_id;
   let roleId, roleName;
-  const resultMsg = { name: 'Add role success' };
+  const resultMsgs = [];
   for (const attachMsg of attachedMsgs) {
     if (attachMsg.name == 'Role') {
       roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value.split('@').at(-1)).id);
       roleName = attachMsg.value;
       if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
+        const resultMsg = {};
+        resultMsg.name = 'Already in role';
+        resultMsg.value = `✅ You already in this role ${roleName}.`;
+        resultMsgs.push(resultMsg);
+        logger.info(`${JSON.stringify(resultMsg)}`);
         return;
       }
     }
+    // Follow
     else if (attachMsg.name == 'Follow') {
       const followUsers = await this.listFollowUserName(attachMsg.value);
       for (const followUser of followUsers) {
         if (!await this.isUserFollowing(userClient, twitterId, followUser)) {
+          const resultMsg = {};
           resultMsg.name = 'Follow';
           resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: follow @${followUser}`;
+          resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
-          return resultMsg;
         }
       }
     }
+    // Rt_Tweet
     else if (attachMsg.name == 'Rt_Tweet') {
       const rtTweetIds = await this.listTweetLink(attachMsg.value);
       for (const rtTweetId of rtTweetIds) {
         if (!await this.isUserRetweeted(userClient, rtTweetId, twitterUser.twitter_id)) {
+          const resultMsg = {};
           resultMsg.name = 'rt_tweet';
           resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}`;
+          resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
-          return resultMsg;
         }
       }
     }
+    // Like_Tweet
     else if (attachMsg.name == 'Like_Tweet') {
       const likeTweetIds = await this.listTweetLink(attachMsg.value);
       for (const tweetId of likeTweetIds) {
         if (!await this.isUserLikedTweet(userClient, tweetId, twitterId)) {
+          const resultMsg = {};
           resultMsg.name = 'like_tweet';
           resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: like tweet ${attachMsg.value.split('+').find(e => e.includes(tweetId))}`;
+          resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
-          return resultMsg;
         }
       }
     }
 
   }
 
-  const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
-  await memberInGuild.roles.add(roleId).then(logger.info(`${memberInGuild.user.username} add role_id ${roleId}(name: ${roleName}) in twitter_utils`)).catch(e => logger.error(e));
-  resultMsg.value = `✅ Role Assigned: @${roleName}`;
-  logger.info(`${JSON.stringify(resultMsg)}`);
-  return resultMsg;
+  if (resultMsgs.length == 0) {
+    const memberInGuild = await discordUtils.getMemberInGuild(guildId, userId);
+    await memberInGuild.roles.add(roleId).then(logger.info(`${memberInGuild.user.username} add role_id ${roleId}(name: ${roleName}) in twitter_utils`)).catch(e => logger.error(e));
+    const resultMsg = {};
+    resultMsg.name = 'Add role success';
+    resultMsg.value = `✅ Role Assigned: ${roleName}`;
+    resultMsgs.push(resultMsg);
+    logger.info(`${JSON.stringify(resultMsg)}`);
+    return resultMsgs;
+  }
+  else {
+    return resultMsgs;
+  }
 };
