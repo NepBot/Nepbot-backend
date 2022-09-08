@@ -217,7 +217,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
   let isMeetAllRule = true;
   for (const attachMsg of attachedMsgs) {
     if (attachMsg.name == 'Role') {
-      roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value).id);
+      roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value.split('@').at(-1)).id);
       roleName = attachMsg.value;
       if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
         break;

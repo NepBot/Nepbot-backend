@@ -7,7 +7,7 @@ const logger = require('../../pkg/utils/logger');
 
 const data = new SlashCommandBuilder()
   .setName('check_proposal')
-  .setDescription('List active proposal; Nepbot will automatically set a range from last 50 proposal')
+  .setDescription('List active proposal; Nepbot will automatically set a range from last 50 proposals')
   .addStringOption(option =>
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')
