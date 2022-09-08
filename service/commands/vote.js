@@ -9,7 +9,7 @@ const logger = require('../../pkg/utils/logger');
 
 const data = new SlashCommandBuilder()
   .setName('vote')
-  .setDescription('List the active proposal for the dao')
+  .setDescription('Vote for a DAO proposal with DAO contract and proposal ID.')
   .addStringOption(option =>
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')

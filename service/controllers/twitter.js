@@ -19,6 +19,7 @@ const callback = async (ctx, next) => {
     .then(e => e.code_verifier)
     .catch(() => ctx.body = new Resp({ code: 500 }));
   if (!codeVerifier || !state || !code) {
+    await oauthCache.delete({ state: state });
     return ctx.body = new Resp({ code: 500 });
   }
 

@@ -9,14 +9,19 @@ const button = new MessageButton()
   .setLabel('Verify Twitter')
   .setStyle('PRIMARY');
 
+const disconnect = new MessageButton()
+  .setCustomId('action.disconnect_twitter')
+  .setLabel('Disconnect Twitter')
+  .setStyle('SECONDARY');
+
 const action = new MessageActionRow()
-  .addComponents(button);
+  .addComponents(button, disconnect);
 
 const data = new SlashCommandBuilder()
   .setName('set_twitter_rule')
   .setDescription('Set twitter rules for roles in this server.')
   .addRoleOption(option => option.setName('role').setDescription('which role the user can join').setRequired(true))
-  .addStringOption(option => option.setName('follow_username').setDescription('Using \'+\' to septate different user name, like a + b').setRequired(false))
+  .addStringOption(option => option.setName('follow_username').setDescription('Input the Username without @. Using \'+\' to septate different username, like a + b').setRequired(false))
   .addStringOption(option => option.setName('rt_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false))
   .addStringOption(option => option.setName('like_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false));
 const execute = async interaction => {
@@ -40,10 +45,10 @@ const execute = async interaction => {
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  content.addFields({ name: 'Role', value: roleName });
+  content.addFields({ name: 'Role', value: `@${roleName}` });
   try {
     followUserName = interaction.options.get('follow_username').value;
-    content.addFields({ name: 'Follow', value: followUserName });
+    content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
   }
   catch (e) {
     logger.debug('no follow_username');
