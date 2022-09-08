@@ -37,7 +37,7 @@ exports.generateOAuthLink = async (guildId, userId) => {
 
 exports.getExpiredTime = async (second) => {
   const expiredAt = Date.now() + second * 1000;
-  return new Date(expiredAt).toISOString().replace('T', ' ').substring(0, 19);
+  return new Date(expiredAt).toISOString();
 };
 
 // this.getExpiredTime(7200).then(console.log);
