@@ -58,7 +58,7 @@ exports.getClient = async (guildId, userId) => {
   const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
   if (await this.isTimeExpired(twitterUser.expired_at)) {
     const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
-    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7000) }; // the expired time in twitter office API is 7200ms (2 hours), using 7000 can let the program have some time to refresh the token.
+    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7200) };
     const condition = { guild_id: guildId, user_id: userId };
     await twitterUsers.update(params, condition);
     return refreshedClient;
