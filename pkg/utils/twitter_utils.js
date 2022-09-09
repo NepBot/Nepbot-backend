@@ -8,7 +8,7 @@ const discordUtils = require('./discord_utils');
 const logger = require('./logger');
 
 
-exports.generateOAuthLink = async (guildId, userId) => {
+exports.generateOAuthLink = async (userId) => {
   const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(config.twitter.callback_url, { scope: ['tweet.read', 'users.read', 'offline.access', 'follows.read', 'like.read'] });
   await oauthCache.add({
     state: state,
@@ -16,18 +16,15 @@ exports.generateOAuthLink = async (guildId, userId) => {
   });
   const result = await twitterUsers.get({
     user_id: userId,
-    guild_id: guildId,
   });
   if (result) {
     await twitterUsers.update({ state: state }, {
       user_id: userId,
-      guild_id: guildId,
     });
   }
   else {
     await twitterUsers.add({
       user_id: userId,
-      guild_id: guildId,
       state: state,
     });
   }
@@ -54,12 +51,12 @@ exports.isTimeExpired = async (time) => {
 };
 // this.isTimeExpired('2022-09-01 05:53:22').then(console.log);
 
-exports.getClient = async (guildId, userId) => {
-  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+exports.getClient = async (userId) => {
+  const twitterUser = await twitterUsers.get({ user_id: userId });
   if (await this.isTimeExpired(twitterUser.expired_at)) {
     const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
     const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7200) };
-    const condition = { guild_id: guildId, user_id: userId };
+    const condition = { user_id: userId };
     await twitterUsers.update(params, condition);
     return refreshedClient;
   }
@@ -223,7 +220,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
   const guildId = interaction.guildId;
   const userId = interaction.user.id;
   const attachedMsgs = interaction.message.embeds[0].fields;
-  const twitterUser = await twitterUsers.get({ guild_id: guildId, user_id: userId });
+  const twitterUser = await twitterUsers.get({ user_id: userId });
   const twitterId = twitterUser.twitter_id;
   let roleId, roleName;
   const resultMsgs = [];

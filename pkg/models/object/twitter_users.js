@@ -6,10 +6,6 @@ const TwitterUsers = mysql.define('twitter_users', {
     type:DataTypes.STRING,
     allowNull: true,
   },
-  guild_id:{
-    type:DataTypes.STRING,
-    allowNull: true,
-  },
   state:{
     type:DataTypes.STRING,
     allowNull: true,

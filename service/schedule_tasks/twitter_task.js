@@ -11,13 +11,13 @@ exports.refreshToken = async () => {
     try {
       const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
       const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await twitterUtils.getExpiredTime(7200) };
-      const condition = { guild_id: twitterUser.guild_id, user_id: twitterUser.user_id };
+      const condition = { user_id: twitterUser.user_id };
       await twitterUsers.update(params, condition);
-      logger.debug(`${twitterUser.twitter_username} refresh token in twitter_task`);
+      logger.info(`${twitterUser.twitter_username} refresh token in twitter_task`);
     }
     catch (e) {
       logger.error(e);
-      await twitterUsers.delete({ user_id: twitterUser.user_id, guild_id: twitterUser.guild_id }).then(logger.info(`delete twitter user in refresh_token_task ${JSON.stringify(twitterUser)}`));
+      await twitterUsers.delete({ user_id: twitterUser.user_id }).then(logger.info(`delete twitter user in refresh_token_task ${JSON.stringify(twitterUser)}`));
     }
   }
 };
