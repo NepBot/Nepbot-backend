@@ -13,11 +13,11 @@ const action = new MessageActionRow()
 
 
 const execute = async interaction => {
-  const twitterUser = await twitterUsers.get({ guild_id: interaction.guildId, user_id: interaction.user.id });
+  const twitterUser = await twitterUsers.get({ user_id: interaction.user.id });
   let userClient;
   try {
     if (twitterUser && twitterUser.access_token) {
-      userClient = await twitterUtils.getClient(interaction.guildId, interaction.user.id);
+      userClient = await twitterUtils.getClient(interaction.user.id);
       await interaction.reply({
         content: '\n',
         embeds:[new MessageEmbed()
@@ -36,7 +36,7 @@ const execute = async interaction => {
       });
       return;
     }
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
     // replay message to discord user
     await interaction.reply({ content: '\n',
       ephemeral:true,
@@ -53,8 +53,8 @@ const execute = async interaction => {
   }
   catch (e) {
     logger.error(e);
-    await twitterUsers.delete({ guild_id: interaction.guildId, user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.guildId, interaction.user.id));
+    await twitterUsers.delete({ user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
     // replay message to discord user
     await interaction.reply({ content: '\n', ephemeral:true, embeds:[new MessageEmbed()
       .setDescription('Because of the Twitter API problem, Nepbot can\'t get the Twitter client.\n Please use the button blow to reverify your twitter.')], components: [action] });
