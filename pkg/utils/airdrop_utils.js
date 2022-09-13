@@ -39,9 +39,6 @@ exports.formatFTEmbedMsg = async (interaction) => {
       result.role_id = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === field.value.split('@').at(-1)).id);
       result.role_name = field.value;
     }
-    else if (field.name == 'Contract_address') {
-      result.contract_address = field.value;
-    }
     else if (field.name == 'Token_id') {
       result.token_id = field.value;
     }

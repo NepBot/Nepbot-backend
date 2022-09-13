@@ -19,7 +19,6 @@ const data = new SlashCommandBuilder()
   .setName('ft_airdrop')
   .setDescription('Airdrop a specify token.')
   .addRoleOption(option => option.setName('receiver_role').setDescription('which role the user can claim').setRequired(true))
-  .addStringOption(option => option.setName('contract_address').setDescription('Input the contract address.').setRequired(true))
   .addStringOption(option => option.setName('token_id').setDescription('Input the token id').setRequired(true))
   .addStringOption(option => option.setName('total_amount').setDescription('Input total amount').setRequired(true))
   .addStringOption(option => option.setName('amount_per_share').setDescription('every person can get').setRequired(true))
@@ -38,7 +37,6 @@ const execute = async interaction => {
 
   const roleId = interaction.options.get('receiver_role').value;
   const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name);
-  const contractAddress = interaction.options.get('contract_address').value;
   const tokenId = interaction.options.get('token_id').value;
   const totalAmount = interaction.options.get('total_amount').value;
   const amountPerShare = interaction.options.get('amount_per_share').value;
@@ -49,7 +47,6 @@ const execute = async interaction => {
     .setDescription('Airdrop: Send the token to airdrop contract')
     .addFields(
       { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Contract_address', value: contractAddress },
       { name: 'Token_id', value: tokenId },
       { name: 'Total_amount', value: totalAmount },
       { name: 'Amount_per_share', value: amountPerShare },
@@ -62,7 +59,6 @@ const execute = async interaction => {
     channel_id: interaction.channelId,
     guild_id: interaction.guildId,
     role_id: roleId,
-    contract_address: contractAddress,
     token_id: tokenId,
     total_amount: totalAmount,
     amount_per_share: amountPerShare,
@@ -74,7 +70,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  send.setURL(`${config.wallet_auth_url}/ftairdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&contract_address=${contractAddress}&token_id=${tokenId}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
+  send.setURL(`${config.wallet_auth_url}/ftairdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&token_id=${tokenId}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
 
   await interaction.reply({
     content:'\n',

@@ -51,12 +51,11 @@ const getConnectedAccount = async (ctx, next) => {
  * @param {*} ctx.request.body {
     "guild_id":"966966468774350948",
     "channel_id":"966966468774350951",
-    "role_id":"1004475262097952848",
-    "contract_address":"test",
-    "token_id":"near",
+    "role_id":"1014164987121512448",
+    "token_id":"test",
     "total_amount":"100",
     "amount_per_share":"10",
-    "end_time":"2022-09-18T11:30:57.366Z"
+    "end_time":"2022-09-14T13:02:02.972Z"
 }
  * @param {*} next 
  */
@@ -69,7 +68,6 @@ const sendFTAirdropMsg = async (ctx, next) => {
   const content = new MessageEmbed()
     .addFields(
       { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Contract_address', value: req.contract_address },
       { name: 'Token_id', value: req.token_id },
       { name: 'Total_amount', value: req.total_amount },
       { name: 'Amount_per_share', value: req.amount_per_share },
