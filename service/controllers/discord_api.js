@@ -62,34 +62,40 @@ const getConnectedAccount = async (ctx, next) => {
 const sendFTAirdropMsg = async (ctx, next) => {
   const req = ctx.request.body;
   logger.info(`receive request from /api/airdrop/sendftmsg ${JSON.stringify(req)}`);
-  const guild = await discordUtils.getGuild(req.guild_id);
-  const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
-  const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
-  const content = new MessageEmbed()
-    .addFields(
-      { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Token_id', value: req.token_id },
-      { name: 'Total_amount', value: req.total_amount },
-      { name: 'Amount_per_share', value: req.amount_per_share },
-      { name: 'End_time(GMT)', value: req.end_time },
-    );
-  const claim = new MessageButton()
-    .setCustomId('action.claim_ft')
-    .setLabel('Claim FT')
-    .setStyle('PRIMARY');
-  const component = new MessageActionRow()
-    .addComponents(claim);
-  await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim FT: Used for user to claim the FT')], components: [component] });
+  try {
+    const guild = await discordUtils.getGuild(req.guild_id);
+    const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
+    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
+    const content = new MessageEmbed()
+      .addFields(
+        { name: 'Receiver_role', value: '@' + roleName },
+        { name: 'Token_id', value: req.token_id },
+        { name: 'Total_amount', value: req.total_amount },
+        { name: 'Amount_per_share', value: req.amount_per_share },
+        { name: 'End_time(GMT)', value: req.end_time },
+      );
+    const claim = new MessageButton()
+      .setCustomId('action.claim_ft')
+      .setLabel('Claim FT')
+      .setStyle('PRIMARY');
+    const component = new MessageActionRow()
+      .addComponents(claim);
+    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim FT: Used for user to claim the FT')], components: [component] });
 
-  const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
-  const redeem = new MessageButton()
-    .setCustomId('action.redeem_ft')
-    .setLabel('Redeem FT')
-    .setStyle('PRIMARY');
-  const redeemComponent = new MessageActionRow()
-    .addComponents(redeem);
-  await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem FT: Used for user to redeem the FT')], components: [redeemComponent] });
-  ctx.body = new Resp({});
+    const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
+    const redeem = new MessageButton()
+      .setCustomId('action.redeem_ft')
+      .setLabel('Redeem FT')
+      .setStyle('PRIMARY');
+    const redeemComponent = new MessageActionRow()
+      .addComponents(redeem);
+    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem FT: Used for user to redeem the FT')], components: [redeemComponent] });
+    ctx.body = new Resp({});
+  }
+  catch (e) {
+    logger.error(e);
+    ctx.body = new Resp({ code: 500, message: 'error sendFTAirdropMsg', success: false });
+  }
 };
 
 /**
@@ -107,33 +113,39 @@ const sendFTAirdropMsg = async (ctx, next) => {
 const sendNFTAirdropMsg = async (ctx, next) => {
   const req = ctx.request.body;
   logger.info(`receive request from /api/airdrop/sendnftmsg ${JSON.stringify(req)}`);
-  const guild = await discordUtils.getGuild(req.guild_id);
-  const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
-  const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
-  const content = new MessageEmbed()
-    .addFields(
-      { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Contract_address', value: req.contract_address },
-      { name: 'Token_id', value: req.token_id },
-      { name: 'End_time(GMT)', value: req.end_time },
-    );
-  const claim = new MessageButton()
-    .setCustomId('action.claim_nft')
-    .setLabel('Claim NFT')
-    .setStyle('PRIMARY');
-  const claimComponent = new MessageActionRow()
-    .addComponents(claim);
-  await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim NFT: Used for user to claim the NFT')], components: [claimComponent] });
+  try {
+    const guild = await discordUtils.getGuild(req.guild_id);
+    const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
+    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
+    const content = new MessageEmbed()
+      .addFields(
+        { name: 'Receiver_role', value: '@' + roleName },
+        { name: 'Contract_address', value: req.contract_address },
+        { name: 'Token_id', value: req.token_id },
+        { name: 'End_time(GMT)', value: req.end_time },
+      );
+    const claim = new MessageButton()
+      .setCustomId('action.claim_nft')
+      .setLabel('Claim NFT')
+      .setStyle('PRIMARY');
+    const claimComponent = new MessageActionRow()
+      .addComponents(claim);
+    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim NFT: Used for user to claim the NFT')], components: [claimComponent] });
 
-  const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
-  const redeem = new MessageButton()
-    .setCustomId('action.redeem_nft')
-    .setLabel('Redeem NFT')
-    .setStyle('PRIMARY');
-  const redeemComponent = new MessageActionRow()
-    .addComponents(redeem);
-  await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem NFT: Used for user to redeem the NFT')], components: [redeemComponent] });
-  ctx.body = new Resp({});
+    const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
+    const redeem = new MessageButton()
+      .setCustomId('action.redeem_nft')
+      .setLabel('Redeem NFT')
+      .setStyle('PRIMARY');
+    const redeemComponent = new MessageActionRow()
+      .addComponents(redeem);
+    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem NFT: Used for user to redeem the NFT')], components: [redeemComponent] });
+    ctx.body = new Resp({});
+  }
+  catch (e) {
+    logger.error(e);
+    ctx.body = new Resp({ code: 500, message: 'error sendNFTAirdropMsg', success: false });
+  }
 };
 
 module.exports = {
