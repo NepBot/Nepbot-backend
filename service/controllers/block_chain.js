@@ -188,10 +188,82 @@ const getVoteSign = async (ctx, next) => {
   });
 };
 
+const getAirdropFTSign = async (ctx, next) => {
+  const req = ctx.request.body;
+  const args = req.args;
+  if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+    logger.error('fn verifyAccountOwner failed in api/getAirdropFTSign');
+    ctx.body = new Resp({
+      code: 500,
+      message: 'fn verifyAccountOwner failed in api/getAirdropFTSign',
+      success: false,
+    });
+    return;
+  }
+
+  const nonce = await userUtils.verifyUserId(
+    { user_id: args.owner_id, guild_id: args.guild_id, channel_id: args.channel_id, contract_address: args.contract_address, role_id: args.role_id, token: args.token, amount: args.amount, end_time: args.end_time },
+    args.sign,
+  );
+  if (!nonce) {
+    ctx.body = new Resp({
+      code: 500,
+      message: 'nonce expired',
+      success: false,
+    });
+    return;
+  }
+
+  const timestamp = Date.now() + '000000';
+  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.role_id + args.token + args.amount + args.end_time);
+  ctx.body = new Resp({ data: {
+    sign,
+    timestamp,
+  },
+  });
+};
+
+const getAirdropNFTSign = async (ctx, next) => {
+  const req = ctx.request.body;
+  const args = req.args;
+  if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+    logger.error('fn verifyAccountOwner failed in api/getAirdropNFTSign');
+    ctx.body = new Resp({
+      code: 500,
+      message: 'fn verifyAccountOwner failed in api/getAirdropNFTSign',
+      success: false,
+    });
+    return;
+  }
+
+  const nonce = await userUtils.verifyUserId(
+    { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, contract_address: args.contract_address, role_id: args.role_id, token_id: args.token_id, end_time: args.end_time },
+    args.sign,
+  );
+  if (!nonce) {
+    ctx.body = new Resp({
+      code: 500,
+      message: 'nonce expired',
+      success: false,
+    });
+    return;
+  }
+
+  const timestamp = Date.now() + '000000';
+  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.role_id + args.token_id + args.end_time);
+  ctx.body = new Resp({ data: {
+    sign,
+    timestamp,
+  },
+  });
+};
+
 module.exports = {
   'POST /api/getOwnerSign': getOwnerSign,
   'POST /api/getOperationSign': getOperationSign,
   'POST /api/getMintSign': getMintSign,
   'POST /api/getSnapshotSign': getSnapshotSign,
   'POST /api/getVoteSign': getVoteSign,
+  'POST /api/getAirdropNFTSign': getAirdropNFTSign,
+  'POST /api/getAirdropFTSign': getAirdropFTSign,
 };
