@@ -227,7 +227,7 @@ const getAirdropFTSign = async (ctx, next) => {
   const timestamp = Date.now() + '000000';
   let sign;
   if (args.hash) {
-    sign = await nearUtils.getSign(req.account_id + timestamp + args.hash);
+    sign = await nearUtils.getSign(args.hash + args.user_id + timestamp);
   }
   else {
     sign = await nearUtils.getSign(req.account_id + timestamp + args.role_id + args.token_id + args.total_amount + args.amount_per_share + args.end_time);
@@ -277,7 +277,7 @@ const getAirdropNFTSign = async (ctx, next) => {
   const timestamp = Date.now() + '000000';
   let sign;
   if (args.hash) {
-    sign = await nearUtils.getSign(req.account_id + timestamp + args.hash);
+    sign = await nearUtils.getSign(args.hash + args.user_id + timestamp);
   }
   else {
     sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.role_id + args.token_id + args.end_time);
