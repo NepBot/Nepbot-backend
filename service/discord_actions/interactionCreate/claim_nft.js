@@ -42,9 +42,7 @@ const execute = async interaction => {
     nonce: nonce,
     user_id: userId,
     guild_id: interaction.guildId,
-    role_id: embedMsg.role_id,
-    contract_address: embedMsg.contract_address,
-    end_time: embedMsg.end_time,
+    hash: embedMsg.hash,
   });
 
   await userInfos.addUser({
@@ -52,7 +50,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  button.setURL(`${config.wallet_auth_url}/nftclaim/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${embedMsg.role_id}&contract_address=${embedMsg.contract_address}&token_id=${embedMsg.token_id}&end_time=${embedMsg.end_time}&sign=${sign}`);
+  button.setURL(`${config.wallet_auth_url}/nftclaim/?user_id=${userId}&guild_id=${interaction.guildId}&hash=${embedMsg.hash}&sign=${sign}`);
 
   interaction.reply({
     content:'\n',

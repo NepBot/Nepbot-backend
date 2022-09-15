@@ -36,7 +36,7 @@ const execute = async interaction => {
   }
 
   const roleId = interaction.options.get('receiver_role').value;
-  const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name);
+  const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name.split('@').at(-1));
   const tokenId = interaction.options.get('token_id').value;
   const totalAmount = interaction.options.get('total_amount').value;
   const amountPerShare = interaction.options.get('amount_per_share').value;
