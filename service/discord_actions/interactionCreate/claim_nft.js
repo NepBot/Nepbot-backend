@@ -6,15 +6,13 @@ const discordUtils = require('../../../pkg/utils/discord_utils');
 const userInfos = require('../../../pkg/models/object/user_infos');
 const logger = require('../../../pkg/utils/logger');
 
-const button = new MessageButton()
-  .setLabel('Claim NFT')
-  .setStyle('LINK');
-
-const action = new MessageActionRow()
-  .addComponents(button);
-
-
 const execute = async interaction => {
+  const button = new MessageButton()
+    .setLabel('Claim NFT')
+    .setStyle('LINK');
+
+  const action = new MessageActionRow()
+    .addComponents(button);
   const userId = interaction.user.id;
 
   // if (await airdropUtils.checkClaimed(userId)) {
