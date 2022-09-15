@@ -41,7 +41,7 @@ const execute = async interaction => {
 
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
-  const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name);
+  const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name.split('@').at(-1));
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';

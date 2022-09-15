@@ -201,10 +201,20 @@ const getAirdropFTSign = async (ctx, next) => {
     return;
   }
 
-  const nonce = await userUtils.verifyUserId(
-    { user_id: args.owner_id, guild_id: args.guild_id, channel_id: args.channel_id, role_id: args.role_id, token_id: args.token_id, total_amount: args.total_amount, amount_per_share: args.amount_per_share, end_time: args.end_time },
-    args.sign,
-  );
+  let nonce;
+  if (args.hash) {
+    nonce = await userUtils.verifyUserId(
+      { user_id: args.user_id, guild_id: args.guild_id, hash: args.hash },
+      args.sign,
+    );
+  }
+  else {
+    nonce = await userUtils.verifyUserId(
+      { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, role_id: args.role_id, token_id: args.token_id, total_amount: args.total_amount, amount_per_share: args.amount_per_share, end_time: args.end_time },
+      args.sign,
+    );
+  }
+
   if (!nonce) {
     ctx.body = new Resp({
       code: 500,
@@ -215,7 +225,13 @@ const getAirdropFTSign = async (ctx, next) => {
   }
 
   const timestamp = Date.now() + '000000';
-  const sign = await nearUtils.getSign(req.account_id + timestamp + args.role_id + args.token_id + args.total_amount + args.amount_per_share + args.end_time);
+  let sign;
+  if (args.hash) {
+    sign = await nearUtils.getSign(req.account_id + timestamp + args.hash);
+  }
+  else {
+    sign = await nearUtils.getSign(req.account_id + timestamp + args.role_id + args.token_id + args.total_amount + args.amount_per_share + args.end_time);
+  }
   ctx.body = new Resp({ data: {
     sign,
     timestamp,
@@ -235,11 +251,20 @@ const getAirdropNFTSign = async (ctx, next) => {
     });
     return;
   }
+  let nonce;
+  if (args.hash) {
+    nonce = await userUtils.verifyUserId(
+      { user_id: args.user_id, guild_id: args.guild_id, hash: args.hash },
+      args.sign,
+    );
+  }
+  else {
+    nonce = await userUtils.verifyUserId(
+      { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, contract_address: args.contract_address, role_id: args.role_id, token_id: args.token_id, end_time: args.end_time },
+      args.sign,
+    );
+  }
 
-  const nonce = await userUtils.verifyUserId(
-    { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, contract_address: args.contract_address, role_id: args.role_id, token_id: args.token_id, end_time: args.end_time },
-    args.sign,
-  );
   if (!nonce) {
     ctx.body = new Resp({
       code: 500,
@@ -250,7 +275,13 @@ const getAirdropNFTSign = async (ctx, next) => {
   }
 
   const timestamp = Date.now() + '000000';
-  const sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.role_id + args.token_id + args.end_time);
+  let sign;
+  if (args.hash) {
+    sign = await nearUtils.getSign(req.account_id + timestamp + args.hash);
+  }
+  else {
+    sign = await nearUtils.getSign(req.account_id + timestamp + args.contract_address + args.role_id + args.token_id + args.end_time);
+  }
   ctx.body = new Resp({ data: {
     sign,
     timestamp,

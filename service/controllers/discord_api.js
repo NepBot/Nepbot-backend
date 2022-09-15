@@ -73,6 +73,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
         { name: 'Total_amount', value: req.total_amount },
         { name: 'Amount_per_share', value: req.amount_per_share },
         { name: 'End_time(GMT)', value: req.end_time },
+        { name: 'Hash', value: req.hash },
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_ft')
@@ -123,6 +124,7 @@ const sendNFTAirdropMsg = async (ctx, next) => {
         { name: 'Contract_address', value: req.contract_address },
         { name: 'Token_id', value: req.token_id },
         { name: 'End_time(GMT)', value: req.end_time },
+        { name: 'Hash', value: req.hash },
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_nft')

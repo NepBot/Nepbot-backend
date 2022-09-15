@@ -27,6 +27,9 @@ exports.formatNFTEmbedMsg = async (interaction) => {
     else if (field.name == 'End_time(GMT)') {
       result.end_time = field.value;
     }
+    else if (field.name == 'Hash') {
+      result.hash = field.value;
+    }
   }
   return result;
 };
@@ -50,6 +53,9 @@ exports.formatFTEmbedMsg = async (interaction) => {
     }
     else if (field.name == 'End_time(GMT)') {
       result.end_time = field.value;
+    }
+    else if (field.name == 'Hash') {
+      result.hash = field.value;
     }
   }
   return result;
