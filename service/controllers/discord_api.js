@@ -65,7 +65,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
   try {
     const guild = await discordUtils.getGuild(req.guild_id);
     const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
-    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
+    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name.split('@').at(-1));
     const content = new MessageEmbed()
       .addFields(
         { name: 'Receiver_role', value: '@' + roleName },
@@ -117,7 +117,7 @@ const sendNFTAirdropMsg = async (ctx, next) => {
   try {
     const guild = await discordUtils.getGuild(req.guild_id);
     const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
-    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name);
+    const roleName = await guild.roles.fetch(req.role_id).then(e => e.name.split('@').at(-1));
     const content = new MessageEmbed()
       .addFields(
         { name: 'Receiver_role', value: '@' + roleName },

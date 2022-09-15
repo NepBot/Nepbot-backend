@@ -29,7 +29,7 @@ const execute = async interaction => {
 
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
 
-  if (!await discordUtils.isMemberIncludeRole(interaction.guildId, userId, embedMsg.role_id)) {
+  if (embedMsg.role_name != '@everyone' && !await discordUtils.isMemberIncludeRole(interaction.guildId, userId, embedMsg.role_id)) {
     return interaction.reply({
       content:'\n',
       embeds:[new MessageEmbed()
