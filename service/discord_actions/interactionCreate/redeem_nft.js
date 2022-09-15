@@ -5,15 +5,13 @@ const airdropUtils = require('../../../pkg/utils/airdrop_utils');
 const userInfos = require('../../../pkg/models/object/user_infos');
 const logger = require('../../../pkg/utils/logger');
 
-const button = new MessageButton()
-  .setLabel('Redeem NFT')
-  .setStyle('LINK');
-
-const action = new MessageActionRow()
-  .addComponents(button);
-
-
 const execute = async interaction => {
+  const button = new MessageButton()
+    .setLabel('Redeem NFT')
+    .setStyle('LINK');
+
+  const action = new MessageActionRow()
+    .addComponents(button);
   const { ownerId } = interaction.guild;
   const userId = interaction.user.id;
   if (userId != ownerId) {
