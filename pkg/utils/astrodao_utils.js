@@ -43,7 +43,7 @@ exports.isMemberHaveRole = async (daoId, accountId, roleInDao) => {
   }
   return false;
 };
-// this.isMemberHaveRole('jacktest.sputnikv2.testnet', 'jacktest3.testnet', 'community').then(console.log);
+// this.isMemberHaveRole('goodguy.sputnikv2.testnet', '0xjacktest1.testnet', 'council').then(console.log);
 
 /**
  *

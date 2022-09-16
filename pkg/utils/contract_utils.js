@@ -20,6 +20,7 @@ exports.getRules = async (guildId) => {
   // return await queryRule({guild_id: guildId});
   return await account.viewFunction(config.rule_contract, 'get_guild', { guild_id: guildId });
 };
+//this.getRules('923197936068861953').then(console.log);
 
 exports.getRulesByField = async (key, value) => {
   const account = await this.contract();
