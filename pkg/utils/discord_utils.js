@@ -106,7 +106,7 @@ exports.getMembersInRole = async (guildId, roleId) => {
   return role.members;
 };
 
-//this.getMembersInRole('966966468774350948', '1004439142899396638').then(console.log);
+//this.getMembersInRole('966966468774350948', '1021984493285933126').then(console.log);
 
 exports.getChannel = async (guildId, channelId) => {
   const guild = await this.getGuild(guildId);
