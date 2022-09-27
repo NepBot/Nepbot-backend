@@ -25,4 +25,5 @@ require('./service/twitter_app');
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
+task.guildDeleteTask();
 // schedule need to be run here

@@ -11,6 +11,8 @@ const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
+const guildDelete = require('../service/events/guildDelete');
+const guildDeletes = require('../pkg/models/object/guild_deletes');
 
 
 const txMap = [];
@@ -104,5 +106,20 @@ module.exports.scheduleTask = function(fromBlockHeight = 0) {
       resolveNewBlock();
       twitterTask.refreshToken();
     });
+  }
+};
+
+/**
+ * when start the nepbot, this function will get data from guild_deletes, and then create schedule jobs for each guild in database.
+ */
+exports.guildDeleteTask = async function() {
+  const listGDs = await guildDeletes.list();
+  if (listGDs) {
+    for (const gd of listGDs) {
+      const job = schedule.scheduleJob(gd.guild_id, gd.expired_at, function() {
+        guildDelete.deleteData(gd.guild_id);
+      });
+      logger.info(`create new guild deletes schedule job, name: ${job.name} run at ${gd.expired_at}`);
+    }
   }
 };
