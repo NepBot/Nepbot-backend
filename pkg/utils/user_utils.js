@@ -38,6 +38,7 @@ exports.verifyUserSign = async (args, sign) => {
   }, sign, keyPair.publicKey.toString().replace('ed25519:', ''));
   return ret;
 };
+//this.verifyUserId({ user_id: '912438768043196456', guild_id: '966966468774350948', contract_address: 'jacktest.sputnikv2.testnet' }, '5CcghkEQAaYHmjZwYTFyKgfgwNNJNAde7CwodnLWJPLQeWULtdN5GkWJ98xPiK1Hb2BKkndiEWn8gJDCrSvZj1tA').then(console.log);
 
 exports.setUser = async (args, accountId) => {
   if (!accountId) {
@@ -212,13 +213,20 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     }
   }
   else if (rule.key_field[0] == 'astrodao_id') {
-    if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+    if (await astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
       logger.debug(`satisfy the {astrodao_id} rule walletId: ${walletId}`);
       return true;
     }
-    if (astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
+    else {
       logger.debug(`unsatisfying the {astrodao_id} rule walletId: ${walletId}`);
       return false;
     }
   }
 };
+
+// this.isMemberSatisfyRule('0xjacktest1.testnet', {
+//   guild_id: '923197936068861953',
+//   role_id: '1019929554745315369',
+//   fields: { astrodao_role: 'yesgood' },
+//   key_field: [ 'astrodao_id', 'goodguy.sputnikv2.testnet' ],
+// }).then(console.log);

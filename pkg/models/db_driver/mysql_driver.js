@@ -14,6 +14,10 @@ const operatorsAliases = {
   $values: Op.values,
   $col: Op.col,
   $nin: Op.notIn,
+  $gte: Op.gte,
+  $lte: Op.lte,
+  $gt: Op.gt,
+  $lt: Op.lt,
 };
 
 const mysql = new Sequelize(`${config.mysql_url}`, {
@@ -22,10 +26,7 @@ const mysql = new Sequelize(`${config.mysql_url}`, {
 });
 
 try {
-  (async () => {
-    await mysql.authenticate();
-    logger.info('Connection with mysql has been established successfully.');
-  })();
+  mysql.authenticate().then(() => logger.info('Connection with mysql has been established successfully.'));
 }
 catch (error) {
   logger.error('Unable to connect to mysql:', error);

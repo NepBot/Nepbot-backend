@@ -28,6 +28,18 @@ const execute = async interaction => {
     logger.info(`${interaction.user.tag} in #${interaction.channel.name} triggered an button interaction with ${buttonInfo[0]}.${ buttonInfo[1] }`);
     return;
   }
+  else if (interaction.isSelectMenu()) {
+    /**
+     * same concept with button
+     */
+    const selectMenuInfo = interaction.customId.split('.');
+    if (selectMenuInfo[0] === 'action') {
+      const actionFile = require(`${ actions }/${ selectMenuInfo[1] }.js`);
+      actionFile.execute(interaction);
+    }
+    logger.info(`${interaction.user.tag} in #${interaction.channel.name} triggered an select menu interaction with ${selectMenuInfo[0]}.${ selectMenuInfo[1] }`);
+    return;
+  }
   logger.info(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
 };
 

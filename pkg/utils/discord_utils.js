@@ -4,7 +4,6 @@ const { REST } = require('@discordjs/rest');
 const config = require('./config');
 const { ThreadChannel } = require('discord.js');
 const replies = {};
-
 const rest = new REST({ version: '9' }).setToken(config.bot_token);
 
 exports.getMember = async (guildId, userId) => {
@@ -94,17 +93,22 @@ exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
   return await member._roles.includes(roleId);
 };
 
-//this.isMemberIncludeRole('923197936068861953', '446580575353044993', '1004475262097952848').then(console.log);
+// this.isMemberIncludeRole('966966468774350948', '912438768043196456', '1004439142899396638').then(console.log);
 
 /**
  * 
  * @param {string} guildId;
  * @param {string} roleId;
- * @returns a list of user_id
+ * @returns a map of GuildMember
  */
 exports.getMembersInRole = async (guildId, roleId) => {
   const role = await this.getRoles(guildId, roleId);
   return role.members;
 };
 
-//this.getMembersInRole('966966468774350948', '1004439142899396638').then(console.log);
+//this.getMembersInRole('966966468774350948', '1021984493285933126').then(console.log);
+
+exports.getChannel = async (guildId, channelId) => {
+  const guild = await this.getGuild(guildId);
+  return guild.channels.fetch(channelId);
+};

@@ -63,10 +63,9 @@ const disconnectAccount = async (ctx, next) => {
     return;
   }
 
-  await userInfos.updateUser({
+  await userInfos.deleteUser({
     user_id: args.user_id,
     guild_id: args.guild_id,
-    near_wallet_id: null,
   });
 
   // remove all roles for user

@@ -20,6 +20,7 @@ exports.getRules = async (guildId) => {
   // return await queryRule({guild_id: guildId});
   return await account.viewFunction(config.rule_contract, 'get_guild', { guild_id: guildId });
 };
+//this.getRules('923197936068861953').then(console.log);
 
 exports.getRulesByField = async (key, value) => {
   const account = await this.contract();
@@ -319,12 +320,7 @@ exports.getCollectionInfo = async (collectionId) => {
   return await account.viewFunction(config.nft_contract, 'get_collection', { collection_id: collectionId });
 };
 
-/**
- * get the policy from astrodao
- * @param contractId
- * @returns return the policy
- */
-exports.getAstrodaoPolicy = async (contractId) => {
+exports.getSnapshot = async (hash) => {
   const account = await this.contract();
-  return await account.viewFunction(contractId, 'get_policy', {});
+  return await account.viewFunction(config.snapshot_contract, 'get_snapshot', { hash: hash });
 };
