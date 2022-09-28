@@ -1,6 +1,7 @@
 const twitterUsers = require('../../pkg/models/object/twitter_users');
 const twitterClient = require('../../service/twitter_app');
 const twitterUtils = require('../../pkg/utils/twitter_utils');
+const userInfos = require('../../pkg/models/object/user_infos');
 const logger = require('../../pkg/utils/logger');
 exports.refreshToken = async () => {
   const currentlyTime = new Date().toISOString();
@@ -9,6 +10,10 @@ exports.refreshToken = async () => {
   });
   for (const twitterUser of listTwitterUsers) {
     try {
+      if (!await userInfos.getUser({ user_id: twitterUser.user_id })) {
+        await twitterUsers.delete({ user_id: twitterUser.user_id });
+        continue;
+      }
       const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
       const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await twitterUtils.getExpiredTime(7200) };
       const condition = { user_id: twitterUser.user_id };
