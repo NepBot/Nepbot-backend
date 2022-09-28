@@ -16,13 +16,14 @@ app.listen(config.port, () => {
   logger.info(`app listening at http://127.0.0.1:${config.port}/api`);
 });
 
-// Run discord bot
+// // Run discord bot
 require('./service/discord_bot');
 
-// Run twitter app
+// // Run twitter app
 require('./service/twitter_app');
 
 // Run schedule task
 const task = require('./service/schedule_task');
 task.scheduleTask();
+task.guildDeleteTask();
 // schedule need to be run here
