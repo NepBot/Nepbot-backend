@@ -12,7 +12,7 @@ const { Routes } = require('discord-api-types/v9');
 const fs = require('node:fs');
 // Require the necessary discord.js classes
 const { Client, Intents, Collection } = require('discord.js');
-const intents = [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS];
+const intents = [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES];
 // Create a new client instance
 const client = new Client({ intents: intents });
 
