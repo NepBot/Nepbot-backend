@@ -63,24 +63,30 @@ const disconnectAccount = async (ctx, next) => {
     return;
   }
 
-  await userInfos.deleteUser({
+  await userInfos.updateUser({
     user_id: args.user_id,
     guild_id: args.guild_id,
-  });
+    near_wallet_id: null
+  })
 
-  // remove all roles for user
-  const rules = await contractUtils.getRules(args.guild_id);
-  const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
-  const member = await discordUtils.getMember(args.guild_id, args.user_id);
-  for (const role of roleList) {
-    try {
-      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
-    }
-    catch (e) {
-      logger.debug(e);
-      continue;
-    }
-  }
+  // await userInfos.deleteUser({
+  //   user_id: args.user_id,
+  //   guild_id: args.guild_id,
+  // });
+
+  // // remove all roles for user
+  // const rules = await contractUtils.getRules(args.guild_id);
+  // const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
+  // const member = await discordUtils.getMember(args.guild_id, args.user_id);
+  // for (const role of roleList) {
+  //   try {
+  //     await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in disconnectAccount`)).catch(e => logger.error(e));
+  //   }
+  //   catch (e) {
+  //     logger.debug(e);
+  //     continue;
+  //   }
+  // }
   ctx.body = new Resp({});
 };
 
