@@ -4,6 +4,7 @@ const oauthCache = require('../../pkg/models/object/oauth_cache');
 const config = require('../../pkg/utils/config');
 const twitterUsers = require('../../pkg/models/object/twitter_users');
 const twitterRules = require('../../pkg/models/object/twitter_rules');
+const timeUtils = require('../../pkg/utils/time_utils');
 const discordUtils = require('./discord_utils');
 const logger = require('./logger');
 
@@ -32,13 +33,6 @@ exports.generateOAuthLink = async (userId) => {
 };
 // this.generateOAuthLink('456', '789').then(console.log);
 
-exports.getExpiredTime = async (second) => {
-  const expiredAt = Date.now() + second * 1000;
-  return new Date(expiredAt).toISOString();
-};
-
-// this.getExpiredTime(7200).then(console.log);
-
 exports.isTimeExpired = async (time) => {
   const date = new Date(time).getTime();
   const currDate = new Date().getTime();
@@ -55,7 +49,7 @@ exports.getClient = async (userId) => {
   const twitterUser = await twitterUsers.get({ user_id: userId });
   if (await this.isTimeExpired(twitterUser.expired_at)) {
     const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
-    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7200) };
+    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await timeUtils.getExpiredTimeBySecond(7200) };
     const condition = { user_id: userId };
     await twitterUsers.update(params, condition);
     return refreshedClient;
