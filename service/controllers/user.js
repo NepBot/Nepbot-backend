@@ -6,7 +6,7 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const contractUtils = require('../../pkg/utils/contract_utils');
 const timeUtils = require('../../pkg/utils/time_utils');
-const userDisconnect = require('../../pkg/models/object/user_disconnect');
+const userDisconnects = require('../../pkg/models/object/user_disconnects');
 const schedule = require('node-schedule');
 const { MessageEmbed } = require('discord.js');
 
@@ -71,12 +71,18 @@ const disconnectAccount = async (ctx, next) => {
    */
   try {
     const expiredAt = await timeUtils.getExpiredTimeByDay(EXPIRED_DAY);
-    await userDisconnect.add({
+    await userDisconnects.add({
       guild_id: args.guild_id,
       user_id: args.user_id,
       expired_at: expiredAt,
     });
-    const job = schedule.scheduleJob(args.user_id + args.guild_id, expiredAt, function() {
+    await userInfos.updateUser({
+      guild_id: args.guild_id,
+      user_id: args.user_id,
+      near_wallet_id: null,
+    });
+    const jobName = args.user_id + '-' + args.guild_id;
+    const job = schedule.scheduleJob(jobName, expiredAt, function() {
       userUtils.deleteDataAndRole(args.user_id, args.guild_id);
     });
     logger.info(`create new user disconnect schedule job, name: ${job.name} run at ${expiredAt}`);

@@ -5,7 +5,7 @@ const parasUtils = require('./paras_api');
 const config = require('./config');
 const userInfos = require('../models/object/user_infos');
 const userFields = require('../models/object/user_fields');
-const userDisconnect = require('../models/object/user_disconnect');
+const userDisconnects = require('../models/object/user_disconnects');
 const astrodaoUtils = require('./astrodao_utils');
 const schedule = require('node-schedule');
 const BN = require('bn.js');
@@ -76,13 +76,14 @@ exports.setUser = async (args, accountId) => {
     guild_id: args.guild_id,
   }).catch(e => logger.error(e));
 
-  // check the data in user_disconnect, if exists, delete the data and cancel schedule job.
-  if (await userDisconnect.get({ user_id: args.user_id, guild_id: args.guild_id })) {
-    await userDisconnect.delete({
+  // check the data in user_disconnect, if exists, delete the data in user_disconnects and cancel schedule job.
+  if (await userDisconnects.get({ user_id: args.user_id, guild_id: args.guild_id })) {
+    await userDisconnects.delete({
       guild_id: args.guild_id,
       user_id: args.user_id,
     });
-    const job = schedule.scheduledJobs[args.user_id + args.guild_id];
+    const jobName = args.user_id + '-' + args.guild_id;
+    const job = schedule.scheduledJobs[jobName];
     job.cancel();
     logger.info(`the user: ${args.user_id} reconnect wallet: ${accountId}, so cancel the job: ${job.name}`);
   }

@@ -3,7 +3,7 @@ const config = require('../pkg/utils/config');
 const schedule = require('node-schedule');
 const guildDelete = require('../service/events/guildDelete');
 const guildDeletes = require('../pkg/models/object/guild_deletes');
-const userDisconnect = require('../pkg/models/object/user_disconnect');
+const userDisconnects = require('../pkg/models/object/user_disconnects');
 const userUtils = require('../pkg/utils/user_utils');
 // Task
 const balanceTask = require('./schedule_tasks/balance_task');
@@ -130,10 +130,11 @@ exports.guildDeleteTask = async function() {
  * when start the nepbot, this function will get data from user_disconnect, and then create schedule jobs for each user in database.
  */
 exports.userDisconnectTask = async function() {
-  const listUDs = await userDisconnect.list();
+  const listUDs = await userDisconnects.list();
   if (listUDs) {
     for (const ud of listUDs) {
-      const job = schedule.scheduleJob(ud.user_id + ud.guild_id, ud.expired_at, function() {
+      const jobName = ud.user_id + '-' + ud.guild_id;
+      const job = schedule.scheduleJob(jobName, ud.expired_at, function() {
         userUtils.deleteDataAndRole(ud.user_id, ud.guild_id);
       });
       logger.info(`create new user disconnect schedule job, name: ${job.name} run at ${ud.expired_at}`);

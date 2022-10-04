@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const mysql = require('../db_driver/mysql_driver');
 
-const UserDisconnect = mysql.define('user_disconnect', {
+const UserDisconnects = mysql.define('user_disconnects', {
   guild_id: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -17,23 +17,23 @@ const UserDisconnect = mysql.define('user_disconnect', {
 });
 
 exports.add = async (data) => {
-  return await UserDisconnect.findOrCreate({
+  return await UserDisconnects.findOrCreate({
     where: data,
   });
 };
 
 exports.get = async (data) => {
-  return await UserDisconnect.findOne({
+  return await UserDisconnects.findOne({
     where: data,
   });
 };
 
 exports.list = async () => {
-  return await UserDisconnect.findAll();
+  return await UserDisconnects.findAll();
 };
 
 exports.delete = async (data) => {
-  return await UserDisconnect.destroy({
+  return await UserDisconnects.destroy({
     where: data,
   });
 };
