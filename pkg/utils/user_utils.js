@@ -246,6 +246,12 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
 // }).then(console.log);
 
 exports.deleteDataAndRole = async (userId, guildId) => {
+
+  await userDisconnects.delete({
+    user_id: userId,
+    guild_id: guildId,
+  });
+
   await userInfos.deleteUser({
     user_id: userId,
     guild_id: guildId,
