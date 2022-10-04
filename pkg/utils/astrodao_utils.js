@@ -138,10 +138,16 @@ exports.checkPermissions = async (policy, afterProposal, accountId) => {
       if (permissions.findIndex(permission => permission == afterProposal.proposal_type) > -1) {
         return true;
       }
+      else if (role.permissions.includes('*:VoteApprove') || role.permissions.includes('*:VoteRemove')) {
+        return true;
+      }
       continue;
     }
     else if (role.kind.Group.some(item => item == accountId)) {
       if (permissions.findIndex(permission => permission == afterProposal.proposal_type) > -1) {
+        return true;
+      }
+      else if (role.permissions.includes('*:VoteApprove') || role.permissions.includes('*:VoteRemove')) {
         return true;
       }
       continue;
@@ -165,6 +171,7 @@ async function formatPermission(permissions) {
   }
   return Array.from(permissionsSet);
 }
+//formatPermission(Array.from(['*:VoteReject', '*:VoteRemove', '*:VoteApprove', '*:AddProposal', '*:Finalize'])).then(console.log);
 
 /**
  *
