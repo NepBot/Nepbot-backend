@@ -66,6 +66,7 @@ const disconnectAccount = async (ctx, next) => {
     });
     return;
   }
+
   /**
    * when user disconnect, the data in database will save @EXPIRED_DAY days, the following code will create a schedule job to delete data after that days
    */
