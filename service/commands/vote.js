@@ -55,15 +55,13 @@ const execute = async interaction => {
   const proposal = await astrodao_utils.getProposal(address, proposalId);
   const isAlreadyVote = await astrodao_utils.isAlreadyVote(proposal, userInfo.near_wallet_id);
   if (isAlreadyVote) {
-    approve.setDisabled();
-    against.setDisabled();
+    logger.info(`already voted. contract_address: ${address}, proposal_id: ${proposalId}, user_wallet: ${userInfo.near_wallet_id}`);
     content.setTitle('You already voted this proposal\n');
     content.setDescription(JSON.stringify(proposal));
     await interaction.reply({
       content:'\n',
       ephemeral: true,
       embeds: [content],
-      components: [action],
     });
     return;
   }
@@ -77,15 +75,13 @@ const execute = async interaction => {
   const checkPermission = await astrodao_utils.checkPermissions(policy, afterProposal, userInfo.near_wallet_id);
   logger.debug(`checkPermission: ${checkPermission}`);
   if (!checkPermission) {
-    approve.setDisabled();
-    against.setDisabled();
+    logger.info(`don't have permission. contract_address: ${address}, proposal_id: ${proposalId}, user_wallet: ${userInfo.near_wallet_id}`);
     content.setTitle('You don\'t have permission to vote this proposal\n');
     content.setDescription(afterProposal.description);
     await interaction.reply({
       content:'\n',
       ephemeral: true,
       embeds: [content],
-      components: [action],
     });
     return;
   }

@@ -1,6 +1,7 @@
 const logger = require('../../pkg/utils/logger');
 const guildDeletes = require('../../pkg/models/object/guild_deletes');
 const userInfos = require('../../pkg/models/object/user_infos');
+const timeUtils = require('../../pkg/utils/time_utils');
 const schedule = require('node-schedule');
 
 const EXPIRED_DAY = 15; // days
@@ -10,7 +11,7 @@ const execute = async guild => {
    * when bot got kick or ban, the data in database will save @EXPIRED_DAY days, the following code will create a schedule job to delete data after that days
    */
   try {
-    const expiredAt = getExpiredTime(EXPIRED_DAY);
+    const expiredAt = await timeUtils.getExpiredTimeByDay(EXPIRED_DAY);
     await guildDeletes.add({
       guild_id: guild.id,
       expired_at: expiredAt,
@@ -39,9 +40,3 @@ module.exports = {
   execute,
   deleteData,
 };
-
-function getExpiredTime(numOfDays) {
-  const date = new Date();
-  date.setDate(date.getDate() + numOfDays);
-  return date;
-}
