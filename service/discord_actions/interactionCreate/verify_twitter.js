@@ -28,7 +28,7 @@ const execute = async interaction => {
         ephemeral:true });
 
       const embed = new MessageEmbed();
-      const results = await twitterUtils.verifyTwitterRule(userClient, interaction);
+      const results = await twitterUtils.verifyRuleFromInteraction(userClient, interaction);
       results.forEach(r => embed.addFields(r));
       await interaction.followUp({
         content: '\n',

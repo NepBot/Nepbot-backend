@@ -40,6 +40,7 @@ const callback = async (ctx, next) => {
       const ruleMsg = await twitterRulesMsg.get({ twitter_state: state });
       const dcMsg = await discordUtils.getMessage(ruleMsg.guild_id, ruleMsg.channel_id, ruleMsg.message_id);
       const result = await twitterUtils.verifyTwitterRuleFromDB(loggedClient, ruleMsg, dcMsg);
+      await twitterRulesMsg.delete({ twitter_state: state });
       return ctx.body = new Resp({ data: result });
     })
     .catch(() => ctx.body = new Resp({ code: 500 }));

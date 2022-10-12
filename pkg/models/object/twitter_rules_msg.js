@@ -18,7 +18,7 @@ const TwitterRulesMsg = mysql.define('twitter_rules_msg', {
     type:DataTypes.STRING,
     allowNull: false,
   },
-  twitter_sate:{
+  twitter_state:{
     type:DataTypes.STRING,
     allowNull: true,
   },
