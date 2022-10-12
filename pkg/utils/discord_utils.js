@@ -112,3 +112,8 @@ exports.getChannel = async (guildId, channelId) => {
   const guild = await this.getGuild(guildId);
   return guild.channels.fetch(channelId);
 };
+
+exports.getMessage = async (guildId, channelId, messageId) => {
+  const channel = await this.getChannel(guildId, channelId);
+  return channel.messages.fetch(messageId);
+};
