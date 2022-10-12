@@ -4,6 +4,7 @@ const twitterUtils = require('../../../pkg/utils/twitter_utils');
 const twitterUsers = require('../../../pkg/models/object/twitter_users');
 const logger = require('../../../pkg/utils/logger');
 
+
 const button = new MessageButton()
   .setLabel('Connect Twitter')
   .setStyle('LINK');
@@ -36,7 +37,7 @@ const execute = async interaction => {
       });
       return;
     }
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction));
     // replay message to discord user
     await interaction.reply({ content: '\n',
       ephemeral:true,
@@ -49,16 +50,14 @@ const execute = async interaction => {
       Once finished, please use the above button 'Verify Twitter' again to verify if you meet the requirements for the role.`)],
       components: [action],
     });
-    discordUtils.setInteraction(interaction);
   }
   catch (e) {
     logger.error(e);
     await twitterUsers.delete({ user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction));
     // replay message to discord user
     await interaction.reply({ content: '\n', ephemeral:true, embeds:[new MessageEmbed()
       .setDescription('Because of the Twitter API problem, Nepbot can\'t get the Twitter client.\n Please use the button blow to reverify your twitter.')], components: [action] });
-    discordUtils.setInteraction(interaction);
   }
 };
 
