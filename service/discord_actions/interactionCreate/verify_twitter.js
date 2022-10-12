@@ -53,7 +53,7 @@ const execute = async interaction => {
   }
   catch (e) {
     logger.error(e);
-    await twitterUsers.delete({ user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
+    //await twitterUsers.delete({ user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
     button.setURL(await twitterUtils.generateOAuthLink(interaction));
     // replay message to discord user
     await interaction.reply({ content: '\n', ephemeral:true, embeds:[new MessageEmbed()

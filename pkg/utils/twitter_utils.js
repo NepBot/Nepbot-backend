@@ -223,15 +223,15 @@ exports.listTweetLink = async (tweetLink) => {
 exports.verifyRuleFromInteraction = async (userClient, interaction) => {
   const userId = interaction.user.id;
   const message = interaction.message;
-  return await verifyRule(message, userId, userClient);
+  return await this.verifyRule(message, userId, userClient);
 };
 
 exports.verifyRuleFromDB = async (userClient, twitterRuleMsg, discordMsg) => {
   const userId = twitterRuleMsg.user_id;
-  return await verifyRule(discordMsg, userId, userClient);
+  return await this.verifyRule(discordMsg, userId, userClient);
 };
 
-async function verifyRule(message, userId, userClient) {
+exports.verifyRule = async (message, userId, userClient) => {
   const guildId = message.guildId;
   const twitterUser = await twitterUsers.get({ user_id: userId });
   const twitterId = twitterUser.twitter_id;
@@ -280,7 +280,7 @@ async function verifyRule(message, userId, userClient) {
     }
     // Like_Tweet
     else if (attachMsg.name == 'Like_Tweet') {
-      const likeTweetIds = await this.listTweetLink(attachMsg.value);
+      const likeTweetIds = await module.exports.listTweetLink(attachMsg.value);
       for (const tweetId of likeTweetIds) {
         if (!await this.isUserLikedTweet(userClient, tweetId, twitterId)) {
           const resultMsg = {};
@@ -307,4 +307,4 @@ async function verifyRule(message, userId, userClient) {
   else {
     return resultMsgs;
   }
-}
+};
