@@ -47,7 +47,7 @@ const execute = async interaction => {
         .setDescription(`🔴 Twitter Not Connected\n
       You haven't connected to your twitter account.\n
       Click the button below to connect. You'll be directed to twitter to authorize Nepbot.\n
-      Once finished, please use the above button 'Verify Twitter' again to verify if you meet the requirements for the role.`)],
+      Once finished, you can see 'Add role success' on our website, then just ignore this message.`)],
       components: [action],
     });
   }

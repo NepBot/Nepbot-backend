@@ -163,13 +163,6 @@ const sendSnapshotMsg = async (ctx, next) => {
         { name: 'Contract_address', value: snapshotInfo.contract_address },
         { name: 'Block_height', value: snapshotInfo.token_id },
       );
-    // const claim = new MessageButton()
-    //   .setCustomId('action.delete_snapshot')
-    //   .setLabel('Claim NFT')
-    //   .setStyle('PRIMARY');
-    // const claimComponent = new MessageActionRow()
-    //   .addComponents(claim);
-    //await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')], components: [claimComponent] });
     await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')] });
 
     ctx.body = new Resp({});
@@ -187,5 +180,5 @@ module.exports = {
   'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount,
   'POST /api/airdrop/sendFTMsg': sendFTAirdropMsg,
   'POST /api/airdrop/sendNFTMsg': sendNFTAirdropMsg,
-  'POST /api/snapshot/senMsg': sendSnapshotMsg,
+  'POST /api/snapshot/sendMsg': sendSnapshotMsg,
 };
