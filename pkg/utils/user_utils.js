@@ -5,7 +5,9 @@ const parasUtils = require('./paras_api');
 const config = require('./config');
 const userInfos = require('../models/object/user_infos');
 const userFields = require('../models/object/user_fields');
+const userDisconnects = require('../models/object/user_disconnects');
 const astrodaoUtils = require('./astrodao_utils');
+const schedule = require('node-schedule');
 const BN = require('bn.js');
 const { verifySign } = require('./near_utils');
 
@@ -24,7 +26,7 @@ exports.verifyUserId = async (args, sign) => {
 
 exports.verifyUserSign = async (args, sign) => {
   const userInfo = await userInfos.getUser({ user_id: args.user_id, guild_id: args.guild_id });
-  logger.debug(userInfo);
+  logger.debug(userInfo, args, sign);
   if (Date.now() - userInfo.nonce > 300 * 1000) { // 5min limit
     logger.error('the user nonce is great than 5 mintes');
     return false;
@@ -73,6 +75,18 @@ exports.setUser = async (args, accountId) => {
     user_id: args.user_id,
     guild_id: args.guild_id,
   }).catch(e => logger.error(e));
+
+  // check the data in user_disconnect, if exists, delete the data in user_disconnects and cancel schedule job.
+  if (await userDisconnects.get({ user_id: args.user_id, guild_id: args.guild_id })) {
+    await userDisconnects.delete({
+      guild_id: args.guild_id,
+      user_id: args.user_id,
+    });
+    const jobName = args.user_id + '-' + args.guild_id;
+    const job = schedule.scheduledJobs[jobName];
+    job.cancel();
+    logger.info(`the user: ${args.user_id} reconnect wallet: ${accountId}, so cancel the job: ${job.name}`);
+  }
 
   // add role for new user
   const member = await discordUtils.getMember(args.guild_id, args.user_id);
@@ -230,3 +244,30 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
 //   fields: { astrodao_role: 'yesgood' },
 //   key_field: [ 'astrodao_id', 'goodguy.sputnikv2.testnet' ],
 // }).then(console.log);
+
+exports.deleteDataAndRole = async (userId, guildId) => {
+
+  await userDisconnects.delete({
+    user_id: userId,
+    guild_id: guildId,
+  });
+
+  await userInfos.deleteUser({
+    user_id: userId,
+    guild_id: guildId,
+  });
+
+  // remove all roles for user
+  const rules = await contractUtils.getRules(guildId);
+  const roleList = Array.from(new Set(rules.map(({ role_id }) => role_id)));
+  const member = await discordUtils.getMember(guildId, userId);
+  for (const role of roleList) {
+    try {
+      await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in schedule job`)).catch(e => logger.error(e));
+    }
+    catch (e) {
+      logger.debug(e);
+      continue;
+    }
+  }
+};

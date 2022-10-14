@@ -4,40 +4,44 @@ const oauthCache = require('../../pkg/models/object/oauth_cache');
 const config = require('../../pkg/utils/config');
 const twitterUsers = require('../../pkg/models/object/twitter_users');
 const twitterRules = require('../../pkg/models/object/twitter_rules');
+const twitterRulesMsg = require('../../pkg/models/object/twitter_rules_msg');
+const timeUtils = require('../../pkg/utils/time_utils');
 const discordUtils = require('./discord_utils');
 const logger = require('./logger');
 
 
-exports.generateOAuthLink = async (userId) => {
+exports.generateOAuthLink = async (interaction) => {
   const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(config.twitter.callback_url, { scope: ['tweet.read', 'users.read', 'offline.access', 'follows.read', 'like.read'] });
   await oauthCache.add({
     state: state,
     code_verifier: codeVerifier,
   });
   const result = await twitterUsers.get({
-    user_id: userId,
+    user_id: interaction.user.id,
   });
   if (result) {
     await twitterUsers.update({ state: state }, {
-      user_id: userId,
+      user_id: interaction.user.id,
     });
   }
   else {
     await twitterUsers.add({
-      user_id: userId,
+      user_id: interaction.user.id,
       state: state,
     });
   }
+
+  await twitterRulesMsg.add({
+    user_id: interaction.user.id,
+    guild_id: interaction.guildId,
+    channel_id: interaction.channelId,
+    message_id:interaction.message.id,
+    twitter_state: state,
+  });
+
   return url;
 };
 // this.generateOAuthLink('456', '789').then(console.log);
-
-exports.getExpiredTime = async (second) => {
-  const expiredAt = Date.now() + second * 1000;
-  return new Date(expiredAt).toISOString();
-};
-
-// this.getExpiredTime(7200).then(console.log);
 
 exports.isTimeExpired = async (time) => {
   const date = new Date(time).getTime();
@@ -55,7 +59,7 @@ exports.getClient = async (userId) => {
   const twitterUser = await twitterUsers.get({ user_id: userId });
   if (await this.isTimeExpired(twitterUser.expired_at)) {
     const { client: refreshedClient, accessToken, refreshToken: newRefreshToken } = await twitterClient.refreshOAuth2Token(twitterUser.refresh_token);
-    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await this.getExpiredTime(7200) };
+    const params = { access_token: accessToken, refresh_token: newRefreshToken, expired_at: await timeUtils.getExpiredTimeBySecond(7200) };
     const condition = { user_id: userId };
     await twitterUsers.update(params, condition);
     return refreshedClient;
@@ -216,17 +220,28 @@ exports.listTweetLink = async (tweetLink) => {
 };
 // this.listTweetLink('https://twitter.com/beepopula/status/1566726219797737473?s=20&t=OaDUKnttKJcv9-0ajBseCQ').then(console.log);
 
-exports.verifyTwitterRule = async (userClient, interaction) => {
-  const guildId = interaction.guildId;
+exports.verifyRuleFromInteraction = async (userClient, interaction) => {
   const userId = interaction.user.id;
-  const attachedMsgs = interaction.message.embeds[0].fields;
+  const message = interaction.message;
+  return await this.verifyRule(message, userId, userClient);
+};
+
+exports.verifyRuleFromDB = async (userClient, twitterRuleMsg, discordMsg) => {
+  const userId = twitterRuleMsg.user_id;
+  return await this.verifyRule(discordMsg, userId, userClient);
+};
+
+exports.verifyRule = async (message, userId, userClient) => {
+  const guildId = message.guildId;
   const twitterUser = await twitterUsers.get({ user_id: userId });
   const twitterId = twitterUser.twitter_id;
+  const attachedMsgs = message.embeds[0].fields;
+  const guild = await discordUtils.getGuild(guildId);
   let roleId, roleName;
   const resultMsgs = [];
   for (const attachMsg of attachedMsgs) {
     if (attachMsg.name == 'Role') {
-      roleId = await interaction.guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value.split('@').at(-1)).id);
+      roleId = await guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value.split('@').at(-1)).id);
       roleName = attachMsg.value;
       if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
         const resultMsg = {};
@@ -254,7 +269,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
     else if (attachMsg.name == 'Rt_Tweet') {
       const rtTweetIds = await this.listTweetLink(attachMsg.value);
       for (const rtTweetId of rtTweetIds) {
-        if (!await this.isUserRetweeted(userClient, rtTweetId, twitterUser.twitter_id)) {
+        if (!await this.isUserRetweeted(userClient, rtTweetId, twitterId)) {
           const resultMsg = {};
           resultMsg.name = 'rt_tweet';
           resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}`;
@@ -265,7 +280,7 @@ exports.verifyTwitterRule = async (userClient, interaction) => {
     }
     // Like_Tweet
     else if (attachMsg.name == 'Like_Tweet') {
-      const likeTweetIds = await this.listTweetLink(attachMsg.value);
+      const likeTweetIds = await module.exports.listTweetLink(attachMsg.value);
       for (const tweetId of likeTweetIds) {
         if (!await this.isUserLikedTweet(userClient, tweetId, twitterId)) {
           const resultMsg = {};

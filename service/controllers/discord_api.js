@@ -2,6 +2,7 @@ const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
+const snapshotUtils = require('../../pkg/utils/snapshot_utils');
 const logger = require('../../pkg/utils/logger');
 const config = require('../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
@@ -150,6 +151,28 @@ const sendNFTAirdropMsg = async (ctx, next) => {
   }
 };
 
+const sendSnapshotMsg = async (ctx, next) => {
+  const req = ctx.request.body;
+  logger.info(`receive request from /api/snapshot/sendmsg ${JSON.stringify(req)}`);
+  try {
+    const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
+    const snapshotInfo = await snapshotUtils.getSnapshot(req.hash);
+    const content = new MessageEmbed()
+      .addFields(
+        { name: 'Hash', value: snapshotInfo.hash },
+        { name: 'Contract_address', value: snapshotInfo.contract_address },
+        { name: 'Block_height', value: snapshotInfo.block_height.toString() },
+      );
+    await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')] });
+
+    ctx.body = new Resp({});
+  }
+  catch (e) {
+    logger.error(e);
+    ctx.body = new Resp({ code: 500, message: 'error send snapshot msg', success: false });
+  }
+};
+
 module.exports = {
   'GET /api/getRole/:guildId': getRole,
   'GET /api/getServer/:guildId': getServer,
@@ -157,4 +180,5 @@ module.exports = {
   'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount,
   'POST /api/airdrop/sendFTMsg': sendFTAirdropMsg,
   'POST /api/airdrop/sendNFTMsg': sendNFTAirdropMsg,
+  'POST /api/snapshot/sendMsg': sendSnapshotMsg,
 };

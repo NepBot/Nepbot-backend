@@ -5,6 +5,9 @@ const config = require('../../pkg/utils/config');
 const oauthCache = require('../../pkg/models/object/oauth_cache');
 const twitterUsers = require('../../pkg/models/object/twitter_users');
 const twitterUtils = require('../../pkg/utils/twitter_utils');
+const timeUtils = require('../../pkg/utils/time_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
+const twitterRulesMsg = require('../../pkg/models/object/twitter_rules_msg');
 
 
 const callback = async (ctx, next) => {
@@ -29,12 +32,16 @@ const callback = async (ctx, next) => {
     // Store {accessToken} somewhere, it will be valid until {expiresIn} is hit.
     // If you want to refresh your token later, store {refreshToken} (it is present if 'offline.access' has been given as scope)
       const { data: userObject } = await loggedClient.v2.me();
-      const expiredAt = await twitterUtils.getExpiredTime(expiresIn);
+      const expiredAt = await timeUtils.getExpiredTimeBySecond(expiresIn);
       const params = { access_token: accessToken, refresh_token: refreshToken, expired_at: expiredAt, twitter_id: userObject.id, twitter_username: userObject.username };
       const condition = { state: state };
       await twitterUsers.update(params, condition);
       await oauthCache.delete({ state: state });
-      return ctx.body = new Resp({});
+      const ruleMsg = await twitterRulesMsg.get({ twitter_state: state });
+      const dcMsg = await discordUtils.getMessage(ruleMsg.guild_id, ruleMsg.channel_id, ruleMsg.message_id);
+      const result = await twitterUtils.verifyRuleFromDB(loggedClient, ruleMsg, dcMsg);
+      await twitterRulesMsg.delete({ twitter_state: state });
+      return ctx.body = new Resp({ data: result });
     })
     .catch(() => ctx.body = new Resp({ code: 500 }));
 };
@@ -65,7 +72,7 @@ module.exports = {
 //     // Store {accessToken} somewhere, it will be valid until {expiresIn} is hit.
 //     // If you want to refresh your token later, store {refreshToken} (it is present if 'offline.access' has been given as scope)
 //       const { data: userObject } = await loggedClient.v2.me();
-//       const expiredAt = await twitterUtils.getExpiredTime(expiresIn);
+//       const expiredAt = await timeUtils.getExpiredTimeBySecond(expiresIn);
 //       const params = { access_token: accessToken, refresh_token: refreshToken, expired_at: expiredAt, twitter_id: userObject.id, twitter_username: userObject.username };
 //       const condition = { state: state };
 //       await twitterUsers.update(params, condition);
