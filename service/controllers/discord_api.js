@@ -161,7 +161,7 @@ const sendSnapshotMsg = async (ctx, next) => {
       .addFields(
         { name: 'Hash', value: snapshotInfo.hash },
         { name: 'Contract_address', value: snapshotInfo.contract_address },
-        { name: 'Block_height', value: snapshotInfo.token_id },
+        { name: 'Block_height', value: snapshotInfo.block_height.toString() },
       );
     await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')] });
 
