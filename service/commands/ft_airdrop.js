@@ -17,9 +17,9 @@ const action = new MessageActionRow()
 
 const data = new SlashCommandBuilder()
   .setName('ft_airdrop')
-  .setDescription('Airdrop a specify token.')
+  .setDescription('/ft_airdrop : Airdrop a specific fungible token (NEP-141) on NEAR.')
   .addRoleOption(option => option.setName('receiver_role').setDescription('which role the user can claim').setRequired(true))
-  .addStringOption(option => option.setName('token_id').setDescription('Input the token id').setRequired(true))
+  .addStringOption(option => option.setName('token_contract').setDescription('Input the token contract').setRequired(true))
   .addStringOption(option => option.setName('total_amount').setDescription('Input total amount').setRequired(true))
   .addStringOption(option => option.setName('amount_per_share').setDescription('every person can get').setRequired(true))
   .addIntegerOption(option => option.setName('duration').setDescription('x days').setRequired(true));
@@ -37,17 +37,17 @@ const execute = async interaction => {
 
   const roleId = interaction.options.get('receiver_role').value;
   const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name.split('@').at(-1));
-  const tokenId = interaction.options.get('token_id').value;
+  const tokenContract = interaction.options.get('token_contract').value;
   const totalAmount = interaction.options.get('total_amount').value;
   const amountPerShare = interaction.options.get('amount_per_share').value;
   const duration = interaction.options.get('duration').value;
   const endTime = await airdropUtils.getGMTTime(duration);
 
   const content = new MessageEmbed()
-    .setDescription('Airdrop: Send the token to airdrop contract')
+    .setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')
     .addFields(
       { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Token_id', value: tokenId },
+      { name: 'Token_Contract', value: tokenContract },
       { name: 'Total_amount', value: totalAmount },
       { name: 'Amount_per_share', value: amountPerShare },
       { name: 'End_time(GMT)', value: endTime },
@@ -59,7 +59,7 @@ const execute = async interaction => {
     channel_id: interaction.channelId,
     guild_id: interaction.guildId,
     role_id: roleId,
-    token_id: tokenId,
+    token_contract: tokenContract,
     total_amount: totalAmount,
     amount_per_share: amountPerShare,
     end_time: endTime,
@@ -70,7 +70,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  send.setURL(`${config.wallet_auth_url}/ftairdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&token_id=${tokenId}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
+  send.setURL(`${config.wallet_auth_url}/ftairdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&token_contract=${tokenContract}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
 
   await interaction.reply({
     content:'\n',

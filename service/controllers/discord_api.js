@@ -2,6 +2,7 @@ const Resp = require('../../pkg/models/object/response');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
+const snapshotUtils = require('../../pkg/utils/snapshot_utils');
 const logger = require('../../pkg/utils/logger');
 const config = require('../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
@@ -69,7 +70,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
     const content = new MessageEmbed()
       .addFields(
         { name: 'Receiver_role', value: '@' + roleName },
-        { name: 'Token_id', value: req.token_id },
+        { name: 'Token_Contract', value: req.token_contract },
         { name: 'Total_amount', value: req.total_amount },
         { name: 'Amount_per_share', value: req.amount_per_share },
         { name: 'End_time(GMT)', value: req.end_time },
@@ -77,11 +78,11 @@ const sendFTAirdropMsg = async (ctx, next) => {
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_ft')
-      .setLabel('Claim FT')
+      .setLabel('Claim')
       .setStyle('PRIMARY');
     const component = new MessageActionRow()
       .addComponents(claim);
-    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim FT: Used for user to claim the FT')], components: [component] });
+    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')], components: [component] });
 
     const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
     const redeem = new MessageButton()
@@ -90,7 +91,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
       .setStyle('PRIMARY');
     const redeemComponent = new MessageActionRow()
       .addComponents(redeem);
-    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem FT: Used for user to redeem the FT')], components: [redeemComponent] });
+    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('**NEP141 Airdrop**\nClick the button below to redeem the Airdrop')], components: [redeemComponent] });
     ctx.body = new Resp({});
   }
   catch (e) {
@@ -150,6 +151,28 @@ const sendNFTAirdropMsg = async (ctx, next) => {
   }
 };
 
+const sendSnapshotMsg = async (ctx, next) => {
+  const req = ctx.request.body;
+  logger.info(`receive request from /api/snapshot/sendmsg ${JSON.stringify(req)}`);
+  try {
+    const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
+    const snapshotInfo = await snapshotUtils.getSnapshot(req.hash);
+    const content = new MessageEmbed()
+      .addFields(
+        { name: 'Hash', value: snapshotInfo.hash },
+        { name: 'Contract_address', value: snapshotInfo.contract_address },
+        { name: 'Block_height', value: snapshotInfo.block_height.toString() },
+      );
+    await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')] });
+
+    ctx.body = new Resp({});
+  }
+  catch (e) {
+    logger.error(e);
+    ctx.body = new Resp({ code: 500, message: 'error send snapshot msg', success: false });
+  }
+};
+
 module.exports = {
   'GET /api/getRole/:guildId': getRole,
   'GET /api/getServer/:guildId': getServer,
@@ -157,4 +180,5 @@ module.exports = {
   'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount,
   'POST /api/airdrop/sendFTMsg': sendFTAirdropMsg,
   'POST /api/airdrop/sendNFTMsg': sendNFTAirdropMsg,
+  'POST /api/snapshot/sendMsg': sendSnapshotMsg,
 };

@@ -4,6 +4,7 @@ const twitterUtils = require('../../../pkg/utils/twitter_utils');
 const twitterUsers = require('../../../pkg/models/object/twitter_users');
 const logger = require('../../../pkg/utils/logger');
 
+
 const button = new MessageButton()
   .setLabel('Connect Twitter')
   .setStyle('LINK');
@@ -27,7 +28,7 @@ const execute = async interaction => {
         ephemeral:true });
 
       const embed = new MessageEmbed();
-      const results = await twitterUtils.verifyTwitterRule(userClient, interaction);
+      const results = await twitterUtils.verifyRuleFromInteraction(userClient, interaction);
       results.forEach(r => embed.addFields(r));
       await interaction.followUp({
         content: '\n',
@@ -36,7 +37,7 @@ const execute = async interaction => {
       });
       return;
     }
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction));
     // replay message to discord user
     await interaction.reply({ content: '\n',
       ephemeral:true,
@@ -46,19 +47,17 @@ const execute = async interaction => {
         .setDescription(`🔴 Twitter Not Connected\n
       You haven't connected to your twitter account.\n
       Click the button below to connect. You'll be directed to twitter to authorize Nepbot.\n
-      Once finished, please use the above button 'Verify Twitter' again to verify if you meet the requirements for the role.`)],
+      Once finished, Nepbot will automatically verify if you meet the requirements and assign the role accordingly.`)],
       components: [action],
     });
-    discordUtils.setInteraction(interaction);
   }
   catch (e) {
     logger.error(e);
     await twitterUsers.delete({ user_id: interaction.user.id }).then(logger.info(`delete twitter_user in verify_twitter ${JSON.stringify(twitterUser)}`));
-    button.setURL(await twitterUtils.generateOAuthLink(interaction.user.id));
+    button.setURL(await twitterUtils.generateOAuthLink(interaction));
     // replay message to discord user
     await interaction.reply({ content: '\n', ephemeral:true, embeds:[new MessageEmbed()
       .setDescription('Because of the Twitter API problem, Nepbot can\'t get the Twitter client.\n Please use the button blow to reverify your twitter.')], components: [action] });
-    discordUtils.setInteraction(interaction);
   }
 };
 

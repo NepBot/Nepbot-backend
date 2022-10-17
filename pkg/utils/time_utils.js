@@ -10,3 +10,7 @@ exports.getExpiredTimeBySecond = async (second) => {
   return new Date(expiredAt).toISOString();
 };
 // this.getExpiredTime(7200).then(console.log);
+
+exports.getGMTTime = async () => {
+  return new Date().toISOString();
+};

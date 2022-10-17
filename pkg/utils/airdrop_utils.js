@@ -52,8 +52,8 @@ exports.formatFTEmbedMsg = async (interaction) => {
       }
       result.role_name = field.value;
     }
-    else if (field.name == 'Token_id') {
-      result.token_id = field.value;
+    else if (field.name == 'Token_Contract') {
+      result.token_contract = field.value;
     }
     else if (field.name == 'Total_amount') {
       result.total_amount = field.value;

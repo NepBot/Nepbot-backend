@@ -6,6 +6,8 @@ const oauthCache = require('../../pkg/models/object/oauth_cache');
 const twitterUsers = require('../../pkg/models/object/twitter_users');
 const twitterUtils = require('../../pkg/utils/twitter_utils');
 const timeUtils = require('../../pkg/utils/time_utils');
+const discordUtils = require('../../pkg/utils/discord_utils');
+const twitterRulesMsg = require('../../pkg/models/object/twitter_rules_msg');
 
 
 const callback = async (ctx, next) => {
@@ -35,7 +37,11 @@ const callback = async (ctx, next) => {
       const condition = { state: state };
       await twitterUsers.update(params, condition);
       await oauthCache.delete({ state: state });
-      return ctx.body = new Resp({});
+      const ruleMsg = await twitterRulesMsg.get({ twitter_state: state });
+      const dcMsg = await discordUtils.getMessage(ruleMsg.guild_id, ruleMsg.channel_id, ruleMsg.message_id);
+      const result = await twitterUtils.verifyRuleFromDB(loggedClient, ruleMsg, dcMsg);
+      await twitterRulesMsg.delete({ twitter_state: state });
+      return ctx.body = new Resp({ data: result });
     })
     .catch(() => ctx.body = new Resp({ code: 500 }));
 };

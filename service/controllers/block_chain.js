@@ -210,7 +210,7 @@ const getAirdropFTSign = async (ctx, next) => {
   }
   else {
     nonce = await userUtils.verifyUserId(
-      { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, role_id: args.role_id, token_id: args.token_id, total_amount: args.total_amount, amount_per_share: args.amount_per_share, end_time: args.end_time },
+      { user_id: args.user_id, guild_id: args.guild_id, channel_id: args.channel_id, role_id: args.role_id, token_contract: args.token_contract, total_amount: args.total_amount, amount_per_share: args.amount_per_share, end_time: args.end_time },
       args.sign,
     );
   }
@@ -230,7 +230,7 @@ const getAirdropFTSign = async (ctx, next) => {
     sign = await nearUtils.getSign(args.hash + args.user_id + timestamp);
   }
   else {
-    sign = await nearUtils.getSign(req.account_id + timestamp + args.role_id + args.token_id + args.total_amount + args.amount_per_share + args.end_time);
+    sign = await nearUtils.getSign(req.account_id + timestamp + args.role_id + args.token_contract + args.total_amount + args.amount_per_share + args.end_time);
   }
   ctx.body = new Resp({ data: {
     sign,
