@@ -246,7 +246,7 @@ exports.verifyRule = async (message, userId, userClient) => {
       if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
         const resultMsg = {};
         resultMsg.name = 'Already in role';
-        resultMsg.value = `✅ You already in this role ${roleName}.`;
+        resultMsg.value = `✅ You are already in this role ${roleName}.`;
         resultMsgs.push(resultMsg);
         logger.info(`${JSON.stringify(resultMsg)}`);
         return resultMsgs;
@@ -259,7 +259,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserFollowing(userClient, twitterId, followUser)) {
           const resultMsg = {};
           resultMsg.name = 'Follow';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: follow @${followUser}. Link: https://twitter.com/${followUser}`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: follow @${followUser}.`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }
@@ -272,7 +272,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserRetweeted(userClient, rtTweetId, twitterId)) {
           const resultMsg = {};
           resultMsg.name = 'rt_tweet';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}.`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }

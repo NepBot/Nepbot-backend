@@ -8,7 +8,7 @@ const logger = require('../../../pkg/utils/logger');
 
 const execute = async interaction => {
   const button = new MessageButton()
-    .setLabel('Claim FT')
+    .setLabel('Claim')
     .setStyle('LINK');
 
   const action = new MessageActionRow()

@@ -78,11 +78,11 @@ const sendFTAirdropMsg = async (ctx, next) => {
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_ft')
-      .setLabel('Claim FT')
+      .setLabel('Claim')
       .setStyle('PRIMARY');
     const component = new MessageActionRow()
       .addComponents(claim);
-    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Claim FT: Used for user to claim the FT')], components: [component] });
+    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')], components: [component] });
 
     const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
     const redeem = new MessageButton()
@@ -91,7 +91,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
       .setStyle('PRIMARY');
     const redeemComponent = new MessageActionRow()
       .addComponents(redeem);
-    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('Redeem FT: Used for user to redeem the FT')], components: [redeemComponent] });
+    await settingChannel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('**NEP141 Airdrop**\nClick the button below to redeem the Airdrop')], components: [redeemComponent] });
     ctx.body = new Resp({});
   }
   catch (e) {

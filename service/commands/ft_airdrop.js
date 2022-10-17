@@ -44,7 +44,7 @@ const execute = async interaction => {
   const endTime = await airdropUtils.getGMTTime(duration);
 
   const content = new MessageEmbed()
-    .setDescription('Airdrop: Send the token to airdrop contract')
+    .setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')
     .addFields(
       { name: 'Receiver_role', value: '@' + roleName },
       { name: 'Token_Contract', value: tokenContract },
