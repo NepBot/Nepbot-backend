@@ -259,7 +259,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserFollowing(userClient, twitterId, followUser)) {
           const resultMsg = {};
           resultMsg.name = 'Follow';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: follow @${followUser}`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: follow @${followUser}. Link: https://twitter.com/${followUser}`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }
@@ -272,7 +272,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserRetweeted(userClient, rtTweetId, twitterId)) {
           const resultMsg = {};
           resultMsg.name = 'rt_tweet';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: retweet tweet ${attachMsg.value.split('+').find(e => e.includes(rtTweetId))}.`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }
@@ -285,7 +285,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserLikedTweet(userClient, tweetId, twitterId)) {
           const resultMsg = {};
           resultMsg.name = 'like_tweet';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Missing: like tweet ${attachMsg.value.split('+').find(e => e.includes(tweetId))}`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: like tweet ${attachMsg.value.split('+').find(e => e.includes(tweetId))}`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }
