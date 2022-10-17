@@ -17,7 +17,7 @@ const action = new MessageActionRow()
 
 const data = new SlashCommandBuilder()
   .setName('ft_airdrop')
-  .setDescription('Airdrop a specify token.')
+  .setDescription('/ft_airdrop : Airdrop a specific fungible token (NEP-141) on NEAR.')
   .addRoleOption(option => option.setName('receiver_role').setDescription('which role the user can claim').setRequired(true))
   .addStringOption(option => option.setName('token_contract').setDescription('Input the token contract').setRequired(true))
   .addStringOption(option => option.setName('total_amount').setDescription('Input total amount').setRequired(true))
@@ -44,7 +44,7 @@ const execute = async interaction => {
   const endTime = await airdropUtils.getGMTTime(duration);
 
   const content = new MessageEmbed()
-    .setDescription('/ft_airdrop : Airdrop a specific fungible token (NEP-141) on NEAR.')
+    .setDescription('Airdrop: Send the token to airdrop contract')
     .addFields(
       { name: 'Receiver_role', value: '@' + roleName },
       { name: 'Token_Contract', value: tokenContract },
