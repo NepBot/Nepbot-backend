@@ -7,7 +7,7 @@ const logger = require('../../../pkg/utils/logger');
 
 const execute = async interaction => {
   const button = new MessageButton()
-    .setLabel('Redeem FT')
+    .setLabel('Redeem')
     .setStyle('LINK');
 
   const action = new MessageActionRow()
