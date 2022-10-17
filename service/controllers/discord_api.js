@@ -70,7 +70,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
     const content = new MessageEmbed()
       .addFields(
         { name: 'Receiver_role', value: '@' + roleName },
-        { name: 'Token_id', value: req.token_id },
+        { name: 'Token_Contract', value: req.token_contract },
         { name: 'Total_amount', value: req.total_amount },
         { name: 'Amount_per_share', value: req.amount_per_share },
         { name: 'End_time(GMT)', value: req.end_time },
