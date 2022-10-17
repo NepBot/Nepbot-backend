@@ -259,7 +259,7 @@ exports.verifyRule = async (message, userId, userClient) => {
         if (!await this.isUserFollowing(userClient, twitterId, followUser)) {
           const resultMsg = {};
           resultMsg.name = 'Follow';
-          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: follow @${followUser}.`;
+          resultMsg.value = `❌ Sorry, you don't meet the requirements for this role.\n Must: follow @${followUser} https://twitter.com/${followUser}`;
           resultMsgs.push(resultMsg);
           logger.info(`${JSON.stringify(resultMsg)}`);
         }
