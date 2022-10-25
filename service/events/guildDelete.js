@@ -11,6 +11,16 @@ const execute = async guild => {
    * when bot got kick or ban, the data in database will save @EXPIRED_DAY days, the following code will create a schedule job to delete data after that days
    */
   try {
+    if (await guildDeletes.get({ guild_id: guild.id })) {
+      await guildDeletes.delete({
+        guild_id: guild.id,
+      });
+      const job = schedule.scheduledJobs[guild.id];
+      job.cancel();
+      logger.info('guildDelete event triggered, find duplicate in guildDeletes table.');
+      logger.info(`remove ${guild.id} data in guildDeletes & cancel the job: ${job.name}`);
+    }
+
     const expiredAt = await timeUtils.getExpiredTimeByDay(EXPIRED_DAY);
     await guildDeletes.add({
       guild_id: guild.id,

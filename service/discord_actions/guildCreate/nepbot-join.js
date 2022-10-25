@@ -1,6 +1,7 @@
 const discordUtils = require('../../../pkg/utils/discord_utils');
 const config = require('../../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js');
+const logger = require('../../../pkg/utils/logger');
 
 const verifyNearEmbed = new MessageEmbed()
   .setColor('#0099ff')
@@ -21,44 +22,49 @@ const verifyNearAction = new MessageActionRow()
   .addComponents(verifyNearButton);
 
 const execute = async guild => {
-  const channelName = 'nepbot-join';
-  let guildChannel = guild.channels.cache.find(channel =>
-    channel.permissionOverwrites.cache.find(permission =>
-      permission.id == config.bot_appid &&
-			permission.allow.has(Permissions.FLAGS.VIEW_CHANNEL),
-    ),
-  );
-  if (!guildChannel) {
-    guildChannel = guild.channels.cache.find(channel =>
-      channel.name == channelName,
+  try {
+    const channelName = 'nepbot-join';
+    let guildChannel = guild.channels.cache.find(channel =>
+      channel.permissionOverwrites.cache.find(permission =>
+        permission.id == config.bot_appid &&
+        permission.allow.has(Permissions.FLAGS.VIEW_CHANNEL),
+      ),
     );
+    if (!guildChannel) {
+      guildChannel = guild.channels.cache.find(channel =>
+        channel.name == channelName,
+      );
+      if (guildChannel) {
+        await guildChannel.permissionOverwrites.upsert(config.bot_appid, {
+          allow: [Permissions.FLAGS.VIEW_CHANNEL],
+        });
+      }
+    }
     if (guildChannel) {
-      await guildChannel.permissionOverwrites.upsert(config.bot_appid, {
-        allow: [Permissions.FLAGS.VIEW_CHANNEL],
-      });
+      const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
+      for (const _value of messages.values()) {
+        _value.delete();
+      }
+      await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
+      return;
     }
+    const channel = await guild.channels.create(channelName,
+      { permissionOverwrites: [
+        {
+          id: guild.roles.everyone,
+          allow: [Permissions.FLAGS.VIEW_CHANNEL],
+          deny: [Permissions.FLAGS.SEND_MESSAGES],
+        },
+        {
+          id: config.bot_appid,
+          allow: [Permissions.FLAGS.VIEW_CHANNEL],
+        },
+      ] });
+    await channel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
   }
-  if (guildChannel) {
-    const messages = await guildChannel.messages.fetch().then(msg => msg.filter(m => m.author.id === config.bot_appid));
-    for (const _value of messages.values()) {
-      _value.delete();
-    }
-    await guildChannel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
-    return;
+  catch (e) {
+    logger.error(e);
   }
-  const channel = await guild.channels.create(channelName,
-    { permissionOverwrites: [
-      {
-        id: guild.roles.everyone,
-        allow: [Permissions.FLAGS.VIEW_CHANNEL],
-        deny: [Permissions.FLAGS.SEND_MESSAGES],
-      },
-      {
-        id: config.bot_appid,
-        allow: [Permissions.FLAGS.VIEW_CHANNEL],
-      },
-    ] });
-  await channel.send({ content: '\n', ephemeral:true, embeds:[verifyNearEmbed], components: [verifyNearAction] });
 };
 module.exports = {
   execute,

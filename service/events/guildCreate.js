@@ -15,20 +15,24 @@ const execute = async guild => {
 
   for (const file of actionFiles) {
     const action = require(`${actions_dir}/${file}`);
-    logger.info(`execute the actions in ${actions_dir}/${file}`);
-    await action.execute(guild);
+    await action.execute(guild).then(logger.info(`execute the actions in ${actions_dir}/${file}`)).catch(e => logger.error(e));
   }
 
   /**
    * find the table guild_deletes have the data need to be delete and cancel the job in schedule.
    */
-  if (await guildDeletes.get({ guild_id: guild.id })) {
-    await guildDeletes.delete({
-      guild_id: guild.id,
-    });
-    const job = schedule.scheduledJobs[guild.id];
-    job.cancel();
-    logger.info(`the guild: ${guild.id} reinvite nepbot, so cancel the job: ${job.name}`);
+  try {
+    if (await guildDeletes.get({ guild_id: guild.id })) {
+      await guildDeletes.delete({
+        guild_id: guild.id,
+      });
+      const job = schedule.scheduledJobs[guild.id];
+      job.cancel();
+      logger.info(`the guild: ${guild.id} reinvite nepbot, so cancel the job: ${job.name}`);
+    }
+  }
+  catch (e) {
+    logger.error(e);
   }
 };
 
