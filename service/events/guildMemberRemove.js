@@ -4,7 +4,6 @@ const twitterUsers = require('../../pkg/models/object/twitter_users');
 
 const execute = async member => {
   try {
-    logger.debug(`member remove id: ${ member.id}, guild: ${ member.guild.id} `);
     const userInfo = await userInfos.getUser({
       guild_id: { $ne: member.guild.id },
       user_id: member.id,
