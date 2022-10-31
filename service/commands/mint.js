@@ -38,10 +38,8 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  console.log("1111111111111111111111111")
   // replay message to discord user
-  await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
-  console.log("222222222222222222222222")
+  await interaction.reply({ content: '\n', ephemeral:true, embeds:[content], components: [action] });
 }
 
 // const execute = async interaction => {
