@@ -26,6 +26,7 @@ let showLog = false
 const dataParser = (data) => {
   let newData = {}
   for (let key in data) {
+    console.log(key)
     let newKey = key.replace(/([A-Z])/g,"_$1").toLowerCase();
     if ((data[key] instanceof Array) || (Object.keys(data[key].length > 0))) {
       newData[newKey] = dataParser(data[key])
