@@ -33,7 +33,7 @@ const execute = async interaction => {
   });
   // Set the url
   button.setURL(`${config.wallet_auth_url}/mint/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
-
+  console.log("=======================================")
   await userInfos.addUser({
     user_id: interaction.user.id,
     guild_id: interaction.guildId,
