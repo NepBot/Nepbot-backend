@@ -24,7 +24,7 @@ const signerPerBlock = [];
 let showLog = false
 
 const resolveChunk = async (chunkData) => {
-  console.log(chunkData)
+  console.log(chunkData.transactions)
   try {
     const promises = [];
     promises.push(resolveTxs(chunkData.transactions));
