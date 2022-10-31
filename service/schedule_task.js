@@ -87,7 +87,10 @@ async function handleStreamerMessage(streamerMessage) {
 
   const promises = [];
   for (const shard of streamerMessage.shards) {
-    promises.push(resolveChunk(Object.assign(shard.chunk)));
+    if (shard.chunk) {
+      promises.push(resolveChunk(Object.assign(shard.chunk)));
+    }
+    
   }
   await Promise.all(promises);
 }
