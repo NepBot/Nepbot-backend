@@ -7,6 +7,7 @@ const userFields = require('../../pkg/models/object/user_fields');
 const config = require('../../pkg/utils/config');
 const BN = require('bn.js');
 const token_task = async function(receipts) {
+  console.log(receipts)
   const allFieldList = await userFields.getUserFields({
     key: 'token_id',
   });
