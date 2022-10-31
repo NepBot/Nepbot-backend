@@ -14,7 +14,6 @@ const token_task = async function(receipts) {
   for (const field of allFieldList) {
     allTokenList.push(field.value);
   }
-  console.log(allTokenList)
   const actions = await contractUtils.filterTokenActions(allTokenList, receipts);
   const accountIdList = [];
   const tokenList = [];
