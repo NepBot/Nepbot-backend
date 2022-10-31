@@ -115,6 +115,7 @@ async function parseEvents(receipt, txMap, eventType) {
 
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
+  console.log(receipts[0].receipt)
   receipts = receipts.filter(item => 
     item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1
   ).map(item => {
@@ -123,7 +124,6 @@ exports.filterTokenActions = (tokenIds, receipts) => {
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
-      console.log(action)
       const obj = {};
       obj.sender_id = receipt.predecessor_id;
       obj.token_id = receipt.receiver_id;
