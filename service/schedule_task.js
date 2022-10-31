@@ -23,11 +23,9 @@ const txMap = [];
 const signerPerBlock = [];
 let showLog = false
 
-const resolveChunk = async (chunkHash) => {
+const resolveChunk = async (chunkData) => {
   try {
-    const chunkData = await provider.chunk(chunkHash);
     const promises = [];
-
     promises.push(resolveTxs(chunkData.transactions));
 
     promises.push(updateGuildTask(chunkData.receipts, txMap));
@@ -69,14 +67,9 @@ async function resolveTxs(transactions) {
   signerPerBlock.push(blockSigners);
 }
 
-
-let blockHeight = 0;
-let finalBlockHeight = 0;
-
 const resolveNewBlock = async (fromBlockHeight) => {
   const lakeConfig = {
-    s3BucketName: "near-lake-data-testnet",
-    s3RegionName: "eu-central-1",
+    ...config.near_lake_config,
     startBlockHeight: fromBlockHeight,
   }
 
@@ -84,10 +77,15 @@ const resolveNewBlock = async (fromBlockHeight) => {
 };
 
 async function handleStreamerMessage(streamerMessage) {
-  console.log(`
-    Block #${streamerMessage.block.header.height}
-    Shards: ${streamerMessage.shards.length}
-  `);
+  if (showLog) {
+    console.log(`fetched block height: ${streamerMessage.block.header.height}`);
+  }
+
+  const promises = [];
+  for (const chunk of streamerMessage.shards) {
+    promises.push(resolveChunk(chunk.chunk_hash));
+  }
+  await Promise.all(promises);
 }
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {
