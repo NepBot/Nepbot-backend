@@ -28,7 +28,7 @@ const dataParser = (data) => {
     data.forEach(item => dataParser(item))
   } else if (data instanceof Object) {
     for (const key in data) {
-      let newKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
+      let newKey = key.charAt(0) + key.slice(1).replace(/([A-Z])/g, '_$1').toLowerCase()
       data[newKey] = data[key]
       if (key !== newKey) {
         delete data[key]
