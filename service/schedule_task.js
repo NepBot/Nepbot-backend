@@ -23,10 +23,24 @@ const txMap = [];
 const signerPerBlock = [];
 let showLog = false
 
+const dataParser = (data) => {
+  let newData = {}
+  for (let key in data) {
+    let newKey = key.charAt(0) + key.splice(0, 1).replace(/([A-Z])/g,"_$1").toLowerCase();
+    if ((data[key] instanceof Array) || (Object.keys(data[key].length > 0))) {
+      newData[newKey] = dataParser(data[key])
+    } else {
+      newData[newKey] = data[key]
+    }
+  }
+  return newData
+}
+
 const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
+  console.log(dataParser(chunkData))
   try {
     const promises = [];
     if (chunkData.transactions) {
