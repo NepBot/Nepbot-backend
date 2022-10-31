@@ -33,12 +33,12 @@ const dataParser = (data) => {
       if (key !== newKey) {
         delete data[key]
       }
-      if (data[hump] instanceof Object) {
-        dataParser(data[hump])
+      if (data[newKey] instanceof Object) {
+        dataParser(data[newKey])
       }
     }
-  } else if (typeof data === 'string') {
-    data = type === 'hump' ? formatToHump(data) : formatToLine(data)
+  } else {
+    
   }
   return data
 }
