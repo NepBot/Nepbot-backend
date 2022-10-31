@@ -30,7 +30,7 @@ const dataParser = (data) => {
     for (const key in data) {
       if (key == 'FunctionCall') {
         if (data[key] instanceof Object) {
-          dataParser(data[newKey])
+          dataParser(data[key])
         }
         continue
       }
