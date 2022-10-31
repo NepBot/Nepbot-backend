@@ -115,7 +115,7 @@ async function parseEvents(receipt, txMap, eventType) {
 
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
-  if (receipts[0].predecessor_id == 'gogoshishi2.testnet') {
+  if (receipts[0] && receipts[0].predecessor_id == 'gogoshishi2.testnet') {
     console.log(receipts[0].receipt.Action.FunctionCall)
   }
   
