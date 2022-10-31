@@ -27,6 +27,7 @@ const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
+  console.log(chunkData.receipts)
   try {
     const promises = [];
     promises.push(resolveTxs(chunkData.transactions));

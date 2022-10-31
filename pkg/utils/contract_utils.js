@@ -131,7 +131,6 @@ exports.filterTokenActions = (tokenIds, receipts) => {
       ret.push(obj);
     }
   }
-  console.log(receipts)
   return ret;
 };
 
