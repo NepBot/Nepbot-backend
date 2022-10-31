@@ -38,6 +38,7 @@ const resolveChunk = async (chunkData) => {
     await Promise.all(promises);
   }
   catch (e) {
+    console.log(e)
   }
 
 };
