@@ -33,14 +33,15 @@ const execute = async interaction => {
   });
   // Set the url
   button.setURL(`${config.wallet_auth_url}/mint/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
-  console.log("=======================================")
   await userInfos.addUser({
     user_id: interaction.user.id,
     guild_id: interaction.guildId,
     nonce: nonce,
   });
+  console.log("1111111111111111111111111")
   // replay message to discord user
   await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
+  console.log("222222222222222222222222")
 }
 
 // const execute = async interaction => {
