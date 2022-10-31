@@ -28,6 +28,12 @@ const dataParser = (data) => {
     data.forEach(item => dataParser(item))
   } else if (data instanceof Object) {
     for (const key in data) {
+      if (key == 'FunctionCall') {
+        if (data[key] instanceof Object) {
+          dataParser(data[newKey])
+        }
+        continue
+      }
       let newKey = key.charAt(0) + key.slice(1).replace(/([A-Z])/g, '_$1').toLowerCase()
       data[newKey] = data[key]
       if (key !== newKey) {
