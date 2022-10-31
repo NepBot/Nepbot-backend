@@ -267,10 +267,7 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
       ret.push(obj);
     }
   }
-  if (ret.length > 0) {
-    logger.debug(`ret: ${ JSON.stringify(ret) }`);
-    return ret;
-  }
+  return ret;
 };
 
 /**
