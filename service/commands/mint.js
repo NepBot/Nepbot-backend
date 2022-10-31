@@ -27,6 +27,7 @@ const data = new SlashCommandBuilder()
   //     .setRequired(true));
 
 const execute = async interaction => {
+  console.log(interaction)
   const nonce = Date.now();
   const signature = await nearUtils.getSign({
     nonce: nonce,
