@@ -27,10 +27,13 @@ const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
+  console.log(chunkData.receipts, chunkData.transactions)
   try {
     const promises = [];
-    promises.push(resolveTxs(chunkData.transactions));
-
+    if (chunkData.transactions) {
+      promises.push(resolveTxs(chunkData.transactions));
+    }
+    
     promises.push(updateGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
     promises.push(balanceTask(chunkData.receipts, txMap));
