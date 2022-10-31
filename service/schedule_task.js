@@ -24,17 +24,23 @@ const signerPerBlock = [];
 let showLog = false
 
 const dataParser = (data) => {
-  let newData = {}
-  for (let key in data) {
-    console.log(key)
-    let newKey = key.replace(/([A-Z])/g,"_$1").toLowerCase();
-    if ((data[key] instanceof Array) || (Object.keys(data[key].length > 0))) {
-      newData[newKey] = dataParser(data[key])
-    } else {
-      newData[newKey] = data[key]
+  if (data instanceof Array) {
+    data.forEach(item => dataParser(item))
+  } else if (data instanceof Object) {
+    for (const key in data) {
+      let newKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
+      data[newKey] = data[key]
+      if (key !== newKey) {
+        delete data[key]
+      }
+      if (data[hump] instanceof Object) {
+        dataParser(data[hump])
+      }
     }
+  } else if (typeof data === 'string') {
+    data = type === 'hump' ? formatToHump(data) : formatToLine(data)
   }
-  return newData
+  return data
 }
 
 const resolveChunk = async (chunkData) => {
