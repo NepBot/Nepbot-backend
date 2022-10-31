@@ -123,6 +123,7 @@ exports.filterTokenActions = (tokenIds, receipts) => {
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
+      console.log(action)
       const obj = {};
       obj.sender_id = receipt.predecessor_id;
       obj.token_id = receipt.receiver_id;

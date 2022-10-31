@@ -40,15 +40,14 @@ const dataParser = (data) => {
   } else {
     
   }
-  return data
 }
 
 const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
-  console.log(dataParser(chunkData))
   try {
+    dataParser(chunkData)
     const promises = [];
     if (chunkData.transactions) {
       promises.push(resolveTxs(chunkData.transactions));
