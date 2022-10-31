@@ -116,13 +116,13 @@ async function parseEvents(receipt, txMap, eventType) {
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
   if (receipts[0].predecessor_id == 'gogoshishi2.testnet') {
-    console.log(receipts[0].receipt.Action.actions[0].FunctionCall)
+    console.log(receipts[0].receipt.Action.actions[0].function_call)
   }
   
   receipts = receipts.filter(item => 
     item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1
   ).map(item => {
-    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name.indexOf('ft_transfer') > -1)
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.function_call.method_name.indexOf('ft_transfer') > -1)
     return item
   })
   
@@ -131,7 +131,7 @@ exports.filterTokenActions = (tokenIds, receipts) => {
       const obj = {};
       obj.sender_id = receipt.predecessor_id;
       obj.token_id = receipt.receiver_id;
-      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      const args = JSON.parse(Buffer.from(action.function_call.args, 'base64').toString());
       obj.receiver_id = args.receiver_id;
       ret.push(obj);
     }
@@ -144,13 +144,13 @@ exports.filterOctActions = (receipts) => {
   receipts = receipts.filter(item => 
     item.receipt.Action && item.receiver_id == config.oct_contract
   ).map(item => {
-    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name == 'sync_state_of')
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.function_call.method_name == 'sync_state_of')
     return item
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
       const obj = {};
-      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      const args = JSON.parse(Buffer.from(action.function_call.args, 'base64').toString());
       obj.appchain_id = args.appchain_id;
       obj.signer_id = receipt.receipt.Action.signer_id;
       ret.push(obj);
@@ -164,14 +164,14 @@ exports.filterRoleActions = (receipts) => {
   receipts = receipts.filter(item =>
     item.receipt.Action && item.receiver_id == config.rule_contract
   ).map(item => {
-    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name == 'set_roles' || action.FunctionCall.method_name == 'del_roles')
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.function_call.method_name == 'set_roles' || action.function_call.method_name == 'del_roles')
     return item
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
       const obj = {};
-      obj.method_name = action.FunctionCall.method_name;
-      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      obj.method_name = action.function_call.method_name;
+      const args = JSON.parse(Buffer.from(action.function_call.args, 'base64').toString());
       obj.roles = args.roles;
       ret.push(obj);
     }
@@ -212,11 +212,11 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
       }
     }
     for (action of receipt.receipt.Action.actions) {
-      if (action.FunctionCall.method_name.indexOf('nft_transfer') > -1) {
+      if (action.function_call.method_name.indexOf('nft_transfer') > -1) {
         const obj = {}
         obj.sender_id = receipt.predecessor_id;
         obj.contract_id = receipt.receiver_id;
-        const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+        const args = JSON.parse(Buffer.from(action.function_call.args, 'base64').toString());
         obj.receiver_id = args.receiver_id;
         if (!eventMap[obj.sender_id + obj.contract_id + obj.receiver_id]) {
           ret.push(obj);
@@ -254,14 +254,14 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
     item.receipt.Action &&
     daoIds.findIndex(daoId => daoId == item.receiver_id) > -1
   ).map(item => {
-    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name == 'act_proposal')
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.function_call.method_name == 'act_proposal')
     return item
   })
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
       const obj = {};
       obj.dao_id = receipt.receiver_id;
-      const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+      const args = JSON.parse(Buffer.from(action.function_call.args, 'base64').toString());
       const proposalResult = await account.viewFunction(receipt.receiver_id, 'get_proposal', { 'id': args.id });
       if (!('AddMemberToRole' in proposalResult.kind || 'RemoveMemberFromRole' in proposalResult.kind) && proposalResult.status != 'Approved') {
         continue;
