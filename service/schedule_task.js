@@ -27,7 +27,6 @@ const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
-  console.log(chunkData.receipts)
   try {
     const promises = [];
     promises.push(resolveTxs(chunkData.transactions));
@@ -88,7 +87,7 @@ async function handleStreamerMessage(streamerMessage) {
 
   const promises = [];
   for (const shard of streamerMessage.shards) {
-    promises.push(resolveChunk(shard.chunk));
+    promises.push(resolveChunk(Object.assign(shard.chunk)));
   }
   await Promise.all(promises);
 }
