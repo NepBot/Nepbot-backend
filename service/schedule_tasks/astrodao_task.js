@@ -13,7 +13,6 @@ const astrodao_task = async function(receipts) {
     allDaoList.push(field.value);
   }
   const actions = await contractUtils.filterAstroDaoMemberActions(allDaoList, receipts);
-  console.log(actions)
   for (const action of actions) {
     const mapAstrodaoDiscord = await assembleMap(action);
     /**
