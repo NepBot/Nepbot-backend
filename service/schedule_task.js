@@ -117,7 +117,7 @@ async function handleStreamerMessage(streamerMessage) {
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {
   const lakeConfig = {
-    s3BucketName: "near-lake-testnet",
+    s3BucketName: "near-lake-data-testnet",
     s3RegionName: "eu-central-1",
     startBlockHeight: fromBlockHeight,
   }
