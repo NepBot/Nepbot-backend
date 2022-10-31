@@ -1,7 +1,5 @@
 const nearUtils = require('../../pkg/utils/near_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
-const parasUtils = require('../../pkg/utils/paras_api');
-const indexerUtils = require('../../pkg/utils/indexer_utils');
 const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
@@ -27,7 +25,6 @@ const data = new SlashCommandBuilder()
   //     .setRequired(true));
 
 const execute = async interaction => {
-  console.log(interaction)
   const nonce = Date.now();
   const signature = await nearUtils.getSign({
     nonce: nonce,
@@ -44,7 +41,6 @@ const execute = async interaction => {
   });
   // replay message to discord user
   await interaction.reply({ content: '\n', ephemeral:true, embeds:[embed], components: [action] });
-  discordUtils.setInteraction(interaction);
 }
 
 // const execute = async interaction => {
