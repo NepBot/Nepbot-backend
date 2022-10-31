@@ -27,7 +27,6 @@ const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
-  console.log(chunkData.receipts, chunkData.transactions)
   try {
     const promises = [];
     if (chunkData.transactions) {
