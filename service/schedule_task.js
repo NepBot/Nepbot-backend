@@ -83,8 +83,8 @@ async function handleStreamerMessage(streamerMessage) {
   }
 
   const promises = [];
-  for (const chunk of streamerMessage.shards) {
-    promises.push(resolveChunk(chunk.chunk_hash));
+  for (const shard of streamerMessage.shards) {
+    promises.push(resolveChunk(shard.chunk));
   }
   await Promise.all(promises);
 }
