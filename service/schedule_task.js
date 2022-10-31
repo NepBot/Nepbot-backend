@@ -16,6 +16,8 @@ const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
 
+const { startStream, types } = require('near-lake-framework');
+
 
 const txMap = [];
 const signerPerBlock = [];
@@ -71,6 +73,13 @@ let blockHeight = 0;
 let finalBlockHeight = 0;
 
 const resolveNewBlock = async (showLog = false) => {
+
+
+
+
+
+
+
   if (showLog) {
     console.log(`fetched block height: ${blockHeight}`);
   }
@@ -98,17 +107,33 @@ const resolveNewBlock = async (showLog = false) => {
   }
   await Promise.all(promises);
 };
-module.exports.scheduleTask = function(fromBlockHeight = 0) {
-  if (fromBlockHeight > 0) {
-    blockHeight = fromBlockHeight;
-    resolveNewBlock(true);
+
+async function handleStreamerMessage(streamerMessage) {
+  console.log(`
+    Block #${streamerMessage.block.header.height}
+    Shards: ${streamerMessage.shards.length}
+  `);
+}
+
+module.exports.scheduleTask = async function(fromBlockHeight = 0) {
+  const lakeConfig = {
+    s3BucketName: "near-lake-data-testnet",
+    s3RegionName: "eu-central-1",
+    startBlockHeight: fromBlockHeight,
   }
-  else {
-    schedule.scheduleJob('*/1 * * * * *', function() {
-      resolveNewBlock();
-      twitterTask.refreshToken();
-    });
-  }
+
+  await startStream(lakeConfig, handleStreamerMessage);
+
+  // if (fromBlockHeight > 0) {
+  //   blockHeight = fromBlockHeight;
+  //   resolveNewBlock(true);
+  // }
+  // else {
+  //   schedule.scheduleJob('*/1 * * * * *', function() {
+  //     resolveNewBlock();
+  //     twitterTask.refreshToken();
+  //   });
+  // }
 };
 
 /**
