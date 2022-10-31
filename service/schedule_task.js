@@ -21,6 +21,7 @@ const { startStream, types } = require('near-lake-framework');
 
 const txMap = [];
 const signerPerBlock = [];
+let showLog = false
 
 const resolveChunk = async (chunkHash) => {
   try {
@@ -72,40 +73,14 @@ async function resolveTxs(transactions) {
 let blockHeight = 0;
 let finalBlockHeight = 0;
 
-const resolveNewBlock = async (showLog = false) => {
-
-
-
-
-
-
-
-  if (showLog) {
-    console.log(`fetched block height: ${blockHeight}`);
+const resolveNewBlock = async (fromBlockHeight) => {
+  const lakeConfig = {
+    s3BucketName: "near-lake-data-testnet",
+    s3RegionName: "eu-central-1",
+    startBlockHeight: fromBlockHeight,
   }
-  const newestBlock = await provider.block({ finality: 'optimistic' });
-  finalBlockHeight = newestBlock.header.height;
-  if (blockHeight == 0) {
-    blockHeight = finalBlockHeight - 1;
-  }
-  const promises = [];
-  for (;blockHeight <= finalBlockHeight; blockHeight++) {
-    if (showLog) {
-      console.log(`fetched block height: ${blockHeight}`);
-    }
-    let block = {};
-    try {
-      block = await provider.block({ blockId: blockHeight });
-    }
-    catch (e) {
-      continue;
-    }
 
-    for (const chunk of block.chunks) {
-      promises.push(resolveChunk(chunk.chunk_hash));
-    }
-  }
-  await Promise.all(promises);
+  await startStream(lakeConfig, handleStreamerMessage);
 };
 
 async function handleStreamerMessage(streamerMessage) {
@@ -116,24 +91,17 @@ async function handleStreamerMessage(streamerMessage) {
 }
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {
-  const lakeConfig = {
-    s3BucketName: "near-lake-data-testnet",
-    s3RegionName: "eu-central-1",
-    startBlockHeight: fromBlockHeight,
+  if (fromBlockHeight > 0) {
+    showLog = true
+    resolveNewBlock(fromBlockHeight);
   }
-
-  await startStream(lakeConfig, handleStreamerMessage);
-
-  // if (fromBlockHeight > 0) {
-  //   blockHeight = fromBlockHeight;
-  //   resolveNewBlock(true);
-  // }
-  // else {
-  //   schedule.scheduleJob('*/1 * * * * *', function() {
-  //     resolveNewBlock();
-  //     twitterTask.refreshToken();
-  //   });
-  // }
+  else {
+    schedule.scheduleJob('*/1 * * * * *', function() {
+      twitterTask.refreshToken();
+    });
+    const newestBlock = await provider.block({ finality: 'optimistic' });
+    resolveNewBlock(newestBlock.header.height);
+  }
 };
 
 /**
