@@ -105,11 +105,11 @@ const getMintSign = async (ctx, next) => {
     return;
   }
 
-  const nonce = await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id, collection_id: args.collection_id }, args.sign);
-  if (!nonce) {
+  if (!await nearUtils.verifyOperationSign(args, req.account_id)) {
+    logger.error('fn verifyOperationSign failed in api/get-sign');
     ctx.body = new Resp({
       code: 500,
-      message: 'nonce expired',
+      message: 'fn verifyOperationSign failed in api/get-sign',
       success: false,
     });
     return;
