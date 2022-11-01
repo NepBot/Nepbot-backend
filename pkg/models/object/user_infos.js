@@ -47,6 +47,7 @@ exports.getUsers = async (data) => {
   });
 };
 exports.updateUser = async (data) => {
+  console.log(data)
   if (!data.user_id) return { msg:'Missing parameters user_id', code:0 };
   const params = {
     near_wallet_id: data?.near_wallet_id,
