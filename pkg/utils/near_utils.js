@@ -13,6 +13,7 @@ const provider = new providers.JsonRpcProvider(config.nearWallet.nodeUrl);
 
 // sign means signature
 const verifySign = (data, signature, public_key) => {
+	console.log(JSON.stringify(data))
 	try {
 		const bf_data = new Uint8Array(Buffer.from(JSON.stringify(data)));
 		const bf_sign = new Uint8Array(bs58.decode(signature));
@@ -52,6 +53,7 @@ const getSign = async (args) => {
 	const keyStore = config.nearWallet.keyStore;
 	const keyPair = await keyStore.getKey(config.nearWallet.networkId, config.account_id);
 	const args_string = JSON.stringify(args);
+	console.log(args_string)
 	const data_buffer = Buffer.from(args_string);
 	const { signature } = keyPair.sign(data_buffer);
 	return bs58.encode(signature);

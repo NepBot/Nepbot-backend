@@ -26,7 +26,6 @@ exports.verifyUserId = async (args, sign) => {
 
 exports.verifyUserSign = async (args, sign) => {
   const userInfo = await userInfos.getUser({ user_id: args.user_id, guild_id: args.guild_id });
-  logger.debug(userInfo, args, sign);
   if (Date.now() - userInfo.nonce > 300 * 1000) { // 5min limit
     logger.error('the user nonce is great than 5 mintes');
     return false;
