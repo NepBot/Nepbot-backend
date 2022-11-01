@@ -24,6 +24,7 @@ const getUser = async (ctx, next) => {
   const guildId = ctx.params.guildId;
   const userId = ctx.params.userId;
   const sign = ctx.params.sign;
+  console.log(guildId, userId, sign)
   if (!await userUtils.verifyUserSign({ user_id: userId, guild_id: guildId }, sign)) {
     logger.error('fn verifyUserId failed in api/setInfo');
     ctx.body = new Resp({
