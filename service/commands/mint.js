@@ -26,11 +26,13 @@ const data = new SlashCommandBuilder()
 
 const execute = async interaction => {
   const nonce = Date.now();
+  console.log(nonce)
   const signature = await nearUtils.getSign({
     nonce: nonce,
     user_id: interaction.user.id,
     guild_id: interaction.guildId,
   });
+  console.log(nonce)
   // Set the url
   button.setURL(`${config.wallet_auth_url}/mint/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&sign=${signature}`);
   await userInfos.addUser({
@@ -38,7 +40,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  console.log(interaction.user.id, interaction.guildId, signature)
+  console.log(nonce)
   // replay message to discord user
   await interaction.reply({ content: '\n', ephemeral:true, embeds:[content], components: [action] });
 }
