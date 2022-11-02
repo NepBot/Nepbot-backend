@@ -15,45 +15,18 @@ const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
-
-const { startStream, types } = require('near-lake-framework');
+const { startStream } = require('../pkg/utils/block_stream');
 
 
 const txMap = [];
 const signerPerBlock = [];
 let showLog = false
 
-const dataParser = (data) => {
-  if (data instanceof Array) {
-    data.forEach(item => dataParser(item))
-  } else if (data instanceof Object) {
-    for (const key in data) {
-      if (key == 'FunctionCall') {
-        if (data[key] instanceof Object) {
-          dataParser(data[key])
-        }
-        continue
-      }
-      let newKey = key.charAt(0) + key.slice(1).replace(/([A-Z])/g, '_$1').toLowerCase()
-      data[newKey] = data[key]
-      if (key !== newKey) {
-        delete data[key]
-      }
-      if (data[newKey] instanceof Object) {
-        dataParser(data[newKey])
-      }
-    }
-  } else {
-    
-  }
-}
-
 const resolveChunk = async (chunkData) => {
   if (!chunkData) {
     return
   }
   try {
-    dataParser(chunkData)
     const promises = [];
     if (chunkData.transactions) {
       promises.push(resolveTxs(chunkData.transactions));
@@ -93,7 +66,7 @@ async function resolveTxs(transactions) {
     if (!txMap[signerId]) {
       txMap[signerId] = [];
     }
-    txMap[signerId].push(tx);
+    txMap[signerId].push(tx.transaction);
 
   }
   signerPerBlock.push(blockSigners);
@@ -103,6 +76,7 @@ const resolveNewBlock = async (fromBlockHeight) => {
   const lakeConfig = {
     ...config.near_lake_config,
     startBlockHeight: fromBlockHeight,
+    endBlockHeight: 0
   }
 
   await startStream(lakeConfig, handleStreamerMessage);
