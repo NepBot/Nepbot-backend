@@ -89,7 +89,6 @@ exports.getCollectionsByGuild = async (guildId) => {
 async function parseEvents(receipt, txMap, eventType) {
   let txDigests = txMap[receipt.receipt.Action.signer_id]
   if (!txDigests || txDigests.length == 0) {
-    console.log(receipt)
     return []
   }
   let tx = {}

@@ -28,9 +28,8 @@ const resolveChunk = async (chunkData) => {
   }
   try {
     const promises = [];
-    if (chunkData.transactions) {
-      promises.push(resolveTxs(chunkData.transactions));
-    }
+    resolveTxs(chunkData.transactions)
+    
     
     promises.push(updateGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
@@ -48,17 +47,17 @@ const resolveChunk = async (chunkData) => {
 };
 
 async function resolveTxs(transactions) {
-  if (signerPerBlock.length >= 20) {
-    signerPerBlock.splice(0, signerPerBlock.length - 20);
-  }
-  for (const signerId in txMap) {
-    const index = signerPerBlock.findIndex(ids => {
-      return ids.findIndex(id => id == signerId) > -1;
-    });
-    if (index == -1) {
-      delete txMap[signerId];
-    }
-  }
+  // if (signerPerBlock.length >= 20) {
+  //   signerPerBlock.splice(0, signerPerBlock.length - 20);
+  // }
+  // for (const signerId in txMap) {
+  //   const index = signerPerBlock.findIndex(ids => {
+  //     return ids.findIndex(id => id == signerId) > -1;
+  //   });
+  //   if (index == -1) {
+  //     delete txMap[signerId];
+  //   }
+  // }
   const blockSigners = [];
   for (const tx of transactions) {
     const signerId = tx.signer_id;
