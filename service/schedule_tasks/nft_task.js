@@ -27,6 +27,7 @@ const nft_task = async function(receipts, txMap) {
     near_wallet_id: accountIdList,
     value: contractList,
   });
+  console.log(userTokens)
   for (const userToken of userTokens) {
     const rolesByField = await contractUtils.getRulesByField('nft_contract_id', userToken.value);
     const guild_ids = [];
@@ -63,7 +64,6 @@ const nft_task = async function(receipts, txMap) {
           await member.roles.add(role).then(logger.info(`${member.user.username} add role_id ${role} in nft_task`));
         }
         catch (e) {
-          console.log(e)
           continue;
         }
       }
@@ -73,7 +73,6 @@ const nft_task = async function(receipts, txMap) {
           await member.roles.remove(role).then(logger.info(`${member.user.username} remove role_id ${role} in nft_task`));
         }
         catch (e) {
-          console.log(e)
           continue;
         }
 
