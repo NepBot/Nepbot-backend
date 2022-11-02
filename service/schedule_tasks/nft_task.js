@@ -14,7 +14,6 @@ const nft_task = async function(receipts, txMap) {
     allContractList.push(field.value);
   }
   const actions = await contractUtils.filterNftActions(allContractList, receipts, txMap);
-  console.log(actions)
   const accountIdList = [];
   const contractList = [];
   for (const action of actions) {
@@ -42,6 +41,7 @@ const nft_task = async function(receipts, txMap) {
 
 
     for (const _userInfo of _userInfos) {
+      console.log(_userInfo)
       const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
       const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);
 
