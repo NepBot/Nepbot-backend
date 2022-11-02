@@ -54,7 +54,7 @@ async function resolveTxs(transactions) {
     if (!txMap[signerId]) {
       txMap[signerId] = [];
     }
-    txMap[signerId].push(tx);
+    txMap[signerId].push(tx.transaction);
   }
   signerPerBlock.push(blockSigners);
 }
