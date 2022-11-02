@@ -47,20 +47,20 @@ const resolveChunk = async (chunkData) => {
 };
 
 async function resolveTxs(transactions) {
-  // if (signerPerBlock.length >= 20) {
-  //   signerPerBlock.splice(0, signerPerBlock.length - 20);
-  // }
-  // for (const signerId in txMap) {
-  //   const index = signerPerBlock.findIndex(ids => {
-  //     return ids.findIndex(id => id == signerId) > -1;
-  //   });
-  //   if (index == -1) {
-  //     delete txMap[signerId];
-  //   }
-  // }
+  if (signerPerBlock.length >= 20) {
+    signerPerBlock.splice(0, signerPerBlock.length - 20);
+  }
+  for (const signerId in txMap) {
+    const index = signerPerBlock.findIndex(ids => {
+      return ids.findIndex(id => id == signerId) > -1;
+    });
+    if (index == -1) {
+      delete txMap[signerId];
+    }
+  }
   const blockSigners = [];
   for (const tx of transactions) {
-    const signerId = tx.signer_id;
+    const signerId = tx.transaction.signer_id;
     blockSigners.push(signerId);
     if (!txMap[signerId]) {
       txMap[signerId] = [];
