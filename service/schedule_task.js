@@ -47,17 +47,6 @@ const resolveChunk = async (chunkData) => {
 };
 
 async function resolveTxs(transactions) {
-  // if (signerPerBlock.length >= 20) {
-  //   signerPerBlock.splice(0, signerPerBlock.length - 20);
-  // }
-  // for (const signerId in txMap) {
-  //   const index = signerPerBlock.findIndex(ids => {
-  //     return ids.findIndex(id => id == signerId) > -1;
-  //   });
-  //   if (index == -1) {
-  //     delete txMap[signerId];
-  //   }
-  // }
   const blockSigners = [];
   for (const tx of transactions) {
     const signerId = tx.transaction.signer_id;
@@ -65,10 +54,24 @@ async function resolveTxs(transactions) {
     if (!txMap[signerId]) {
       txMap[signerId] = [];
     }
-    txMap[signerId].push(tx.transaction);
-
+    txMap[signerId].push(tx);
   }
   signerPerBlock.push(blockSigners);
+}
+
+function clearTxs(blockCount = 20) {
+  if (signerPerBlock.length >= blockCount) {
+      signerPerBlock.splice(0, signerPerBlock.length - blockCount);
+  }
+  for (const signerId in txMap) {
+      const index = signerPerBlock.findIndex(ids => {
+          return ids.findIndex(id => id == signerId) > -1;
+      });
+
+      if (index == -1) {
+          delete txMap[signerId];
+      }
+  }
 }
 
 const resolveNewBlock = async (fromBlockHeight) => {
@@ -89,11 +92,12 @@ async function handleStreamerMessage(streamerMessage) {
   const promises = [];
   for (const shard of streamerMessage.shards) {
     if (shard.chunk) {
-      promises.push(resolveChunk(Object.assign(shard.chunk)));
+      resolveTxs(shard.chunk.transactions)
+      promises.push(resolveChunk(shard.chunk));
     }
-    
   }
   await Promise.all(promises);
+  clearTxs()
 }
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {
