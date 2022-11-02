@@ -94,6 +94,7 @@ async function parseEvents(receipt, txMap, eventType) {
   }
   let tx = {}
   for (let txDigest of txDigests) {
+    console.log(txDigest)
     tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
     if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
       break
