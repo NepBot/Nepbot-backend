@@ -39,7 +39,6 @@ const nft_task = async function(receipts, txMap) {
     });
     const newAmount = await contractUtils.getNftCountOf(userToken.value, userToken.near_wallet_id);
 
-
     for (const _userInfo of _userInfos) {
       const member = await discordUtils.getMember(_userInfo.guild_id, _userInfo.user_id);
       const guildRoles = rolesByField.filter(role => role.guild_id == _userInfo.guild_id);

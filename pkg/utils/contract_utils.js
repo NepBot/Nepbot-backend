@@ -89,6 +89,7 @@ exports.getCollectionsByGuild = async (guildId) => {
 async function parseEvents(receipt, txMap, eventType) {
   let txDigests = txMap[receipt.receipt.Action.signer_id]
   if (!txDigests || txDigests.length == 0) {
+    console.log(receipt)
     return []
   }
   let tx = {}
@@ -115,12 +116,17 @@ async function parseEvents(receipt, txMap, eventType) {
 
 exports.filterTokenActions = (tokenIds, receipts) => {
   const ret = [];
+  if (receipts[0] && receipts[0].predecessor_id == 'gogoshishi2.testnet') {
+    console.log(receipts[0].receipt.Action)
+  }
+  
   receipts = receipts.filter(item => 
     item.receipt.Action && tokenIds.findIndex(tokenId => tokenId == item.receiver_id) > -1
   ).map(item => {
     item.receipt.Action.actions = item.receipt.Action.actions.filter(action => action.FunctionCall.method_name.indexOf('ft_transfer') > -1)
     return item
   })
+  
   for (receipt of receipts) {
     for (action of receipt.receipt.Action.actions) {
       const obj = {};
@@ -131,7 +137,6 @@ exports.filterTokenActions = (tokenIds, receipts) => {
       ret.push(obj);
     }
   }
-
   return ret;
 };
 
@@ -267,10 +272,7 @@ exports.filterAstroDaoMemberActions = async (daoIds, receipts) => {
       ret.push(obj);
     }
   }
-  if (ret.length > 0) {
-    logger.debug(`ret: ${ JSON.stringify(ret) }`);
-    return ret;
-  }
+  return ret;
 };
 
 /**
