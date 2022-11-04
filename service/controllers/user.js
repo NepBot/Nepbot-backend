@@ -9,6 +9,7 @@ const timeUtils = require('../../pkg/utils/time_utils');
 const userDisconnects = require('../../pkg/models/object/user_disconnects');
 const schedule = require('node-schedule');
 const { MessageEmbed } = require('discord.js');
+const { user } = require('../discord_bot');
 
 const embed = new MessageEmbed()
   .setColor('#0099ff')
@@ -71,6 +72,9 @@ const disconnectAccount = async (ctx, next) => {
    * when user disconnect, the data in database will save @EXPIRED_DAY days, the following code will create a schedule job to delete data after that days
    */
   try {
+    // remove all role for the user
+    userUtils.deleteAllRole(args.guild_id, args.user_id);
+
     const expiredAt = await timeUtils.getExpiredTimeByDay(EXPIRED_DAY);
     await userDisconnects.add({
       guild_id: args.guild_id,
@@ -84,7 +88,7 @@ const disconnectAccount = async (ctx, next) => {
     });
     const jobName = args.user_id + '-' + args.guild_id;
     const job = schedule.scheduleJob(jobName, expiredAt, function() {
-      userUtils.deleteDataAndRole(args.user_id, args.guild_id);
+      userUtils.deleteData(args.user_id, args.guild_id);
     });
     logger.info(`create new user disconnect schedule job, name: ${job.name} run at ${expiredAt}`);
   }
