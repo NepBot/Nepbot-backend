@@ -15,18 +15,22 @@ const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
+const { startStream } = require('../pkg/utils/block_stream');
 
 
 const txMap = [];
 const signerPerBlock = [];
+let showLog = false
 
-const resolveChunk = async (chunkHash) => {
+const resolveChunk = async (chunkData) => {
+  if (!chunkData) {
+    return
+  }
   try {
-    const chunkData = await provider.chunk(chunkHash);
     const promises = [];
-
-    promises.push(resolveTxs(chunkData.transactions));
-
+    resolveTxs(chunkData.transactions)
+    
+    
     promises.push(updateGuildTask(chunkData.receipts, txMap));
     promises.push(tokenTask(chunkData.receipts, txMap));
     promises.push(balanceTask(chunkData.receipts, txMap));
@@ -37,77 +41,76 @@ const resolveChunk = async (chunkHash) => {
     await Promise.all(promises);
   }
   catch (e) {
+    console.log(e)
   }
 
 };
 
 async function resolveTxs(transactions) {
-  if (signerPerBlock.length >= 20) {
-    signerPerBlock.splice(0, signerPerBlock.length - 20);
-  }
-  for (const signerId in txMap) {
-    const index = signerPerBlock.findIndex(ids => {
-      return ids.findIndex(id => id == signerId) > -1;
-    });
-    if (index == -1) {
-      delete txMap[signerId];
-    }
-  }
   const blockSigners = [];
   for (const tx of transactions) {
-    const signerId = tx.signer_id;
+    const signerId = tx.transaction.signer_id;
     blockSigners.push(signerId);
     if (!txMap[signerId]) {
       txMap[signerId] = [];
     }
-    txMap[signerId].push(tx);
-
+    txMap[signerId].push(tx.transaction);
   }
   signerPerBlock.push(blockSigners);
 }
 
+function clearTxs(blockCount = 20) {
+  if (signerPerBlock.length >= blockCount) {
+      signerPerBlock.splice(0, signerPerBlock.length - blockCount);
+  }
+  for (const signerId in txMap) {
+      const index = signerPerBlock.findIndex(ids => {
+          return ids.findIndex(id => id == signerId) > -1;
+      });
 
-let blockHeight = 0;
-let finalBlockHeight = 0;
+      if (index == -1) {
+          delete txMap[signerId];
+      }
+  }
+}
 
-const resolveNewBlock = async (showLog = false) => {
+const resolveNewBlock = async (fromBlockHeight) => {
+  const lakeConfig = {
+    ...config.near_lake_config,
+    startBlockHeight: fromBlockHeight,
+    endBlockHeight: 0
+  }
+
+  await startStream(lakeConfig, handleStreamerMessage);
+};
+
+async function handleStreamerMessage(streamerMessage) {
   if (showLog) {
-    console.log(`fetched block height: ${blockHeight}`);
+    console.log(`fetched block height: ${streamerMessage.block.header.height}`);
   }
-  const newestBlock = await provider.block({ finality: 'optimistic' });
-  finalBlockHeight = newestBlock.header.height;
-  if (blockHeight == 0) {
-    blockHeight = finalBlockHeight - 1;
-  }
-  const promises = [];
-  for (;blockHeight <= finalBlockHeight; blockHeight++) {
-    if (showLog) {
-      console.log(`fetched block height: ${blockHeight}`);
-    }
-    let block = {};
-    try {
-      block = await provider.block({ blockId: blockHeight });
-    }
-    catch (e) {
-      continue;
-    }
 
-    for (const chunk of block.chunks) {
-      promises.push(resolveChunk(chunk.chunk_hash));
+  const promises = [];
+  for (const shard of streamerMessage.shards) {
+    if (shard.chunk) {
+      resolveTxs(shard.chunk.transactions)
+      promises.push(resolveChunk(shard.chunk));
     }
   }
   await Promise.all(promises);
-};
-module.exports.scheduleTask = function(fromBlockHeight = 0) {
+  clearTxs()
+}
+
+module.exports.scheduleTask = async function(fromBlockHeight = 0) {
   if (fromBlockHeight > 0) {
-    blockHeight = fromBlockHeight;
-    resolveNewBlock(true);
+    showLog = true
+    resolveNewBlock(fromBlockHeight);
   }
   else {
     schedule.scheduleJob('*/1 * * * * *', function() {
-      resolveNewBlock();
       twitterTask.refreshToken();
     });
+    const newestBlock = await provider.block({ finality: 'optimistic' });
+    resolveNewBlock(newestBlock.header.height);
   }
 };
 
