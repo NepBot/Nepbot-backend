@@ -138,7 +138,7 @@ exports.userDisconnectTask = async function() {
     for (const ud of listUDs) {
       const jobName = ud.user_id + '-' + ud.guild_id;
       const job = schedule.scheduleJob(jobName, ud.expired_at, function() {
-        userUtils.deleteDataAndRole(ud.user_id, ud.guild_id);
+        userUtils.deleteData(ud.user_id, ud.guild_id);
       });
       logger.info(`create new user disconnect schedule job, name: ${job.name} run at ${ud.expired_at}`);
     }

@@ -19,7 +19,15 @@ const data = new SlashCommandBuilder()
   .addIntegerOption(option =>
     option.setName('to')
       .setDescription('The to index tell Nepbot which position should stop to get proposal')
-      .setRequired(false));
+      .setRequired(false))
+  .addStringOption(option =>
+    option.setName('message_type')
+      .setDescription('Displays the result in a private or public message.')
+      .setRequired(false)
+      .addChoices(
+        { name: 'Private', value: 'private' },
+        { name: 'Public', value: 'public' },
+      ));
 
 
 const execute = async interaction => {
@@ -42,6 +50,11 @@ const execute = async interaction => {
   let fromIndex = 0;
   let limit = 0;
   let activeProposals = [];
+  let messageType = false;
+  if (interaction.options.get('message_type')?.value != undefined) {
+    messageType = interaction.options.get('message_type').value == 'private' ? true : false;
+  }
+
   try {
     fromIndex = interaction.options.get('from').value;
     limit = interaction.options.get('to').value;
@@ -86,7 +99,7 @@ const execute = async interaction => {
   try {
     await interaction.reply({
       content:'\n',
-      ephemeral: true,
+      ephemeral: messageType,
       embeds: [content],
     });
   }
