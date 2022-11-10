@@ -260,12 +260,23 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'ChangeConfig' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('config') };
     afterProposal.origin = JSON.stringify(proposal);
+
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
     afterProposal.embeds = embeds;
     return afterProposal;
   }
   else if (typeof proposal.kind == 'string' && proposal.kind == 'Vote') {
     const afterProposal = { proposal_type: snakeCase('Vote') };
     afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
     afterProposal.embeds = embeds;
     return afterProposal;
   }
