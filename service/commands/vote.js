@@ -31,6 +31,7 @@ const execute = async interaction => {
   if (interaction.options.get('message_type')?.value != undefined) {
     messageType = interaction.options.get('message_type').value == 'private' ? true : false;
   }
+
   const proposal = await astrodaoUtils.getProposal(address, proposalId);
   const afterProposal = await astrodaoUtils.formatProposal(proposal);
 

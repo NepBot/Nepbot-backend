@@ -104,9 +104,16 @@ const isProposalExpired = async (time) =>{
  * @returns
  */
 exports.getProposal = async (daoId, proposalId) => {
-  const account = await contractUtils.contract();
-  return await account.viewFunction(daoId, 'get_proposal', { id: proposalId });
+  try {
+    const account = await contractUtils.contract();
+    return await account.viewFunction(daoId, 'get_proposal', { id: proposalId });
+  }
+  catch (e) {
+    logger.error(e);
+  }
 };
+
+//this.getProposal('jacktest.sputnikv2.testnett', 172).then(console.log);
 
 /**
  *
