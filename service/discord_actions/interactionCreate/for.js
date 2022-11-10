@@ -48,7 +48,6 @@ const execute = async interaction => {
   if (isAlreadyVote) {
     logger.info(`already voted. contract_address: ${contractAddress}, proposal_id: ${proposalId}, user_wallet: ${userInfo.near_wallet_id}`);
     content.setTitle('You already voted this proposal\n');
-    content.setDescription(JSON.stringify(proposal));
     await interaction.reply({
       content:'\n',
       ephemeral: true,
@@ -68,7 +67,6 @@ const execute = async interaction => {
   if (!checkPermission) {
     logger.info(`don't have permission. contract_address: ${contractAddress}, proposal_id: ${proposalId}, user_wallet: ${userInfo.near_wallet_id}`);
     content.setTitle('You don\'t have permission to vote this proposal\n');
-    content.setDescription(afterProposal.description);
     await interaction.reply({
       content:'\n',
       ephemeral: true,
