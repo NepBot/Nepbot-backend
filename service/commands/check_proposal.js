@@ -7,7 +7,7 @@ const logger = require('../../pkg/utils/logger');
 
 const data = new SlashCommandBuilder()
   .setName('check_proposal')
-  .setDescription('List active proposal; Nepbot will automatically set a range from last 50 proposals')
+  .setDescription('List active proposal; Nepbot will automatically set a range from last 25 proposals')
   .addStringOption(option =>
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')
@@ -70,11 +70,11 @@ const execute = async interaction => {
   catch (e) {
     logger.debug(e);
     const lastProposalId = await astrodao_utils.getLastProposalId(address);
-    if (lastProposalId <= 50) {
+    if (lastProposalId <= 25) {
       activeProposals = await astrodao_utils.listActiveProposals(address, 0, lastProposalId);
     }
     else {
-      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
+      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 25, 25);
     }
   }
 
