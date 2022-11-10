@@ -24,21 +24,6 @@ const data = new SlashCommandBuilder()
         { name: 'Public', value: 'public' },
       ));
 
-const approve = new MessageButton()
-  .setCustomId('action.for')
-  .setStyle('SECONDARY')
-  .setLabel('👍 For');
-
-const against = new MessageButton()
-  .setCustomId('action.against')
-  .setStyle('SECONDARY')
-  .setLabel('👎 Against');
-
-const content = new MessageEmbed();
-
-const action = new MessageActionRow()
-  .addComponents(approve, against);
-
 const execute = async interaction => {
   const address = interaction.options.get('contract_address').value;
   const proposalId = interaction.options.get('proposal_id').value;
@@ -49,6 +34,20 @@ const execute = async interaction => {
   const proposal = await astrodaoUtils.getProposal(address, proposalId);
   const afterProposal = await astrodaoUtils.formatProposal(proposal);
 
+  const approve = new MessageButton()
+    .setCustomId('action.for')
+    .setStyle('SECONDARY')
+    .setLabel('👍 For');
+
+  const against = new MessageButton()
+    .setCustomId('action.against')
+    .setStyle('SECONDARY')
+    .setLabel('👎 Against');
+
+  const content = new MessageEmbed();
+
+  const action = new MessageActionRow()
+    .addComponents(approve, against);
   // Generate sign and main info for the both of the button
   content.addFields({ name: 'Contract Address', value: address });
   for (const field of afterProposal.embeds) {
