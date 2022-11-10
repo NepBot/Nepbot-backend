@@ -260,11 +260,13 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'ChangeConfig' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('config') };
     afterProposal.origin = JSON.stringify(proposal);
+    afterProposal.embeds = embeds;
     return afterProposal;
   }
   else if (typeof proposal.kind == 'string' && proposal.kind == 'Vote') {
     const afterProposal = { proposal_type: snakeCase('Vote') };
     afterProposal.origin = JSON.stringify(proposal);
+    afterProposal.embeds = embeds;
     return afterProposal;
   }
   else if (typeof proposal.kind == 'object' && 'FunctionCall' in proposal.kind) {
