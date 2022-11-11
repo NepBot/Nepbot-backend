@@ -7,7 +7,7 @@ const logger = require('../../pkg/utils/logger');
 
 const data = new SlashCommandBuilder()
   .setName('check_proposal')
-  .setDescription('List active proposal; Nepbot will automatically set a range from last 50 proposals')
+  .setDescription('List active proposal; Nepbot will automatically set a range from last 25 proposals')
   .addStringOption(option =>
     option.setName('contract_address')
       .setDescription('The Astrodao Contract Address')
@@ -19,7 +19,15 @@ const data = new SlashCommandBuilder()
   .addIntegerOption(option =>
     option.setName('to')
       .setDescription('The to index tell Nepbot which position should stop to get proposal')
-      .setRequired(false));
+      .setRequired(false))
+  .addStringOption(option =>
+    option.setName('message_type')
+      .setDescription('Displays the result in a private or public message.')
+      .setRequired(false)
+      .addChoices(
+        { name: 'Private', value: 'private' },
+        { name: 'Public', value: 'public' },
+      ));
 
 
 const execute = async interaction => {
@@ -30,7 +38,7 @@ const execute = async interaction => {
     user_id: userId,
   });
   // if the user doesn't connect to any near wallet, it will reply the following content.
-  if (!userInfo.near_wallet_id.trim()) {
+  if (!userInfo.near_wallet_id) {
     await interaction.reply({
       content:'You are not connected to any Near wallet.',
       ephemeral: true,
@@ -42,6 +50,11 @@ const execute = async interaction => {
   let fromIndex = 0;
   let limit = 0;
   let activeProposals = [];
+  let messageType = false;
+  if (interaction.options.get('message_type')?.value != undefined) {
+    messageType = interaction.options.get('message_type').value == 'private' ? true : false;
+  }
+
   try {
     fromIndex = interaction.options.get('from').value;
     limit = interaction.options.get('to').value;
@@ -57,11 +70,11 @@ const execute = async interaction => {
   catch (e) {
     logger.debug(e);
     const lastProposalId = await astrodao_utils.getLastProposalId(address);
-    if (lastProposalId <= 50) {
+    if (lastProposalId <= 25) {
       activeProposals = await astrodao_utils.listActiveProposals(address, 0, lastProposalId);
     }
     else {
-      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 50, 50);
+      activeProposals = await astrodao_utils.listActiveProposals(address, lastProposalId - 25, 25);
     }
   }
 
@@ -86,7 +99,7 @@ const execute = async interaction => {
   try {
     await interaction.reply({
       content:'\n',
-      ephemeral: true,
+      ephemeral: messageType,
       embeds: [content],
     });
   }
