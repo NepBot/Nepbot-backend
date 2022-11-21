@@ -31,15 +31,20 @@ const delayTask = async function(accountIdList, collectionList) {
 
       const roles = [];
       const delRoles = [];
+      let level = false;
       for (const { fields, role_id, key_field } of guildRoles) {
         if (key_field[0] != config.paras.nft_contract || key_field[1] != userToken.value) {
           continue;
         }
+        if (key_field[2] != undefined) {
+          const userLevel = await parasUtils.getUserInfo(userToken.near_wallet_id).then(e => e.level);
+          level = await parasUtils.checkUserLevel(userLevel, key_field[2]);
+        }
         const newAmount = await parasUtils.getTokenPerOwnerCount(userToken.value, userToken.near_wallet_id, fields.token_amount);
-        if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1) {
+        if (!member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) != -1 && level) {
           roles.push(role_id);
         }
-        if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1) {
+        if (member._roles.includes(role_id) && new BN(newAmount).cmp(new BN(fields.token_amount)) == -1 && !level) {
           delRoles.push(role_id);
         }
       }
@@ -61,7 +66,6 @@ const delayTask = async function(accountIdList, collectionList) {
         }
 
       }
-
 
     }
   }
