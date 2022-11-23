@@ -37,6 +37,7 @@
     "request-promise": "^4.2.6",
     "sequelize": "^6.21.3",
     "snake-case": "^3.0.4",
+    "text-table": "^0.2.0",
     "twitter-api-v2": "^1.12.5",
     "yargs": "^17.5.1"
   },
