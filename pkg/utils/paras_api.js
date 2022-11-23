@@ -70,7 +70,7 @@ exports.getUserInfo = async (accountId) => {
     });
   return userInfo;
 };
-//this.getUserInfo('kangmalu.testnet').then(e => console.log(e.level));
+// this.getUserInfo('kangmalu.testnet').then(e => console.log(e.level));
 
 const LEVEL = ['everyone', 'bronze', 'silver', 'gold', 'platinum'];
 exports.checkUserLevel = async (accountLevel, ruleLevel) => {
@@ -89,4 +89,44 @@ exports.checkUserLevel = async (accountLevel, ruleLevel) => {
     return true;
   }
 };
-//this.checkUserLevel('bronze', 'test').then(console.log);
+// this.checkUserLevel('bronze', 'test').then(console.log);
+
+exports.getRaffleId = async () => {
+  const api = 'https://api-v2-mainnet.paras.id';
+  const current = await axios
+    .get(`${api}/raffle/current`)
+    .then(res => {
+      return res.data.raffle._id;
+    })
+    .catch(error => {
+      logger.error(error.response.data);
+    });
+  return current;
+};
+
+exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
+  const api = 'https://api-v2-mainnet.paras.id';
+  if (accountId) {
+    const result = await axios
+      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=1&raffle_type=${raffleType}&account_id=${accountId}`)
+      .then(res => {
+        return res.data.account_id;
+      })
+      .catch(error => {
+        logger.error(error.response.data);
+      });
+    return result;
+  }
+  else {
+    const result = await axios
+      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=10&raffle_type=${raffleType}`)
+      .then(res => {
+        return res.data.results;
+      })
+      .catch(error => {
+        logger.error(error.response.data);
+      });
+    return result;
+  }
+};
+//this.getLeaderBoard('platinum', 'smile143.near').then(console.log);
