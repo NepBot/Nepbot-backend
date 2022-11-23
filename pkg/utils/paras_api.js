@@ -3,6 +3,7 @@ const config = require('../../pkg/utils/config');
 const rp = require('request-promise');
 const fs = require('fs');
 const logger = require('./logger');
+const axios = require('axios');
 
 exports.getCollection = async (collectionId) => {
   const result = await request({
@@ -32,29 +33,100 @@ exports.createCollection = async (formData, auth) => {
 };
 
 exports.getTokenSeries = async (tokenSeriesId) => {
-	const res = await new Promise((resolve, reject) => {
-		request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=${config.paras.nft_contract}&__limit=1`, function(error, response, body) {
-			if (!error && response.statusCode == 200) {
-				resolve(JSON.parse(body));
-			}
-			reject(error);
-		});
-	});
-	if (res.data.results) {
-		return res.data.results[0];
-	}
+  const res = await new Promise((resolve, reject) => {
+    request(`${config.paras.api}/token?token_series_id=${tokenSeriesId}&contract_id=${config.paras.nft_contract}&__limit=1`, function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(JSON.parse(body));
+      }
+      reject(error);
+    });
+  });
+  if (res.data.results) {
+    return res.data.results[0];
+  }
 };
 
 exports.getTokenPerOwnerCount = async (collectionId, ownerId, limit) => {
-	return await new Promise((resolve, reject) => {
-		request(`${config.paras.api}/token?collection_id=${collectionId}&owner_id=${ownerId}&exclude_total_burn=true&__limit=${limit}`, function(error, response, body) {
-			if (!error && response.statusCode == 200) {
-				const res = JSON.parse(body);
-				resolve(res.data.results.length);
-			}
-			reject(error);
-		});
-	});
-	
+  return await new Promise((resolve, reject) => {
+    request(`${config.paras.api}/token?collection_id=${collectionId}&owner_id=${ownerId}&exclude_total_burn=true&__limit=${limit}`, function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        const res = JSON.parse(body);
+        resolve(res.data.results.length);
+      }
+      reject(error);
+    });
+  });
+
 };
 
+exports.getUserInfo = async (accountId) => {
+  const userInfo = await axios
+    .get(`${config.paras.api}/profiles?accountId=${accountId}`)
+    .then(res => {
+      return res.data.data.results[0];
+    })
+    .catch(error => {
+      logger.error(error.response.data);
+    });
+  return userInfo;
+};
+// this.getUserInfo('kangmalu.testnet').then(e => console.log(e.level));
+
+const LEVEL = ['everyone', 'bronze', 'silver', 'gold', 'platinum'];
+exports.checkUserLevel = async (accountLevel, ruleLevel) => {
+  logger.debug(`accountLevel: ${accountLevel} --- ruleLevel: ${ruleLevel}`);
+
+  if (LEVEL.indexOf(accountLevel) == -1 || LEVEL.indexOf(ruleLevel) == -1) {
+    return false;
+  }
+  else if (LEVEL.indexOf(accountLevel) < LEVEL.indexOf(ruleLevel)) {
+    return false;
+  }
+  else if (LEVEL.indexOf(accountLevel) > LEVEL.indexOf(ruleLevel)) {
+    return true;
+  }
+  else if (LEVEL.indexOf(accountLevel) == LEVEL.indexOf(ruleLevel)) {
+    return true;
+  }
+};
+// this.checkUserLevel('bronze', 'test').then(console.log);
+
+exports.getRaffleId = async () => {
+  const api = 'https://api-v2-mainnet.paras.id';
+  const current = await axios
+    .get(`${api}/raffle/current`)
+    .then(res => {
+      return res.data.raffle._id;
+    })
+    .catch(error => {
+      logger.error(error.response.data);
+    });
+  return current;
+};
+
+exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
+  const api = 'https://api-v2-mainnet.paras.id';
+  if (accountId) {
+    const result = await axios
+      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=1&raffle_type=${raffleType}&account_id=${accountId}`)
+      .then(res => {
+        return res.data.account_id;
+      })
+      .catch(error => {
+        logger.error(error.response.data);
+      });
+    return result;
+  }
+  else {
+    const result = await axios
+      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=10&raffle_type=${raffleType}`)
+      .then(res => {
+        return res.data.results;
+      })
+      .catch(error => {
+        logger.error(error.response.data);
+      });
+    return result;
+  }
+};
+//this.getLeaderBoard('platinum', 'smile143.near').then(console.log);

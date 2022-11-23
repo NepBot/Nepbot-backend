@@ -1,6 +1,7 @@
 const contractUtils = require('../../pkg/utils/contract_utils');
 const discordUtils = require('../../pkg/utils/discord_utils');
 const nearUtils = require('../../pkg/utils/near_utils');
+const parasUtils = require('../../pkg/utils/paras_api');
 const logger = require('../../pkg/utils/logger');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userFields = require('../../pkg/models/object/user_fields');
@@ -50,14 +51,19 @@ const token_task = async function(receipts) {
 
       const roles = [];
       const delRoles = [];
+      let level = false;
       for (const { fields, role_id, key_field } of guildRoles) {
         if (key_field[0] != 'token_id' || key_field[1] != userToken.value) {
           continue;
         }
-        if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1) {
+        if (userToken.value === config.paras.token_contract && key_field[2] != undefined) {
+          const userLevel = await parasUtils.getUserInfo(userToken.near_wallet_id).then(e => e.level);
+          level = await parasUtils.checkUserLevel(userLevel, key_field[2]);
+        }
+        if (!member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) != -1 && level) {
           roles.push(role_id);
         }
-        if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1) {
+        if (member._roles.includes(role_id) && total.cmp(new BN(fields.token_amount)) == -1 && !level) {
           delRoles.push(role_id);
         }
       }

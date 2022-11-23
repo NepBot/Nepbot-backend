@@ -176,6 +176,13 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     let stakedParas = new BN('0');
     if (rule.key_field[1] === config.paras.token_contract) {
       stakedParas = await contractUtils.getStakedParas(walletId);
+      if (rule.key_field[2] != undefined) {
+        const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level);
+        if (!await parasUtils.checkUserLevel(userLevel, rule.key_field[2])) {
+          logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
+          return false;
+        }
+      }
     }
     const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], walletId);
     const tokenAmount = new BN(newAmount).add(stakedParas);
@@ -228,6 +235,13 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     }
   }
   else if (rule.key_field[0] == config.paras.nft_contract) {
+    if (rule.key_field[2] != undefined) {
+      const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level);
+      if (!await parasUtils.checkUserLevel(userLevel, rule.key_field[2])) { //false
+        logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
+        return false;
+      }
+    }
     const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], walletId);
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
       logger.debug(`satisfy the ${config.paras.nft_contract} rule walletId: ${walletId}`);
