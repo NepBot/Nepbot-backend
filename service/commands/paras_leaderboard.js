@@ -6,7 +6,7 @@ const table = require('text-table');
 
 const data = new SlashCommandBuilder()
   .setName('paras_leaderboard')
-  .setDescription('Create a snapshot based on currently block_height and your contract_address')
+  .setDescription('Tracking the leader board on paras OR input a account_id to track your rank')
   .addStringOption(option => option.setName('account_id').setDescription('Input account id in paras.').setRequired(false));
 
 const execute = async interaction => {
