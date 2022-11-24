@@ -1,9 +1,13 @@
+/**
+ * all source code about paras can be found in https://github.com/orgs/ParasHQ/repositories?type=all
+ */
 const request = require('request');
 const config = require('../../pkg/utils/config');
 const rp = require('request-promise');
 const fs = require('fs');
 const logger = require('./logger');
 const axios = require('axios');
+const contractUtils = require('./contract_utils');
 
 exports.getCollection = async (collectionId) => {
   const result = await request({
@@ -92,9 +96,8 @@ exports.checkUserLevel = async (accountLevel, ruleLevel) => {
 // this.checkUserLevel('bronze', 'test').then(console.log);
 
 exports.getRaffleId = async () => {
-  const api = 'https://api-v2-mainnet.paras.id';
   const current = await axios
-    .get(`${api}/raffle/current`)
+    .get(`${config.paras.api}/raffle/current`)
     .then(res => {
       return res.data.raffle._id;
     })
@@ -105,10 +108,9 @@ exports.getRaffleId = async () => {
 };
 
 exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
-  const api = 'https://api-v2-mainnet.paras.id';
   if (accountId) {
     const result = await axios
-      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=1&raffle_type=${raffleType}&account_id=${accountId}`)
+      .get(`${config.paras.api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=1&raffle_type=${raffleType}&account_id=${accountId}`)
       .then(res => {
         return res.data.account_id;
       })
@@ -119,7 +121,7 @@ exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
   }
   else {
     const result = await axios
-      .get(`${api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=10&raffle_type=${raffleType}`)
+      .get(`${config.paras.api}/raffle/${raffleId}/leaderboards?__skip=0&__limit=10&raffle_type=${raffleType}`)
       .then(res => {
         return res.data.results;
       })
@@ -129,4 +131,41 @@ exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
     return result;
   }
 };
-//this.getLeaderBoard('platinum', 'smile143.near').then(console.log);
+// this.getLeaderBoard('platinum', 'smile143.near').then(console.log);
+
+/**
+ * get the user locked seeds
+ * @param accountId
+ * @returns
+ * pub struct LockedSeed {
+    pub balance: U128,
+    pub started_at: u32,
+    pub ended_at: u32
+}
+ */
+exports.getUserLockedSeeds = async (accountId) => {
+  const account = await contractUtils.contract();
+  return await account.viewFunction(config.paras.stake_contract, 'list_user_locked_seeds', { account_id: accountId }).then((e) => (e)[config.paras.token_contract]);
+};
+// this.getUserLockedSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
+
+exports.prettyBalance = (balance, decimals = 18, len = 8) => {
+  if (!balance) {
+    return '0';
+  }
+  const diff = balance.toString().length - decimals;
+  const fixedPoint = Math.max(2, len - Math.max(diff, 0));
+  const fixedBalance = (balance / 10 ** decimals).toFixed(fixedPoint);
+  const finalBalance = parseFloat(fixedBalance).toString();
+  const [head, tail] = finalBalance.split('.');
+  if (head == 0) {
+    if (tail) {
+      return `${head}.${tail.substring(0, len - 1)}`;
+    }
+    return `${head}`;
+  }
+  const formattedHead = head.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return tail ? `${formattedHead}.${tail}` : formattedHead;
+};
+
+// console.log(this.prettyBalance('3002980000000000000000'));

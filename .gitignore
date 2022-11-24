@@ -1,6 +1,7 @@
 .env
 .eslintrc.json
 conf/near_net.json
+conf/near_net_mainnet.json
 logs/*
 node_modules
 .vscode

@@ -11,6 +11,18 @@ exports.getExpiredTimeBySecond = async (second) => {
 };
 // this.getExpiredTime(7200).then(console.log);
 
-exports.getGMTTime = async () => {
+exports.getISOTime = async (milliseconds) => {
+  if (milliseconds) {
+    return new Date(milliseconds).toISOString();
+  }
   return new Date().toISOString();
 };
+// this.getISOTime(1669241673 * 1000).then(console.log);
+
+exports.getUTCTime = async (milliseconds) => {
+  if (milliseconds) {
+    return new Date(milliseconds).toUTCString();
+  }
+  return new Date().toUTCString();
+};
+// this.getGMTTime(1669241673 * 1000).then(console.log);
