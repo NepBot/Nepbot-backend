@@ -114,15 +114,15 @@ exports.setUser = async (args, accountId) => {
         try {
           if (await this.isMemberSatisfyRule(accountId, rule)) {
             isAddRole = isAddRole || true;
-            await userFields.addUserField({
-              near_wallet_id: accountId,
-              key: rule.key_field[0],
-              value: rule.key_field[1],
-            }).catch(e => logger.error(e));
           }
           else {
             isAddRole = isAddRole || false;
           }
+          await userFields.addUserField({
+            near_wallet_id: accountId,
+            key: rule.key_field[0],
+            value: rule.key_field[1],
+          }).catch(e => logger.error(e));
         }
         catch (e) {
           isAddRole = isAddRole || false;
@@ -176,13 +176,6 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     let stakedParas = new BN('0');
     if (rule.key_field[1] === config.paras.token_contract) {
       stakedParas = await contractUtils.getStakedParas(walletId);
-      if (rule.key_field[2] != undefined) {
-        const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level);
-        if (!await parasUtils.checkUserLevel(userLevel, rule.key_field[2])) {
-          logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
-          return false;
-        }
-      }
     }
     const newAmount = await contractUtils.getBalanceOf(rule.key_field[1], walletId);
     const tokenAmount = new BN(newAmount).add(stakedParas);
@@ -196,6 +189,14 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
       return false;
     }
 
+  }
+  else if (rule.key_field[0] == 'gating_rule' && rule.key_field[1] == 'Loyalty Level') {
+    const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level.charAt(0).toUpperCase() + e.level.slice(1));
+    if (!await parasUtils.checkUserLevel(userLevel, rule.fields.loyalty_level)) {
+      logger.debug(`unsatisfying the ${rule.fields.loyalty_level} rule walletId: ${walletId}`);
+      return false;
+    }
+    return true;
   }
   else if (rule.key_field[0] == 'appchain_id') {
     const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], walletId);
@@ -235,13 +236,7 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     }
   }
   else if (rule.key_field[0] == config.paras.nft_contract) {
-    if (rule.key_field[2] != undefined) {
-      const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level);
-      if (!await parasUtils.checkUserLevel(userLevel, rule.key_field[2])) { //false
-        logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
-        return false;
-      }
-    }
+
     const tokenAmount = await parasUtils.getTokenPerOwnerCount(rule.key_field[1], walletId);
     if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
       logger.debug(`satisfy the ${config.paras.nft_contract} rule walletId: ${walletId}`);
@@ -264,12 +259,12 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
   }
 };
 
-// this.isMemberSatisfyRule('0xjacktest1.testnet', {
+// this.isMemberSatisfyRule('gogoshishi.near', {
 //   guild_id: '923197936068861953',
-//   role_id: '1019929554745315369',
-//   fields: { astrodao_role: 'yesgood' },
-//   key_field: [ 'astrodao_id', 'goodguy.sputnikv2.testnet' ],
-// }).then(console.log);
+//   role_id: '1041667394122285116',
+//   fields: { loyalty_level: 'Bronze' },
+//   key_field: [ 'gating_rule', 'Loyalty Level' ],
+// }).then(console.log).catch(e => console.log(e));
 
 exports.deleteData = async (userId, guildId) => {
 

@@ -74,9 +74,9 @@ exports.getUserInfo = async (accountId) => {
     });
   return userInfo;
 };
-// this.getUserInfo('kangmalu.testnet').then(e => console.log(e.level));
+// this.getUserInfo('gogoshishi.near').then(e => console.log(e.level));
 
-const LEVEL = ['everyone', 'bronze', 'silver', 'gold', 'platinum'];
+const LEVEL = ['Everyone', 'Bronze', 'Silver', 'Gold', 'Platinum'];
 exports.checkUserLevel = async (accountLevel, ruleLevel) => {
   logger.info(`accountLevel: ${accountLevel} --- ruleLevel: ${ruleLevel}`);
 
