@@ -78,7 +78,7 @@ exports.getUserInfo = async (accountId) => {
 
 const LEVEL = ['Everyone', 'Bronze', 'Silver', 'Gold', 'Platinum'];
 exports.checkUserLevel = async (accountLevel, ruleLevel) => {
-  logger.info(`accountLevel: ${accountLevel} --- ruleLevel: ${ruleLevel}`);
+  logger.debug(`accountLevel: ${accountLevel} --- ruleLevel: ${ruleLevel}`);
 
   if (LEVEL.indexOf(accountLevel) == -1 || LEVEL.indexOf(ruleLevel) == -1) {
     return false;
@@ -93,7 +93,7 @@ exports.checkUserLevel = async (accountLevel, ruleLevel) => {
     return true;
   }
 };
-// this.checkUserLevel('bronze', 'test').then(console.log);
+//this.checkUserLevel('Bronze', 'Sliver').then(console.log);
 
 exports.getRaffleId = async () => {
   const current = await axios
