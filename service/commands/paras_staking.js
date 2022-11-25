@@ -9,11 +9,11 @@ const data = new SlashCommandBuilder()
   .setDescription('Tracking your staking status on paras')
   .addStringOption(option => option.setName('account_id').setDescription('Input account id in paras.').setRequired(true));
 
-const content = new MessageEmbed()
-  .setTitle('Paras Staking')
-  .setColor('BLURPLE');
-
 const execute = async interaction => {
+
+  const content = new MessageEmbed()
+    .setTitle('Paras Staking')
+    .setColor('BLURPLE');
 
   const accountId = interaction.options.get('account_id').value;
   try {
