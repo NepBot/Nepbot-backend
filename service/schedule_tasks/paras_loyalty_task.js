@@ -4,7 +4,7 @@ const userInfos = require('../../pkg/models/object/user_infos');
 const parasUtils = require('../../pkg/utils/paras_api');
 const discordUtils = require('../../pkg/utils/discord_utils');
 
-const refreshRole = async function() {
+exports.refreshRole = async () => {
   // logger.debug(`accountIds: ${_accountIds}`);
   const rules = await contractUtils.getRulesByField('gating_rule', 'Loyalty Level');
   for (const rule of rules) {
@@ -30,5 +30,3 @@ const refreshRole = async function() {
     }
   }
 };
-
-module.exports = refreshRole;
