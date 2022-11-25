@@ -35,15 +35,18 @@ exports.getAstrodaoPolicy = async (contractId) => {
  * @returns boolean
  */
 exports.isMemberHaveRole = async (daoId, accountId, roleInDao) => {
+  if (roleInDao == 'all') {
+    return true;
+  }
   const policy = await this.getAstrodaoPolicy(daoId);
   for (const role of policy.roles) {
-    if (role.name == roleInDao && role.kind.Group.some(item => item === accountId)) {
+    if (role.name == roleInDao && role.kind.Group.includes(accountId)) {
       return true;
     }
   }
   return false;
 };
-// this.isMemberHaveRole('goodguy.sputnikv2.testnet', '0xjacktest1.testnet', 'council').then(console.log);
+// this.isMemberHaveRole('kalakendradao.sputnik-dao.near', 'gogoshishi.near', 'all').then(console.log);
 
 /**
  *
