@@ -16,6 +16,7 @@ const astrodaoTask = require('./schedule_tasks/astrodao_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
 const { startStream } = require('../pkg/utils/block_stream');
+const parasLoyaltyTask = require('./schedule_tasks/paras_loyalty_task');
 
 
 const txMap = [];
@@ -108,6 +109,9 @@ module.exports.scheduleTask = async function(fromBlockHeight = 0) {
   else {
     schedule.scheduleJob('*/1 * * * * *', function() {
       twitterTask.refreshToken();
+    });
+    schedule.scheduleJob('*/5 * * * * *', function() {
+      parasLoyaltyTask.refreshRole();
     });
     const newestBlock = await provider.block({ finality: 'optimistic' });
     resolveNewBlock(newestBlock.header.height);
