@@ -1,0 +1,36 @@
+{
+  "nearWallet": {
+    "networkId": "testnet",
+    "nodeUrl": "https://rpc.testnet.near.org",
+    "walletUrl": "https://wallet.testnet.near.org",
+    "helperUrl": "https://helper.testnet.near.org"
+  },
+  "port": 6000,
+  "rule_contract": "app.dev-nepbot.testnet",
+  "nft_contract": "nft.dev-nepbot.testnet",
+  "snapshot_contract": "snapshot.dev-nepbot.testnet",
+  "airdrop_contract": "airdrop.dev-nepbot.testnet",
+  "linkdrop": "linkdrop6.bhc8521.testnet",
+  "account_id": "dev-nepbot.testnet",
+  "oct_contract": "registry.test_oct.testnet",
+  "near_indexer": "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer",
+  "wallet_auth_url":"http://127.0.0.1:8080",
+  "indexer_service_url":"https://testnet-api.kitwallet.app",
+  "paras": {
+    "api":"https://api-v3-marketplace-testnet.paras.id",
+    "nft_contract": "paras-token-v2.testnet",
+    "stake_contract":"dev-1641987418790-52566958498708",
+    "token_contract":"dev-1631277489384-75412609538902"
+  },
+  "astrodao":{
+    "api":"https://testnet.app.astrodao.com/api/server/v1/daos",
+    "contract":"sputnikv2.testnet"
+  },
+  "twitter":{
+    "callback_url": "http://13.214.203.20:8080/twitterverify"
+  },
+  "near_lake_config": {
+    "s3BucketName": "near-lake-data-testnet",
+    "s3RegionName": "eu-central-1"
+  }
+}
