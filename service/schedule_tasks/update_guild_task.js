@@ -74,11 +74,6 @@ const update_guild_task = async (receipts) => {
             try {
               const guildMember = await discordUtils.getMember(user.guild_id, user.user_id);
               await guildMember.roles.remove(ruleFromAction.role_id).then(logger.info(`${guildMember.user.username} remove role_id ${ruleFromAction.role_id} in update_guild_task`)).catch(e => logger.error(e));
-              await userFields.deleteUserField({
-                near_wallet_id: user.near_wallet_id,
-                key: ruleFromAction.key_field[0],
-                value: ruleFromAction.key_field[1],
-              });
               logger.debug(`${user.user_id} remove role & deleteUserFields are finished`);
             }
             catch (e) {
