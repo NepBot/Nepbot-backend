@@ -93,7 +93,7 @@ exports.isMemberIncludeRole = async (guildId, userId, roleId) => {
   return await member._roles.includes(roleId);
 };
 
-// this.isMemberIncludeRole('966966468774350948', '912438768043196456', '1004439142899396638').then(console.log);
+//this.isMemberIncludeRole('966966468774350948', '912438768043196456', '1004439142899396638').then(console.log);
 
 /**
  * 
@@ -106,7 +106,7 @@ exports.getMembersInRole = async (guildId, roleId) => {
   return role.members;
 };
 
-//this.getMembersInRole('966966468774350948', '1021984493285933126').then(console.log);
+//this.getMembersInRole('966966468774350948', '1004475262097952848').then(console.log);
 
 exports.getChannel = async (guildId, channelId) => {
   const guild = await this.getGuild(guildId);

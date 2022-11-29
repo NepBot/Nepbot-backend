@@ -28,7 +28,7 @@ log4js.configure({
       pattern: 'yyyy-MM-dd.log',
       alwaysIncludePattern: true,
       encoding: 'utf-8',
-      numBackups:10,
+      numBackups:5,
     },
   },
   categories: {
