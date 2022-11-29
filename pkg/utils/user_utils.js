@@ -191,12 +191,17 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
 
   }
   else if (rule.key_field[0] == 'gating_rule' && rule.key_field[1] == 'Loyalty Level') {
-    const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level.charAt(0).toUpperCase() + e.level.slice(1));
-    if (!await parasUtils.checkUserLevel(userLevel, rule.fields.loyalty_level)) {
-      logger.debug(`unsatisfying the ${rule.fields.loyalty_level} rule walletId: ${walletId}`);
+    try {
+      const userLevel = await parasUtils.getUserInfo(walletId).then(e => e.level.charAt(0).toUpperCase() + e.level.slice(1));
+      if (!await parasUtils.checkUserLevel(userLevel, rule.fields.loyalty_level)) {
+        logger.debug(`unsatisfying the ${rule.fields.loyalty_level} rule walletId: ${walletId}`);
+        return false;
+      }
+      return true;
+    }
+    catch (e) {
       return false;
     }
-    return true;
   }
   else if (rule.key_field[0] == 'gating_rule' && rule.key_field[1] == 'Paras Staking') {
     try {
@@ -219,7 +224,6 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
       }
     }
     catch (e) {
-      logger.error(e);
       return false;
     }
   }
