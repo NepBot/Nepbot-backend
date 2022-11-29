@@ -8,6 +8,7 @@ const fs = require('fs');
 const logger = require('./logger');
 const axios = require('axios');
 const contractUtils = require('./contract_utils');
+const { throws } = require('assert');
 
 exports.getCollection = async (collectionId) => {
   const result = await request({
@@ -147,7 +148,7 @@ exports.getUserLockedSeeds = async (accountId) => {
   const account = await contractUtils.contract();
   return await account.viewFunction(config.paras.stake_contract, 'list_user_locked_seeds', { account_id: accountId }).then((e) => (e)[config.paras.token_contract]);
 };
-// this.getUserLockedSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
+//this.getUserLockedSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
 
 exports.prettyBalance = (balance, decimals = 18, len = 8) => {
   if (!balance) {

@@ -13,7 +13,7 @@ const execute = async interaction => {
   const raffleId = await parasUtils.getRaffleId();
   if (raffleId == null || raffleId == undefined) {
     await interaction.reply({
-      content:'There is no active raffle at this moment',
+      content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info in the upcoming raffle! :blue_heart:',
       ephemeral: true,
     });
   }
@@ -47,7 +47,7 @@ const execute = async interaction => {
     }
     else {
       await interaction.reply({
-        content:`Can not find this account: **${accountId}** on paras.id`,
+        content:'You haven’t signed up for the raffle yet. You can check the raffle registration mechanism & period here: https://paras.id/loyalty.',
         ephemeral: true,
       });
     }
