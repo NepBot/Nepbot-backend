@@ -18,6 +18,12 @@ const execute = async interaction => {
   const accountId = interaction.options.get('account_id').value;
   try {
     const lockedInfo = await parasUtils.getUserLockedSeeds(accountId);
+    if (lockedInfo == undefined) {
+      return await interaction.reply({
+        content:'Currently you don’t have any Paras staking',
+        ephemeral: true,
+      });
+    }
     content.addFields(
       { name: 'Amount', value: parasUtils.prettyBalance(lockedInfo.balance) + ' ℗' },
       { name: 'Duration', value: Math.floor(lockedInfo.ended_at / (3600 * 24)) - Math.floor(lockedInfo.started_at / (3600 * 24)) + ' days' },

@@ -198,6 +198,31 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     }
     return true;
   }
+  else if (rule.key_field[0] == 'gating_rule' && rule.key_field[1] == 'Paras Staking') {
+    try {
+      const userLockSeed = await parasUtils.getUserLockedSeeds(walletId);
+      const duration = Math.floor(userLockSeed.ended_at / (3600 * 24)) - Math.floor(userLockSeed.started_at / (3600 * 24));
+      const isGreatDuration = duration >= parseInt(rule.fields.paras_staking_duration);
+      const checkBalance = new BN(userLockSeed.balance).cmp(new BN(rule.fields.paras_staking_amount)) != -1 ? true : false;
+      if (isGreatDuration) {
+        if (checkBalance) {
+          logger.debug(`satisfy the {paras_staking} rule walletId: ${walletId}`);
+          return true;
+        }
+        else {
+          logger.debug(`unsatisfying the {paras_staking} rule walletId: ${walletId}`);
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    }
+    catch (e) {
+      logger.error(e);
+      return false;
+    }
+  }
   else if (rule.key_field[0] == 'appchain_id') {
     const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], walletId);
     if (octRole == rule.fields.oct_role) {
@@ -259,11 +284,11 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
   }
 };
 
-// this.isMemberSatisfyRule('gogoshishi.near', {
-//   guild_id: '923197936068861953',
-//   role_id: '1041667394122285116',
-//   fields: { loyalty_level: 'Bronze' },
-//   key_field: [ 'gating_rule', 'Loyalty Level' ],
+// this.isMemberSatisfyRule('dolmat.near', {
+//   guild_id: '935095654924042240',
+//   role_id: '935096627511820309',
+//   fields: { paras_staking_amount: "7000000000000000000", paras_staking_duration: "30" },
+//   key_field: [ 'gating_rule', 'Paras Staking' ],
 // }).then(console.log).catch(e => console.log(e));
 
 exports.deleteData = async (userId, guildId) => {
