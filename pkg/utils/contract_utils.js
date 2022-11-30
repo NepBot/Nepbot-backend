@@ -44,6 +44,27 @@ exports.getParasNftCountOf = async (accountId, tokenId) => {
   return await account.viewFunction(tokenId, 'nft_supply_for_owner', { account_id: accountId });
 };
 
+exports.getH00kdNftCountOf = async (accountId, eventId) => {
+  const account = await this.contract();
+  let tokens = await account.viewFunction(nft.h00kd.nft_contract, "nft_tokens_for_owner", {account_id: accountId})
+  tokens = tokens.filter(token => {
+    try {
+      let extra = JSON.parse(token.extra)
+      if (extra.event_id == eventId) {
+        return true
+      }
+    } catch(e) {
+      return false
+    }
+  })
+  return tokens.length
+}
+
+exports.getH00kdNftToken = async (tokenId) => {
+  const account = await this.contract();
+  return await account.viewFunction(nft.h00kd.nft_contract, "nft_token", {token_id: tokenId})
+}
+
 exports.getNearBalanceOf = async (accountId) => {
   const near = await connect(config.nearWallet);
   const account = await near.account(accountId);
@@ -87,10 +108,9 @@ exports.getCollectionsByGuild = async (guildId) => {
   }
 };
 
-async function parseEvents(receipt, txMap, eventType) {
+async function parseEvents(receipt, txMap, eventTypes) {
   let txDigests = txMap[receipt.receipt.Action.signer_id]
   if (!txDigests || txDigests.length == 0) {
-    console.log(receipt)
     return []
   }
   let tx = {}
@@ -105,7 +125,12 @@ async function parseEvents(receipt, txMap, eventType) {
     const events = outcome.outcome.logs.filter(log => {
       try {
         const logObj = JSON.parse(log.replace("EVENT_JSON:", ""))
-        return logObj && logObj.event == eventType
+        for (eventType of eventTypes) {
+          if (logObj && logObj.event == eventType) {
+            return true
+          }
+        }
+        return false
       } catch (e) {
         return false
       }
@@ -202,7 +227,7 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
-    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    const events = await parseEvents(receipt, txMap, ["nft_transfer", "nft_mint"])
     for (let event of events) {
       for (let item of event.data) {
         const obj = {};
@@ -233,7 +258,7 @@ exports.filterParasActions = async (receipts, txMap) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract);
   for (receipt of receipts) {
-    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    const events = await parseEvents(receipt, txMap, ["nft_transfer", "nft_mint"])
     for (let event of events) {
       for (let item of event.data) {
         for (let token_id of item.token_ids) {
@@ -241,6 +266,35 @@ exports.filterParasActions = async (receipts, txMap) => {
           obj.sender_id = item.old_owner_id;
           obj.receiver_id = item.new_owner_id;
           obj.token_id = token_id
+          ret.push(obj);
+        }
+      }
+    }
+  }
+  return ret;
+};
+
+exports.filterH00kdActions = async (receipts, txMap) => {
+  const ret = [];
+  receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.h00kd.nft_contract);
+  for (receipt of receipts) {
+    const events = await parseEvents(receipt, txMap, ["nft_transfer", "nft_mint"])
+    for (let event of events) {
+      for (let item of event.data) {
+        for (let token_id of item.token_ids) {
+          const obj = {};
+          obj.sender_id = item.old_owner_id;
+          obj.receiver_id = item.new_owner_id;
+          obj.token_id = token_id
+          for (let action of receipt.receipt.Action.actions) {
+            const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
+            if (action.FunctionCall.method_name == 'on_mint_nft') {
+              obj.event_id = args.event_data ? args.event_data.event_id : ""
+            }
+            else {
+              obj.event_id = await getH00kdNftToken(token_id)
+            }
+          }
           ret.push(obj);
         }
       }
