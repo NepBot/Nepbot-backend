@@ -40,7 +40,7 @@ const resolveChunk = async (chunkData) => {
     promises.push(ntfTask(chunkData.receipts, txMap));
     promises.push(parasTask(chunkData.receipts, txMap));
     promises.push(astrodaoTask(chunkData.receipts, txMap));
-    promises.push(h00kdTask(chunkData.receipts, txMap))
+    //promises.push(h00kdTask(chunkData.receipts, txMap))
     await Promise.all(promises);
   }
   catch (e) {
@@ -112,10 +112,10 @@ module.exports.scheduleTask = async function(fromBlockHeight = 0) {
     schedule.scheduleJob('*/1 * * * * *', function() {
       twitterTask.refreshToken();
     });
-    schedule.scheduleJob('*/5 * * * * *', function() {
-      parasLoyaltyTask.checkLevel();
-      parasLoyaltyTask.checkStaking();
-    });
+    // schedule.scheduleJob('*/5 * * * * *', function() {
+    //   parasLoyaltyTask.checkLevel();
+    //   parasLoyaltyTask.checkStaking();
+    // });
     const newestBlock = await provider.block({ finality: 'optimistic' });
     resolveNewBlock(newestBlock.header.height);
   }

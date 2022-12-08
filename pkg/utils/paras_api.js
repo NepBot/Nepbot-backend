@@ -71,7 +71,7 @@ exports.getUserInfo = async (accountId) => {
       return res.data.data.results[0];
     })
     .catch(error => {
-      logger.error(error.response.data);
+      logger.error(error);
     });
   return userInfo;
 };
@@ -102,7 +102,7 @@ exports.getRaffleId = async () => {
       return res.data.raffle._id;
     })
     .catch(error => {
-      logger.error(error.response.data);
+      logger.error(error);
     });
   return current;
 };
@@ -115,7 +115,7 @@ exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
         return res.data.account_id;
       })
       .catch(error => {
-        logger.error(error.response.data);
+        logger.error(error);
       });
     return result;
   }
@@ -126,7 +126,7 @@ exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
         return res.data.results;
       })
       .catch(error => {
-        logger.error(error.response.data);
+        logger.error(error);
       });
     return result;
   }
