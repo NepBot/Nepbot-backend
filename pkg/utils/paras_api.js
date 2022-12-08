@@ -143,6 +143,11 @@ exports.getLeaderBoard = async (raffleId, raffleType, accountId) => {
     pub ended_at: u32
 }
  */
+exports.getUserLockedSeeds = async (accountId) => {
+  const account = await contractUtils.contract();
+  return await account.viewFunction(config.paras.stake_contract, 'list_user_locked_seeds', { account_id: accountId }).then((e) => (e)[config.paras.token_contract]);
+};
+//this.getUserLockedSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
 
 exports.prettyBalance = (balance, decimals = 18, len = 8) => {
   if (!balance) {
