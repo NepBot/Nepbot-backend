@@ -22,10 +22,6 @@
     "stake_contract":"dev-1641987418790-52566958498708",
     "token_contract":"dev-1631277489384-75412609538902"
   },
-  "h00kd": {
-    "metadata_contract": "h00kd-metadata.near",
-    "nft_contract": "h00kd.near"
-  },
   "astrodao":{
     "api":"https://testnet.app.astrodao.com/api/server/v1/daos",
     "contract":"sputnikv2.testnet"
