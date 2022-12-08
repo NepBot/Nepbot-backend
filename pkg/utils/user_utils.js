@@ -276,18 +276,6 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
       return false;
     }
   }
-  else if (rule.key_field[0] == config.h00kd.nft_contract) {
-
-    const tokenAmount = await contractUtils.getH00kdNftCountOf(walletId, rule.key_field[1]);
-    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) != -1) {
-      logger.debug(`satisfy the ${config.paras.nft_contract} rule walletId: ${walletId}`);
-      return true;
-    }
-    if (new BN(tokenAmount).cmp(new BN(rule.fields.token_amount)) == -1) {
-      logger.debug(`unsatisfying the ${config.paras.nft_contract} rule walletId: ${walletId}`);
-      return false;
-    }
-  }
   else if (rule.key_field[0] == 'astrodao_id') {
     if (await astrodaoUtils.isMemberHaveRole(rule.key_field[1], walletId, rule.fields.astrodao_role)) {
       logger.debug(`satisfy the {astrodao_id} rule walletId: ${walletId}`);
