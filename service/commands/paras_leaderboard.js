@@ -14,7 +14,7 @@ const execute = async interaction => {
   if (raffleId == null || raffleId == undefined) {
     await interaction.reply({
       content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info in the upcoming raffle! :blue_heart:',
-      ephemeral: true,
+      ephemeral: false,
     });
   }
 
