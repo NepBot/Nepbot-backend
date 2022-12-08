@@ -13,7 +13,6 @@ const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
 const updateGuildTask = require('./schedule_tasks/update_guild_task');
 const astrodaoTask = require('./schedule_tasks/astrodao_task');
-const h00kdTask = require('./schedule_tasks/h00kd_task');
 const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
 const { startStream } = require('../pkg/utils/block_stream');
@@ -40,7 +39,6 @@ const resolveChunk = async (chunkData) => {
     promises.push(ntfTask(chunkData.receipts, txMap));
     promises.push(parasTask(chunkData.receipts, txMap));
     promises.push(astrodaoTask(chunkData.receipts, txMap));
-    promises.push(h00kdTask(chunkData.receipts, txMap))
     await Promise.all(promises);
   }
   catch (e) {
