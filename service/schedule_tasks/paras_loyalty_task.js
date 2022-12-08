@@ -21,6 +21,13 @@ exports.checkLevel = async () => {
           await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task`));
         }
         else if (!isMemberSatisfyRule && isMemberIncludeRole) {
+          const otherRules = rules.filter(e => e.role_id === rule.role_id && e.guild_id === rule.guild_id);
+          for (const oRule of otherRules) {
+            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, oRule);
+            if (isMemberSatisfyOtherRule) {
+              return;
+            }
+          }
           logger.debug(`unsatisfying the ${rule.fields.loyalty_level} rule walletId: ${userInfo.near_wallet_id}`);
           await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task`));
         }
@@ -49,6 +56,13 @@ exports.checkStaking = async () => {
           await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task`));
         }
         else if (!isMemberSatisfyRule && isMemberIncludeRole) {
+          const otherRules = rules.filter(e => e.role_id === rule.role_id && e.guild_id === rule.guild_id);
+          for (const oRule of otherRules) {
+            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, oRule);
+            if (isMemberSatisfyOtherRule) {
+              return;
+            }
+          }
           logger.debug(`unsatisfying the {paras_staking} rule walletId: ${userInfo.near_wallet_id}`);
           await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task`));
         }
