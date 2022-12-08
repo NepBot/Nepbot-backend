@@ -12,8 +12,8 @@ const data = new SlashCommandBuilder()
 const execute = async interaction => {
   const raffleId = await parasUtils.getRaffleId();
   if (raffleId == null || raffleId == undefined) {
-    await interaction.reply({
-      content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info in the upcoming raffle! :blue_heart:',
+    return await interaction.reply({
+      content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info in the upcoming raffle!:blue_heart:',
       ephemeral: true,
     });
   }
