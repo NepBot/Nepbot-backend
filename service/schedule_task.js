@@ -111,10 +111,10 @@ module.exports.scheduleTask = async function(fromBlockHeight = 0) {
     schedule.scheduleJob('*/1 * * * * *', function() {
       twitterTask.refreshToken();
     });
-    // schedule.scheduleJob('*/5 * * * * *', function() {
-    //   parasLoyaltyTask.checkLevel();
-    //   parasLoyaltyTask.checkStaking();
-    // });
+    schedule.scheduleJob('*/5 * * * * *', function() {
+      parasLoyaltyTask.checkLevel();
+      parasLoyaltyTask.checkStaking();
+    });
     const newestBlock = await provider.block({ finality: 'optimistic' });
     resolveNewBlock(newestBlock.header.height);
   }
