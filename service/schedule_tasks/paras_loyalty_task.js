@@ -33,7 +33,7 @@ exports.checkLevel = async () => {
         }
       }
       catch (e) {
-        logger.error(e);
+        //logger.error(e);
       }
     }
   }
@@ -68,7 +68,7 @@ exports.checkStaking = async () => {
         }
       }
       catch (e) {
-        logger.error(e);
+        //logger.error(e);
       }
     }
   }
