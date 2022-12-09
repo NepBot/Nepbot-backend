@@ -18,18 +18,18 @@ exports.checkLevel = async () => {
         const isMemberSatisfyRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, rule);
         const isMemberIncludeRole = await discordUtils.isMemberIncludeRole(rule.guild_id, userInfo.user_id, rule.role_id);
         if (isMemberSatisfyRule && !isMemberIncludeRole) {
-          await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task`));
+          await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task.checkLevel`));
         }
         else if (!isMemberSatisfyRule && isMemberIncludeRole) {
-          const otherRules = rules.filter(e => e.role_id === rule.role_id && e.guild_id === rule.guild_id);
-          for (const oRule of otherRules) {
-            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, oRule);
+          const rulesInGuild = await contractUtils.getRules(rule.guild_id).then(r => r.filter(e => e.role_id === rule.role_id));
+          for (const ruleInGuild of rulesInGuild) {
+            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, ruleInGuild);
             if (isMemberSatisfyOtherRule) {
               return;
             }
           }
           logger.debug(`unsatisfying the ${rule.fields.loyalty_level} rule walletId: ${userInfo.near_wallet_id}`);
-          await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task`));
+          await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task.checkLevel`));
         }
       }
       catch (e) {
@@ -53,18 +53,18 @@ exports.checkStaking = async () => {
         const isMemberSatisfyRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, rule);
         const isMemberIncludeRole = await discordUtils.isMemberIncludeRole(rule.guild_id, userInfo.user_id, rule.role_id);
         if (isMemberSatisfyRule && !isMemberIncludeRole) {
-          await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task`));
+          await member.roles.add(rule.role_id).then(logger.info(`${member.user.username} add role_id ${rule.role_id} in paras_loyalty_task.checkStaking`));
         }
         else if (!isMemberSatisfyRule && isMemberIncludeRole) {
-          const otherRules = rules.filter(e => e.role_id === rule.role_id && e.guild_id === rule.guild_id);
-          for (const oRule of otherRules) {
-            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, oRule);
+          const rulesInGuild = await contractUtils.getRules(rule.guild_id).then(r => r.filter(e => e.role_id === rule.role_id));
+          for (const ruleInGuild of rulesInGuild) {
+            const isMemberSatisfyOtherRule = await userUtils.isMemberSatisfyRule(userInfo.near_wallet_id, ruleInGuild);
             if (isMemberSatisfyOtherRule) {
               return;
             }
           }
           logger.debug(`unsatisfying the {paras_staking} rule walletId: ${userInfo.near_wallet_id}`);
-          await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task`));
+          await member.roles.remove(rule.role_id).then(logger.info(`${member.user.username} remove role_id ${rule.role_id} in paras_loyalty_task.checkStaking`));
         }
       }
       catch (e) {
