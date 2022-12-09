@@ -205,6 +205,20 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
   }
   else if (rule.key_field[0] == 'gating_rule' && rule.key_field[1] == 'Paras Staking') {
     try {
+      // staking amount
+      if (rule.fields.paras_staking_duration == '0') {
+        const userSeeds = await parasUtils.getUserSeeds(walletId);
+        const checkBalance = new BN(userSeeds).cmp(new BN(rule.fields.paras_staking_amount)) != -1 ? true : false;
+        if (checkBalance) {
+          logger.debug(`satisfy the {paras_staking} rule walletId: ${walletId}`);
+          return true;
+        }
+        else {
+          logger.debug(`unsatisfying the {paras_staking} rule walletId: ${walletId}`);
+          return false;
+        }
+      }
+      // lock stake amount
       const userLockSeed = await parasUtils.getUserLockedSeeds(walletId);
       const duration = Math.floor(userLockSeed.ended_at / (3600 * 24)) - Math.floor(userLockSeed.started_at / (3600 * 24));
       const isGreatDuration = duration >= parseInt(rule.fields.paras_staking_duration);
@@ -289,9 +303,9 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
 };
 
 // this.isMemberSatisfyRule('dolmat.near', {
-//   guild_id: '935095654924042240',
-//   role_id: '935096627511820309',
-//   fields: { paras_staking_amount: "7000000000000000000", paras_staking_duration: "30" },
+//   guild_id: '923197936068861953',
+//   role_id: '1047053310269604001',
+//   fields: { paras_staking_amount: "10000000000000000000", paras_staking_duration: "30" },
 //   key_field: [ 'gating_rule', 'Paras Staking' ],
 // }).then(console.log).catch(e => console.log(e));
 
