@@ -26,7 +26,7 @@ exports.getRulesByField = async (key, value) => {
   const account = await this.contract();
   return await account.viewFunction(config.rule_contract, 'get_field', { field_key: key, field_value: value });
 };
-//this.getRulesByField('gating_rule', 'Loyalty Level').then(console.log);
+//this.getRulesByField('gating_rule', 'Paras Staking').then(console.log);
 
 exports.getBalanceOf = async (tokenId, accountId) => {
   const account = await this.contract();

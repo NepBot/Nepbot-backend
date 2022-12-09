@@ -149,6 +149,12 @@ exports.getUserLockedSeeds = async (accountId) => {
 };
 //this.getUserLockedSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
 
+exports.getUserSeeds = async (accountId) => {
+  const account = await contractUtils.contract();
+  return await account.viewFunction(config.paras.stake_contract, 'list_user_seeds', { account_id: accountId }).then((e) => (e)[config.paras.token_contract]);
+};
+//this.getUserSeeds('dolmat.near').then(console.log).catch(e => console.log(e));
+
 exports.prettyBalance = (balance, decimals = 18, len = 8) => {
   if (!balance) {
     return '0';
