@@ -86,7 +86,7 @@ This repository contains the code for the backend of Nepbot, a discord bot for t
   Each platform has different way to interact withe the blockchain, so we need to generate specific utils for them.
 
 ## Note
-If you need to execute this project, the [near_net.json](./conf/near_net.json) and [.env](./.env) file is needed, there is a sample file in the currently folder. Don't forget to rename the both file by deleting `_sample`.
+If you need to execute this project, the [near_net_sample.json](./conf/near_net_sample.json) and [.env_sample](./.env_sample) file is needed, there is a sample file in the currently folder. Don't forget to rename the both file by deleting `_sample`.
 
 ## Local debug
 1. Apply for a discord bot and get the token from https://discord.com/developers/applications
