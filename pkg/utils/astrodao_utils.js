@@ -2,6 +2,7 @@ const axios = require('axios');
 const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 const contractUtils = require('./contract_utils');
+const parasApi = require('./paras_api');
 const { snakeCase } = require('snake-case');
 
 // this is just a backup for using astrodao API, it's not used in anywhere 2022-08-05
@@ -201,37 +202,16 @@ async function getDeadline(subTime, dueTime) {
  * @returns { proposal_type: snakeCase(proposal.kind), description: 'text show in discord' }
  */
 exports.formatProposal = async (proposal) => {
+  // logger.info(JSON.stringify(proposal));
   const embeds = [];
-  if (typeof proposal.kind == 'object' && 'AddMemberToRole' in proposal.kind) {
-    const afterProposal = { proposal_type: snakeCase('AddMemberToRole') };
+  if (typeof proposal.kind == 'object' && 'ChangePolicy' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('policy') };
     afterProposal.origin = JSON.stringify(proposal);
     embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Target', value: proposal.kind.AddMemberToRole.member_id });
-    embeds.push({ name: 'Group', value: proposal.kind.AddMemberToRole.role });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
-    afterProposal.embeds = embeds;
-    return afterProposal;
-  }
-  else if (typeof proposal.kind == 'object' && 'RemoveMemberFromRole' in proposal.kind) {
-    const afterProposal = { proposal_type: snakeCase('RemoveMemberFromRole') };
-    afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
-    embeds.push({ name: 'Proposer', value: proposal.proposer });
-    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
-    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Target', value: proposal.kind.AddMemberToRole.member_id });
-    embeds.push({ name: 'Group', value: proposal.kind.AddMemberToRole.role });
-    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
-    afterProposal.embeds = embeds;
-    return afterProposal;
-  }
-  else if (typeof proposal.kind == 'object' && 'Transfer' in proposal.kind) {
-    const afterProposal = { proposal_type: snakeCase('Transfer') };
-    afterProposal.origin = JSON.stringify(proposal);
-
     afterProposal.embeds = embeds;
     return afterProposal;
   }
@@ -243,8 +223,8 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.kind.AddBounty.bounty.description.split('$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Token', value: proposal.kind.AddBounty.bounty.token });
-    embeds.push({ name: 'Amount', value: proposal.kind.AddBounty.bounty.amount });
+    embeds.push({ name: 'Token', value: proposal.kind.AddBounty.bounty.token.length == 0 ? 'Near' : proposal.kind.AddBounty.bounty.token.toString() });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.AddBounty.bounty.amount, 24) });
     embeds.push({ name: 'Available Claims', value: proposal.kind.AddBounty.bounty.times.toString() });
     embeds.push({ name: 'Deadline', value: await getDeadline(proposal.submission_time, proposal.kind.AddBounty.bounty.max_deadline) });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
@@ -267,25 +247,28 @@ exports.formatProposal = async (proposal) => {
     afterProposal.embeds = embeds;
     return afterProposal;
   }
-  else if (typeof proposal.kind == 'object' && 'ChangeConfig' in proposal.kind) {
-    const afterProposal = { proposal_type: snakeCase('config') };
+  else if (typeof proposal.kind == 'object' && 'AddMemberToRole' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('AddMemberToRole') };
     afterProposal.origin = JSON.stringify(proposal);
-
     embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Target', value: proposal.kind.AddMemberToRole.member_id });
+    embeds.push({ name: 'Group', value: proposal.kind.AddMemberToRole.role });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
     afterProposal.embeds = embeds;
     return afterProposal;
   }
-  else if (typeof proposal.kind == 'string' && proposal.kind == 'Vote') {
-    const afterProposal = { proposal_type: snakeCase('Vote') };
+  else if (typeof proposal.kind == 'object' && 'RemoveMemberFromRole' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('RemoveMemberFromRole') };
     afterProposal.origin = JSON.stringify(proposal);
     embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Target', value: proposal.kind.RemoveMemberFromRole.member_id });
+    embeds.push({ name: 'Group', value: proposal.kind.RemoveMemberFromRole.role });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
     afterProposal.embeds = embeds;
     return afterProposal;
@@ -307,9 +290,72 @@ exports.formatProposal = async (proposal) => {
     afterProposal.embeds = embeds;
     return afterProposal;
   }
-  else if (typeof proposal.kind == 'object' && 'ChangePolicy' in proposal.kind) {
-    const afterProposal = { proposal_type: snakeCase('policy') };
+  else if (typeof proposal.kind == 'object' && 'Transfer' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('Transfer') };
     afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Token ID', value: proposal.kind.Transfer.token_id.length == 0 ? 'Near' : proposal.kind.Transfer.token_id });
+    embeds.push({ name: 'Target', value: proposal.kind.Transfer.receiver_id });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.Transfer.amount, 24) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
+
+    afterProposal.embeds = embeds;
+    return afterProposal;
+  }
+  else if (typeof proposal.kind == 'object' && 'UpgradeRemote' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('UpgradeRemote') };
+    afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Receiver Id', value: proposal.kind.UpgradeRemote.receiver_id });
+    embeds.push({ name: 'Method', value: proposal.kind.UpgradeRemote.method_name });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
+    afterProposal.embeds = embeds;
+    return afterProposal;
+  }
+  else if (typeof proposal.kind == 'object' && 'UpgradeSelf' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('UpgradeSelf') };
+    afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
+    afterProposal.embeds = embeds;
+    return afterProposal;
+  }
+  else if (typeof proposal.kind == 'string' && proposal.kind == 'Vote') {
+    const afterProposal = { proposal_type: snakeCase('Vote') };
+    afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
+    afterProposal.embeds = embeds;
+    return afterProposal;
+  }
+  else if (typeof proposal.kind == 'object' && 'SetStakingContract' in proposal.kind) { 
+    const afterProposal = { proposal_type: snakeCase('SetStakingContract') };
+    afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Staking Contract', value: proposal.kind.SetStakingContract.staking_id });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
+    afterProposal.embeds = embeds;
+    return afterProposal;
+  }
+  else if (typeof proposal.kind == 'object' && 'ChangeConfig' in proposal.kind) {
+    const afterProposal = { proposal_type: snakeCase('config') };
+    afterProposal.origin = JSON.stringify(proposal);
+
     embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
@@ -342,17 +388,6 @@ exports.formatProposal = async (proposal) => {
   }
 };
 
-// const proposal = {
-//   id: 59,
-//   proposer: 'jacktest4.testnet',
-//   description: 'test$$$$$$$$ProposeAddMember',
-//   kind: {
-//     AddMemberToRole: { member_id: 'jacktest4.testnet', role: 'community' }
-//   },
-//   status: 'InProgress',
-//   vote_counts: { all: [ 2, 0, 0 ] },
-//   votes: { 'jacktest2.testnet': 'Approve', 'jacktest4.testnet': 'Approve' },
-//   submission_time: '1661061753973331808'
-// }
+// const proposal = {"id":12,"proposer":"0xv.testnet","description":"1231231231231$$$$","kind":{"Transfer":{"token_id":"","receiver_id":"gogoshishi.testnet","amount":"100000000000000000000000","msg":null}},"status":"InProgress","vote_counts":{},"votes":{},"submission_time":"1672057558008532223"}
 // ;
 // this.formatProposal(proposal).then(console.log).catch(e => console.log(e));
