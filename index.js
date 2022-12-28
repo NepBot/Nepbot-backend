@@ -23,8 +23,8 @@ require('./service/discord_bot');
 require('./service/twitter_app');
 
 // Run schedule task
-// const task = require('./service/schedule_task');
-// task.scheduleTask();
-// task.guildDeleteTask();
-// task.userDisconnectTask();
+const task = require('./service/schedule_task');
+task.scheduleTask();
+task.guildDeleteTask();
+task.userDisconnectTask();
 // schedule need to be run here
