@@ -202,7 +202,7 @@ async function getDeadline(subTime, dueTime) {
  * @returns { proposal_type: snakeCase(proposal.kind), description: 'text show in discord' }
  */
 exports.formatProposal = async (proposal) => {
-  logger.info(JSON.stringify(proposal));
+  // logger.info(JSON.stringify(proposal));
   const embeds = [];
   if (typeof proposal.kind == 'object' && 'ChangePolicy' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('policy') };
@@ -224,7 +224,7 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.kind.AddBounty.bounty.description.split('$$$$')[0].substring(0, 1024) });
     embeds.push({ name: 'Token', value: proposal.kind.AddBounty.bounty.token.length == 0 ? 'Near' : proposal.kind.AddBounty.bounty.token.toString() });
-    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.AddBounty.bounty.amount) });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.AddBounty.bounty.amount, 24) });
     embeds.push({ name: 'Available Claims', value: proposal.kind.AddBounty.bounty.times.toString() });
     embeds.push({ name: 'Deadline', value: await getDeadline(proposal.submission_time, proposal.kind.AddBounty.bounty.max_deadline) });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
@@ -299,7 +299,7 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
     embeds.push({ name: 'Token ID', value: proposal.kind.Transfer.token_id.length == 0 ? 'Near' : proposal.kind.Transfer.token_id });
     embeds.push({ name: 'Target', value: proposal.kind.Transfer.receiver_id });
-    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.Transfer.amount) });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.Transfer.amount, 24) });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
 
     afterProposal.embeds = embeds;
@@ -388,25 +388,6 @@ exports.formatProposal = async (proposal) => {
   }
 };
 
-// const proposal = {
-//   id: 74,
-//   proposer: '0xjacktest1.testnet',
-//   description: 'test2$$$$$$$$ProposeCreateBounty',
-//   kind: {
-//     AddBounty: {
-//       bounty: {
-//         description: 'test2$$$$',
-//         token: '',
-//         amount: '1000000000000000000000000',
-//         times: 1,
-//         max_deadline: '432000000000000'
-//       }
-//     }
-//   },
-//   status: 'InProgress',
-//   vote_counts: {},
-//   votes: {},
-//   submission_time: '1661099398878638314'
-// }
+// const proposal = {"id":12,"proposer":"0xv.testnet","description":"1231231231231$$$$","kind":{"Transfer":{"token_id":"","receiver_id":"gogoshishi.testnet","amount":"100000000000000000000000","msg":null}},"status":"InProgress","vote_counts":{},"votes":{},"submission_time":"1672057558008532223"}
 // ;
 // this.formatProposal(proposal).then(console.log).catch(e => console.log(e));
