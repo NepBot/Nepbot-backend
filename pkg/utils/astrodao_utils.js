@@ -2,6 +2,7 @@ const axios = require('axios');
 const config = require('../../pkg/utils/config');
 const logger = require('./logger');
 const contractUtils = require('./contract_utils');
+const parasApi = require('./paras_api');
 const { snakeCase } = require('snake-case');
 
 // this is just a backup for using astrodao API, it's not used in anywhere 2022-08-05
@@ -201,6 +202,7 @@ async function getDeadline(subTime, dueTime) {
  * @returns { proposal_type: snakeCase(proposal.kind), description: 'text show in discord' }
  */
 exports.formatProposal = async (proposal) => {
+  logger.info(JSON.stringify(proposal));
   const embeds = [];
   if (typeof proposal.kind == 'object' && 'ChangePolicy' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('policy') };
@@ -221,8 +223,8 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.kind.AddBounty.bounty.description.split('$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Token', value: proposal.kind.AddBounty.bounty.token });
-    embeds.push({ name: 'Amount', value: proposal.kind.AddBounty.bounty.amount });
+    embeds.push({ name: 'Token', value: proposal.kind.AddBounty.bounty.token.length == 0 ? 'Near' : proposal.kind.AddBounty.bounty.token.toString() });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.AddBounty.bounty.amount) });
     embeds.push({ name: 'Available Claims', value: proposal.kind.AddBounty.bounty.times.toString() });
     embeds.push({ name: 'Deadline', value: await getDeadline(proposal.submission_time, proposal.kind.AddBounty.bounty.max_deadline) });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
@@ -265,8 +267,8 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Target', value: proposal.kind.AddMemberToRole.member_id });
-    embeds.push({ name: 'Group', value: proposal.kind.AddMemberToRole.role });
+    embeds.push({ name: 'Target', value: proposal.kind.RemoveMemberFromRole.member_id });
+    embeds.push({ name: 'Group', value: proposal.kind.RemoveMemberFromRole.role });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
     afterProposal.embeds = embeds;
     return afterProposal;
@@ -291,6 +293,14 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'Transfer' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('Transfer') };
     afterProposal.origin = JSON.stringify(proposal);
+    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: 'Proposer', value: proposal.proposer });
+    embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
+    embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
+    embeds.push({ name: 'Token ID', value: proposal.kind.Transfer.token_id });
+    embeds.push({ name: 'Target', value: proposal.kind.Transfer.receiver_id });
+    embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.Transfer.amount) });
+    embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
 
     afterProposal.embeds = embeds;
     return afterProposal;
@@ -379,16 +389,24 @@ exports.formatProposal = async (proposal) => {
 };
 
 // const proposal = {
-//   id: 1,
-//   proposer: 'moopaloo.testnet',
-//   description: 'Adopt NFTs for voting',
+//   id: 74,
+//   proposer: '0xjacktest1.testnet',
+//   description: 'test2$$$$$$$$ProposeCreateBounty',
 //   kind: {
-//     SetStakingContract: { staking_id: 'dev-1631400423721-63996387777217' }
+//     AddBounty: {
+//       bounty: {
+//         description: 'test2$$$$',
+//         token: '',
+//         amount: '1000000000000000000000000',
+//         times: 1,
+//         max_deadline: '432000000000000'
+//       }
+//     }
 //   },
-//   status: 'Approved',
-//   vote_counts: { council: [ 1, 0, 0 ] },
-//   votes: { 'moopaloo.testnet': 'Approve' },
-//   submission_time: '1631563599965640486'
+//   status: 'InProgress',
+//   vote_counts: {},
+//   votes: {},
+//   submission_time: '1661099398878638314'
 // }
 // ;
 // this.formatProposal(proposal).then(console.log).catch(e => console.log(e));
