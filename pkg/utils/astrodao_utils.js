@@ -297,7 +297,7 @@ exports.formatProposal = async (proposal) => {
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
-    embeds.push({ name: 'Token ID', value: proposal.kind.Transfer.token_id });
+    embeds.push({ name: 'Token ID', value: proposal.kind.Transfer.token_id.length == 0 ? 'Near' : proposal.kind.Transfer.token_id });
     embeds.push({ name: 'Target', value: proposal.kind.Transfer.receiver_id });
     embeds.push({ name: 'Amount', value: parasApi.prettyBalance(proposal.kind.Transfer.amount) });
     embeds.push({ name: 'Submission Time', value: await getSubmitTime(proposal.submission_time) });
