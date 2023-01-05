@@ -38,39 +38,38 @@ const execute = async interaction => {
     });
   }
 
-  const content0 = new MessageEmbed()
-    .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.`);
-
+  const content = new MessageEmbed()
+    .setTitle('Twitter Verification')
+    .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.`)
+    .setDescription('**Requirements:**')
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
   const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name.split('@').at(-1));
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  const content1 = new MessageEmbed().setDescription('**Requirements:**')
-  const content2 = new MessageEmbed()
   try {
     followUserName = interaction.options.get('follow_username').value;
-    content2.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
+    content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
   }
   catch (e) {
     logger.debug('no follow_username');
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
-    content2.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
+    content.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
-    content2.addFields({ name: 'Like_Tweet', value: likeTweetLink });
+    content.addFields({ name: 'Like_Tweet', value: likeTweetLink });
   }
   catch (e) {
     logger.debug('no like_tweet_link');
   }
-  content2.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
+  content.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
 
   await twitterRule.add({
     guild_id: guildId,
