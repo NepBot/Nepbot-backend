@@ -16,15 +16,15 @@ const execute = async interaction => {
 
   const userId = interaction.user.id;
 
-  // if (await airdropUtils.checkClaimed(userId)) {
-  //   return interaction.reply({
-  //     content:'\n',
-  //     embeds:[new MessageEmbed()
-  //       .setDescription('You already claimed this FT.')],
-  //     ephemeral:true,
-  //     components:[action],
-  //   });
-  // }
+  if (await airdropUtils.checkClaimed(userId)) {
+    return interaction.reply({
+      content:'\n',
+      embeds:[new MessageEmbed()
+        .setDescription('You already claimed this FT.')],
+      ephemeral:true,
+      components:[action],
+    });
+  }
 
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
 
