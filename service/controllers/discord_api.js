@@ -98,6 +98,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
     ctx.body = new Resp({});
   }
   catch (e) {
+    console.log(e)
     logger.error(e);
     ctx.body = new Resp({ code: 500, message: 'error sendFTAirdropMsg', success: false });
   }
