@@ -43,7 +43,18 @@ const execute = async interaction => {
   const amountPerShare = interaction.options.get('amount_per_share').value;
   const duration = interaction.options.get('duration').value;
   const endTime = await airdropUtils.getGMTTime(duration);
-  const metadata = await contractUtils.getMetadata(tokenContract)
+  let metadata = {
+    symbol: ''
+  }
+  try {
+    metadata = await contractUtils.getMetadata(tokenContract)
+  } catch (e) {
+    return await interaction.reply({
+      content:'\n',
+      embeds:[new MessageEmbed().setDescription('Sorry, please input a valid token address.').setColor('RED')],
+      ephemeral:true,
+    });
+  }
 
   const content = new MessageEmbed()
     .setDescription('**Confirm Creating This Airdrop**\nClick the button below to deposit the token and launch the airdrop.')

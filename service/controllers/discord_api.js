@@ -68,7 +68,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
     const guild = await discordUtils.getGuild(req.guild_id);
     const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
     const roleName = await guild.roles.fetch(req.role_id).then(e => e.name.split('@').at(-1));
-    const metadata = await contractUtils.getMetadata(tokenContract)
+    const metadata = await contractUtils.getMetadata(req.token_contract)
     const content = new MessageEmbed()
       .setDescription('**Claim Token Airdrop**\nClick the button below to claim this airdrop')
       .addFields(
