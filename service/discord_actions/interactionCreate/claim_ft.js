@@ -17,11 +17,8 @@ const execute = async interaction => {
   const userId = interaction.user.id;
 
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
-  console.log(interaction.message.embeds[0])
-  console.log(embedMsg)
   const hash = embedMsg.hash
   const campaign = await airdropUtils.getCampaign(hash)
-  console.log(campaign)
 
   if (!campaign) {
     return interaction.reply({
@@ -42,8 +39,8 @@ const execute = async interaction => {
   }
 
   let is_in_role = false
-  for (let role_id of campaign.role_ids) {
-    if (await discordUtils.isMemberIncludeRole(interaction.guildId, userId, role_id)) {
+  for (let roleId of campaign.role_ids) {
+    if (await discordUtils.isMemberIncludeRole(interaction.guildId, userId, roleId)) {
       is_in_role = true
       break
     }
