@@ -40,6 +40,10 @@ const execute = async interaction => {
 
   let is_in_role = false
   for (let roleId of campaign.role_ids) {
+    if (roleId == interaction.guildId) {
+      is_in_role = true
+      break
+    }
     if (await discordUtils.isMemberIncludeRole(interaction.guildId, userId, roleId)) {
       is_in_role = true
       break

@@ -41,6 +41,10 @@ const execute = async interaction => {
 
   let is_in_role = false
   for (let role_id of campaign.role_ids) {
+    if (roleId == interaction.guildId) {
+      is_in_role = true
+      break
+    }
     if (await discordUtils.isMemberIncludeRole(interaction.guildId, userId, role_id)) {
       is_in_role = true
       break
@@ -55,7 +59,7 @@ const execute = async interaction => {
       ephemeral:true,
     });
   }
-  
+
   const nonce = Date.now();
   const sign = await nearUtils.getSign({
     nonce: nonce,
