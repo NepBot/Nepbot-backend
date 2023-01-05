@@ -15,17 +15,19 @@ const execute = async interaction => {
     .addComponents(button);
   const userId = interaction.user.id;
 
-  // if (await airdropUtils.checkClaimed(userId)) {
-  //   return interaction.reply({
-  //     content:'\n',
-  //     embeds:[new MessageEmbed()
-  //       .setDescription('You already claimed this NFT.')],
-  //     ephemeral:true,
-  //     components:[action],
-  //   });
-  // }
+  
 
   const embedMsg = await airdropUtils.formatNFTEmbedMsg(interaction);
+
+  if (await airdropUtils.checkIsClaimed(userId, embedMsg.hash)) {
+    return interaction.reply({
+      content:'\n',
+      embeds:[new MessageEmbed()
+        .setDescription('You already claimed this NFT.')],
+      ephemeral:true,
+      components:[action],
+    });
+  }
 
   if (embedMsg.role_name != '@everyone' && !await discordUtils.isMemberIncludeRole(interaction.guildId, userId, embedMsg.role_id)) {
     return interaction.reply({

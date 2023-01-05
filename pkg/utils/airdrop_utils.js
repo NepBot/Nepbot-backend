@@ -72,7 +72,7 @@ exports.formatFTEmbedMsg = async (interaction) => {
 };
 
 
-exports.checkClaimed = async (userId) => {
+exports.checkIsClaimed = async (userId, hash) => {
   const account = await contractUtils.contract();
-  return await account.viewFunction(config.rule_contract, 'get_guild', { user_id: userId });
+  return await account.viewFunction(config.rule_contract, 'check_is_claimed', { user_id: userId, hash });
 };

@@ -16,7 +16,11 @@ const execute = async interaction => {
 
   const userId = interaction.user.id;
 
-  if (await airdropUtils.checkClaimed(userId)) {
+  
+
+  const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
+
+  if (await airdropUtils.checkIsClaimed(userId, embedMsg.hash)) {
     return interaction.reply({
       content:'\n',
       embeds:[new MessageEmbed()
@@ -25,8 +29,6 @@ const execute = async interaction => {
       components:[action],
     });
   }
-
-  const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
 
   if (embedMsg.role_name != '@everyone' && !await discordUtils.isMemberIncludeRole(interaction.guildId, userId, embedMsg.role_id)) {
     return interaction.reply({
