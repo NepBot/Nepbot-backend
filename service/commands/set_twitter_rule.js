@@ -38,7 +38,7 @@ const execute = async interaction => {
     });
   }
 
-  const content = new MessageEmbed()
+  const content0 = new MessageEmbed()
     .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.`);
 
   const guildId = interaction.guildId;
@@ -47,7 +47,8 @@ const execute = async interaction => {
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  content.addFields({ name: 'Requirements:', value: `` });
+  const content1 = new MessageEmbed().setDescription('**Requirements:**')
+  const content2 = new MessageEmbed()
   try {
     followUserName = interaction.options.get('follow_username').value;
     content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
@@ -83,7 +84,7 @@ const execute = async interaction => {
 
   await interaction.reply({
     content:'\n',
-    embeds:[content],
+    embeds:[content0, content1, content2],
     components: [action],
   });
   } catch (e) {
