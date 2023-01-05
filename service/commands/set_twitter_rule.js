@@ -40,8 +40,7 @@ const execute = async interaction => {
 
   const content = new MessageEmbed()
     .setTitle('Twitter Verification')
-    .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.`)
-    .setDescription('**Requirements:**')
+    .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.\n\n**Requirements:**`)
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
   const roleName = await interaction.guild.roles.fetch(roleId).then(e => e.name.split('@').at(-1));
