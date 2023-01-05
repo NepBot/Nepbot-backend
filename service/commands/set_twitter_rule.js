@@ -68,7 +68,7 @@ const execute = async interaction => {
   catch (e) {
     logger.debug('no like_tweet_link');
   }
-  content.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
+  content.addFields({ name: '\nTo Unlock Role', value: `@${roleName}` });
 
   await twitterRule.add({
     guild_id: guildId,
