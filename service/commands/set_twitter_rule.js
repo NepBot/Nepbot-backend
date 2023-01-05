@@ -44,7 +44,7 @@ const execute = async interaction => {
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  content.addFields({ name: 'Requirements:'});
+  content.addFields({ name: 'Requirements:', value: ` ` });
   try {
     followUserName = interaction.options.get('follow_username').value;
     content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
