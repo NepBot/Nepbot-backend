@@ -25,6 +25,9 @@ const data = new SlashCommandBuilder()
   .addStringOption(option => option.setName('rt_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false))
   .addStringOption(option => option.setName('like_tweet_link').setDescription('Using \'+\' to septate different link, like a + b').setRequired(false));
 const execute = async interaction => {
+  try {
+
+  
   const { ownerId } = interaction.guild;
   const userId = interaction.user.id;
   if (userId != ownerId) {
@@ -44,7 +47,7 @@ const execute = async interaction => {
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  content.addFields({ name: 'Requirements:', value: ` ` });
+  content.addFields({ name: 'Requirements:', value: `` });
   try {
     followUserName = interaction.options.get('follow_username').value;
     content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
@@ -83,6 +86,9 @@ const execute = async interaction => {
     embeds:[content],
     components: [action],
   });
+  } catch (e) {
+    console.log(e)
+  }
 };
 
 module.exports = {
