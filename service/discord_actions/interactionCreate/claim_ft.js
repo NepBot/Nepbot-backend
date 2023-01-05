@@ -17,11 +17,20 @@ const execute = async interaction => {
   const userId = interaction.user.id;
 
   
-
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
-  console.log(embedMsg)
+  const hash = embedMsg.hash
+  const campaign = await airdropUtils.getCampaign(hash)
 
-  if (await airdropUtils.checkIsClaimed(userId, embedMsg.hash)) {
+  if (!campaign) {
+    return interaction.reply({
+      content:'\n',
+      embeds:[new MessageEmbed()
+        .setDescription('Campaign not found.')],
+      ephemeral:true,
+    });
+  }
+
+  if (await airdropUtils.checkIsClaimed(userId, hash)) {
     return interaction.reply({
       content:'\n',
       embeds:[new MessageEmbed()
@@ -30,14 +39,23 @@ const execute = async interaction => {
     });
   }
 
-  if (embedMsg.role_name != '@everyone' && !await discordUtils.isMemberIncludeRole(interaction.guildId, userId, embedMsg.role_id)) {
+  let is_in_role = false
+  for (let role_id of campaign.role_ids) {
+    if (await discordUtils.isMemberIncludeRole(interaction.guildId, userId, role_id)) {
+      is_in_role = true
+      break
+    }
+  }
+
+  if (!is_in_role) {
     return interaction.reply({
       content:'\n',
       embeds:[new MessageEmbed()
-        .setDescription(`You are not in this role: ${embedMsg.role_name}`).setColor('RED')],
+        .setDescription(`You are not in this role`).setColor('RED')],
       ephemeral:true,
     });
   }
+  
 
   const nonce = Date.now();
   const sign = await nearUtils.getSign({
