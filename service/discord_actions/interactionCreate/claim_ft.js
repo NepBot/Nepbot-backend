@@ -19,6 +19,7 @@ const execute = async interaction => {
   
 
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
+  console.log(embedMsg)
 
   if (await airdropUtils.checkIsClaimed(userId, embedMsg.hash)) {
     return interaction.reply({
