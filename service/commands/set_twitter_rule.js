@@ -51,26 +51,26 @@ const execute = async interaction => {
   const content2 = new MessageEmbed()
   try {
     followUserName = interaction.options.get('follow_username').value;
-    content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
+    content2.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
   }
   catch (e) {
     logger.debug('no follow_username');
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
-    content.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
+    content2.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
-    content.addFields({ name: 'Like_Tweet', value: likeTweetLink });
+    content2.addFields({ name: 'Like_Tweet', value: likeTweetLink });
   }
   catch (e) {
     logger.debug('no like_tweet_link');
   }
-  content.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
+  content2.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
 
   await twitterRule.add({
     guild_id: guildId,
