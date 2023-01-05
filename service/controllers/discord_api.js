@@ -3,6 +3,7 @@ const discordUtils = require('../../pkg/utils/discord_utils');
 const userInfos = require('../../pkg/models/object/user_infos');
 const userUtils = require('../../pkg/utils/user_utils');
 const snapshotUtils = require('../../pkg/utils/snapshot_utils');
+const contractUtils = require('../../pkg/utils/contract_utils');
 const logger = require('../../pkg/utils/logger');
 const config = require('../../pkg/utils/config');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
