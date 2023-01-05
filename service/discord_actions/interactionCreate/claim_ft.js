@@ -16,7 +16,6 @@ const execute = async interaction => {
 
   const userId = interaction.user.id;
 
-  console.log(interaction.message.embeds[0])
   const embedMsg = await airdropUtils.formatFTEmbedMsg(interaction);
   const hash = embedMsg.hash
   const campaign = await airdropUtils.getCampaign(hash)

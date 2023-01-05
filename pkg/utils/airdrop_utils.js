@@ -32,7 +32,7 @@ exports.formatNFTEmbedMsg = async (interaction) => {
     // else if (field.name == 'End_time(GMT)') {
     //   result.end_time = field.value;
     // }
-    if (field.inline == 'Hash') {
+    if (field.name == 'Airdrop ID') {
       result.hash = field.value;
     }
   }
@@ -64,7 +64,7 @@ exports.formatFTEmbedMsg = async (interaction) => {
     // else if (field.name == 'End_time(GMT)') {
     //   result.end_time = field.value;
     // }
-    if (field.inline == 'Hash') {
+    if (field.name == 'Airdrop ID') {
       result.hash = field.value;
     }
   }
