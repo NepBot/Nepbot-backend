@@ -36,8 +36,7 @@ const execute = async interaction => {
   }
 
   const content = new MessageEmbed()
-    .setDescription(`If you already have a verified Twitter account, click the button below to verify that you meet this rule.\n
-  If you have not verified a Twitter account, the button generates a verification link, and when you have verified it, click the button again and the Nepbot will start verifying that you have met the conditions.`);
+    .setDescription(`Click the button below to get verified with your Twitter account. You'll be automatically assigned with the role if you meet the requirements.`);
 
   const guildId = interaction.guildId;
   const roleId = interaction.options.get('role').value;
@@ -45,7 +44,7 @@ const execute = async interaction => {
   let followUserName = '';
   let rtTweetLink = '';
   let likeTweetLink = '';
-  content.addFields({ name: 'Role', value: `@${roleName}` });
+  content.addFields({ name: 'Requirements:'});
   try {
     followUserName = interaction.options.get('follow_username').value;
     content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
@@ -67,6 +66,7 @@ const execute = async interaction => {
   catch (e) {
     logger.debug('no like_tweet_link');
   }
+  content.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
 
   await twitterRule.add({
     guild_id: guildId,
