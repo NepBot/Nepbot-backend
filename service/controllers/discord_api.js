@@ -78,7 +78,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
         { name: 'Total Reward Pool', value: `${req.total_amount} ${metadata.symbol}` },
         { name: 'Claimable Reward Per User', value: req.amount_per_share },
         { name: 'Expires at', value: req.end_time + ' (GMT)'},
-        { name: 'Airdrop ID', value: req.hash, inline: "hash" },
+        { name: 'Airdrop ID', value: req.hash },
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_ft')
