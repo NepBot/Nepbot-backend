@@ -26,7 +26,6 @@ const execute = async interaction => {
       embeds:[new MessageEmbed()
         .setDescription('You already claimed this FT.')],
       ephemeral:true,
-      components:[action],
     });
   }
 

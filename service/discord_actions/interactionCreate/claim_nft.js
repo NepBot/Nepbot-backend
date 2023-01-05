@@ -25,7 +25,6 @@ const execute = async interaction => {
       embeds:[new MessageEmbed()
         .setDescription('You already claimed this NFT.')],
       ephemeral:true,
-      components:[action],
     });
   }
 
