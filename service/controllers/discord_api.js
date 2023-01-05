@@ -60,6 +60,7 @@ const getConnectedAccount = async (ctx, next) => {
 }
  * @param {*} next 
  */
+
 const sendFTAirdropMsg = async (ctx, next) => {
   const req = ctx.request.body;
   logger.info(`receive request from /api/airdrop/sendftmsg ${JSON.stringify(req)}`);
@@ -67,14 +68,16 @@ const sendFTAirdropMsg = async (ctx, next) => {
     const guild = await discordUtils.getGuild(req.guild_id);
     const channel = await discordUtils.getChannel(req.guild_id, req.channel_id);
     const roleName = await guild.roles.fetch(req.role_id).then(e => e.name.split('@').at(-1));
+    const metadata = await contractUtils.getMetadata(tokenContract)
     const content = new MessageEmbed()
+      .setDescription('**Claim Token Airdrop**\nClick the button below to claim this airdrop')
       .addFields(
-        { name: 'Receiver_role', value: '@' + roleName },
-        { name: 'Token_Contract', value: req.token_contract },
-        { name: 'Total_amount', value: req.total_amount },
-        { name: 'Amount_per_share', value: req.amount_per_share },
-        { name: 'End_time(GMT)', value: req.end_time },
-        { name: 'Hash', value: req.hash },
+        { name: 'Qualified Role', value: '@' + roleName },
+        { name: 'Token Contract', value: req.token_contract },
+        { name: 'Total Reward Pool', value: `${req.total_amount} ${metadata.symbol}` },
+        { name: 'Claimable Reward Per User', value: req.amount_per_share },
+        { name: 'Expires at', value: req.end_time + ' (GMT)'},
+        { name: 'Airdrop ID', value: req.hash },
       );
     const claim = new MessageButton()
       .setCustomId('action.claim_ft')
@@ -82,7 +85,7 @@ const sendFTAirdropMsg = async (ctx, next) => {
       .setStyle('PRIMARY');
     const component = new MessageActionRow()
       .addComponents(claim);
-    await channel.send({ content: '\n', ephemeral:true, embeds:[content.setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')], components: [component] });
+    await channel.send({ content: '\n', ephemeral:true, embeds:[content], components: [component] });
 
     const settingChannel = await guild.channels.fetch().then(e => e.find(r => r.name == 'nepbot-settings'));
     const redeem = new MessageButton()
@@ -121,10 +124,10 @@ const sendNFTAirdropMsg = async (ctx, next) => {
     const roleName = await guild.roles.fetch(req.role_id).then(e => e.name.split('@').at(-1));
     const content = new MessageEmbed()
       .addFields(
-        { name: 'Receiver_role', value: '@' + roleName },
-        { name: 'Contract_address', value: req.contract_address },
+        { name: 'Qualified Role', value: '@' + roleName },
+        { name: 'Contract Address', value: req.contract_address },
         { name: 'Token_id', value: req.token_id },
-        { name: 'End_time(GMT)', value: req.end_time },
+        { name: 'Expires at', value: req.end_time + ' (GMT)' },
         { name: 'Hash', value: req.hash },
       );
     const claim = new MessageButton()
@@ -160,8 +163,8 @@ const sendSnapshotMsg = async (ctx, next) => {
     const content = new MessageEmbed()
       .addFields(
         { name: 'Hash', value: snapshotInfo.hash },
-        { name: 'Contract_address', value: snapshotInfo.contract_address },
-        { name: 'Block_height', value: snapshotInfo.block_height.toString() },
+        { name: 'Contract Address', value: snapshotInfo.contract_address },
+        { name: 'Block Height', value: snapshotInfo.block_height.toString() },
       );
     await channel.send({ content: '\n', ephemeral:false, embeds:[content.setDescription('Create snapshot success')] });
 

@@ -7,6 +7,7 @@ const config = require('../../pkg/utils/config');
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const contractUtils = require('../../pkg/utils/contract_utils');
 
 const send = new MessageButton()
   .setLabel('Airdrop')
@@ -42,15 +43,16 @@ const execute = async interaction => {
   const amountPerShare = interaction.options.get('amount_per_share').value;
   const duration = interaction.options.get('duration').value;
   const endTime = await airdropUtils.getGMTTime(duration);
+  const metadata = await contractUtils.getMetadata(tokenContract)
 
   const content = new MessageEmbed()
-    .setDescription('**NEP141 Airdrop**\nClick the button below to claim the Airdrop')
+    .setDescription('**Confirm Creating This Airdrop**\nClick the button below to deposit the token and launch the airdrop.')
     .addFields(
-      { name: 'Receiver_role', value: '@' + roleName },
-      { name: 'Token_Contract', value: tokenContract },
-      { name: 'Total_amount', value: totalAmount },
-      { name: 'Amount_per_share', value: amountPerShare },
-      { name: 'End_time(GMT)', value: endTime },
+      { name: 'Qualified Role', value: '@' + roleName },
+      { name: 'Token Contract', value: tokenContract },
+      { name: 'Total Reward Pool', value: `${totalAmount} ${metadata.symbol}` },
+      { name: 'Claimable Reward Per User', value: amountPerShare },
+      { name: 'Expires at', value: endTime + ' (GMT)'},
     );
   const nonce = Date.now();
   const sign = await nearUtils.getSign({

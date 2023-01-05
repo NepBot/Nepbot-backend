@@ -33,6 +33,11 @@ exports.getBalanceOf = async (tokenId, accountId) => {
   return await account.viewFunction(tokenId, 'ft_balance_of', { account_id: accountId });
 };
 
+exports.getMetadata = async (tokenId) => {
+  const account = await this.contract()
+  return await account.viewFunction(tokenId, 'ft_metadata', {})
+}
+
 exports.getNftCountOf = async (contractId, accountId) => {
   const account = await this.contract();
   return await account.viewFunction(contractId, 'nft_supply_for_owner', { account_id: accountId });
