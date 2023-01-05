@@ -83,7 +83,7 @@ const execute = async interaction => {
 
   await interaction.reply({
     content:'\n',
-    embeds:[content0, content1, content2],
+    embeds:[content],
     components: [action],
   });
   } catch (e) {
