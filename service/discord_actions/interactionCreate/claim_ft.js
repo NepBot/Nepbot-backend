@@ -78,7 +78,7 @@ const execute = async interaction => {
   interaction.reply({
     content:'\n',
     embeds:[new MessageEmbed()
-      .setDescription('Please use the the following button to claim your token.').setColor('GREEN')],
+      .setDescription('Please use the button below to claim your token.').setColor('GREEN')],
     ephemeral:true,
     components:[action],
   });

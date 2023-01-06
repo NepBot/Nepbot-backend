@@ -42,7 +42,7 @@ const execute = async interaction => {
   interaction.reply({
     content:'\n',
     embeds:[new MessageEmbed()
-      .setDescription('Please use the the following button to redeem Nepbot permission.')],
+      .setDescription('Please use the button below to redeem Nepbot permission.')],
     ephemeral:true,
     components:[action],
   });
