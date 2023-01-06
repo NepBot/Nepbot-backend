@@ -32,5 +32,14 @@
   "near_lake_config": {
     "s3BucketName": "near-lake-data-testnet",
     "s3RegionName": "eu-central-1"
+  },
+  "fields": {
+    "twitter_role": ["To Unlock Role", "Role"],
+    "airdrop_hash": ["Airdrop ID", "Hash"],
+    "twitter_follow": ["Follow"],
+    "twitter_retweet": ["Retweet"],
+    "twitter_like": ["Like Tweet"],
+    "proposal_id": ["Proposal ID"],
+    "contract_address": ["Contract Address"]
   }
 }

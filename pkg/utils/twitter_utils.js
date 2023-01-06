@@ -240,7 +240,7 @@ exports.verifyRule = async (message, userId, userClient) => {
   let roleId, roleName;
   const resultMsgs = [];
   for (const attachMsg of attachedMsgs) {
-    if (attachMsg.name == 'Role') {
+    if (config.fields.twitter_role.findIndex(item => item == attachMsg.name) > -1) {
       roleId = await guild.roles.fetch().then(e => e.find(r => r.name === attachMsg.value.split('@').at(-1)).id);
       roleName = attachMsg.value;
       if (await discordUtils.isMemberIncludeRole(guildId, userId, roleId)) {
@@ -253,7 +253,7 @@ exports.verifyRule = async (message, userId, userClient) => {
       }
     }
     // Follow
-    else if (attachMsg.name == 'Follow') {
+    else if (config.fields.twitter_follow.findIndex(item => item == attachMsg.name) > -1) {
       const followUsers = await this.listFollowUserName(attachMsg.value);
       for (const followUser of followUsers) {
         if (!await this.isUserFollowing(userClient, twitterId, followUser)) {
@@ -266,7 +266,7 @@ exports.verifyRule = async (message, userId, userClient) => {
       }
     }
     // Rt_Tweet
-    else if (attachMsg.name == 'Rt_Tweet') {
+    else if (config.fields.twitter_retweet.findIndex(item => item == attachMsg.name) > -1) {
       const rtTweetIds = await this.listTweetLink(attachMsg.value);
       for (const rtTweetId of rtTweetIds) {
         if (!await this.isUserRetweeted(userClient, rtTweetId, twitterId)) {
@@ -279,7 +279,7 @@ exports.verifyRule = async (message, userId, userClient) => {
       }
     }
     // Like_Tweet
-    else if (attachMsg.name == 'Like_Tweet') {
+    else if (config.fields.twitter_like.findIndex(item => item == attachMsg.name) > -1) {
       const likeTweetIds = await module.exports.listTweetLink(attachMsg.value);
       for (const tweetId of likeTweetIds) {
         if (!await this.isUserLikedTweet(userClient, tweetId, twitterId)) {

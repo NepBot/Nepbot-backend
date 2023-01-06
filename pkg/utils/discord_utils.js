@@ -42,7 +42,7 @@ exports.getBotUser = () => {
 };
 
 exports.getBotGuildChannel = (guild) => {
-  const res = client.channels.cache.find(channel => channel.name == 'nepbot-joinnn');
+  const res = client.channels.cache.find(channel => channel.name == 'nepbot-join');
   for (channel of client.channels.cache.values()) {
     console.log(channel);
   }

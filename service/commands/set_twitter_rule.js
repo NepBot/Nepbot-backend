@@ -1,3 +1,4 @@
+const config = require('../../pkg/utils/config');
 const twitterRule = require('../../pkg/models/object/twitter_rules');
 const logger = require('../../pkg/utils/logger');
 
@@ -49,26 +50,26 @@ const execute = async interaction => {
   let likeTweetLink = '';
   try {
     followUserName = interaction.options.get('follow_username').value;
-    content.addFields({ name: 'Follow', value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
+    content.addFields({ name: config.fields.twitter_follow[0], value: followUserName.split('+').map(e => '@' + e.trim()).join(', ') });
   }
   catch (e) {
     logger.debug('no follow_username');
   }
   try {
     rtTweetLink = interaction.options.get('rt_tweet_link').value;
-    content.addFields({ name: 'Rt_Tweet', value: rtTweetLink });
+    content.addFields({ name: config.fields.twitter_retweet[0], value: rtTweetLink });
   }
   catch (e) {
     logger.debug('no rt_tweet_link');
   }
   try {
     likeTweetLink = interaction.options.get('like_tweet_link').value;
-    content.addFields({ name: 'Like_Tweet', value: likeTweetLink });
+    content.addFields({ name: config.fields.like_tweet[0], value: likeTweetLink });
   }
   catch (e) {
     logger.debug('no like_tweet_link');
   }
-  content.addFields({ name: 'To Unlock Role', value: `@${roleName}` });
+  content.addFields({ name: config.fields.twitter_role[0], value: `@${roleName}` });
 
   await twitterRule.add({
     guild_id: guildId,

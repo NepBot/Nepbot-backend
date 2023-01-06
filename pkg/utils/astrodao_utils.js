@@ -207,7 +207,7 @@ exports.formatProposal = async (proposal) => {
   if (typeof proposal.kind == 'object' && 'ChangePolicy' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('policy') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -219,7 +219,7 @@ exports.formatProposal = async (proposal) => {
     const afterProposal = { proposal_type: snakeCase('AddBounty') };
     afterProposal.origin = JSON.stringify(proposal);
 
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.kind.AddBounty.bounty.description.split('$$$$')[0].substring(0, 1024) });
@@ -236,7 +236,7 @@ exports.formatProposal = async (proposal) => {
     const afterProposal = { proposal_type: snakeCase('BountyDone') };
     afterProposal.origin = JSON.stringify(proposal);
 
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$')[0].substring(0, 1024) });
@@ -250,7 +250,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'AddMemberToRole' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('AddMemberToRole') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -263,7 +263,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'RemoveMemberFromRole' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('RemoveMemberFromRole') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -276,7 +276,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'FunctionCall' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('FunctionCall') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -293,7 +293,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'Transfer' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('Transfer') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -308,7 +308,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'UpgradeRemote' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('UpgradeRemote') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -321,7 +321,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'UpgradeSelf' in proposal.kind) {
     const afterProposal = { proposal_type: snakeCase('UpgradeSelf') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -332,7 +332,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'string' && proposal.kind == 'Vote') {
     const afterProposal = { proposal_type: snakeCase('Vote') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -343,7 +343,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object' && 'SetStakingContract' in proposal.kind) { 
     const afterProposal = { proposal_type: snakeCase('SetStakingContract') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -356,7 +356,7 @@ exports.formatProposal = async (proposal) => {
     const afterProposal = { proposal_type: snakeCase('config') };
     afterProposal.origin = JSON.stringify(proposal);
 
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -367,7 +367,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'object') {
     const afterProposal = { proposal_type: snakeCase('unknown_type') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
@@ -378,7 +378,7 @@ exports.formatProposal = async (proposal) => {
   else if (typeof proposal.kind == 'string') {
     const afterProposal = { proposal_type: snakeCase('unknown_type') };
     afterProposal.origin = JSON.stringify(proposal);
-    embeds.push({ name: 'Proposal ID', value: proposal.id.toString() });
+    embeds.push({ name: config.fields.proposal_id[0], value: proposal.id.toString() });
     embeds.push({ name: 'Proposer', value: proposal.proposer });
     embeds.push({ name: 'Proposal Type', value: afterProposal.proposal_type });
     embeds.push({ name: 'Description', value: proposal.description.split('$$$$$$')[0].substring(0, 1024) });
