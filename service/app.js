@@ -19,7 +19,13 @@ const session = require('koa-session');
 
 const app = new Koa();
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true, 
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'], 
+  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization']
+}));
 
 // parse request body:
 app.use(bodyParser());
