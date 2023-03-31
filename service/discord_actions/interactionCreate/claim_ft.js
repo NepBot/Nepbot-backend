@@ -73,7 +73,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  button.setURL(`${config.wallet_auth_url}/ftclaim/?user_id=${userId}&guild_id=${interaction.guildId}&hash=${embedMsg.hash}&sign=${sign}`);
+  button.setURL(`${config.wallet_auth_url}/ft/claim/?user_id=${userId}&guild_id=${interaction.guildId}&hash=${embedMsg.hash}&sign=${sign}`);
 
   interaction.reply({
     content:'\n',
