@@ -99,7 +99,7 @@ exports.getRaffleId = async () => {
   const current = await axios
     .get(`${config.paras.api}/raffle/current`)
     .then(res => {
-      return res.data.raffle._id;
+      return res.data._id;
     })
     .catch(error => {
       logger.error(error);
