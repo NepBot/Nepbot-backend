@@ -10,14 +10,15 @@ const data = new SlashCommandBuilder()
   .addStringOption(option => option.setName('account_id').setDescription('Input account id in paras.').setRequired(false));
 
 const execute = async interaction => {
-  const raffleId = await parasUtils.getRaffleId();
-  if (raffleId == null || raffleId == undefined) {
-    return await interaction.reply({
-      content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info on the upcoming raffle! :blue_heart:',
-      ephemeral: false,
-    });
-  }
-
+  // https://api-v2-mainnet.paras.id/raffle/642a95b00e4aa1138038e24b/leaderboards?__skip=0&__limit=10&raffle_type=silver&account_id=eeedo.near
+  // const raffleId = await parasUtils.getRaffleId();
+  // if (raffleId == null || raffleId == undefined) {
+  //   return await interaction.reply({
+  //     content:'The leaderboard will be available on the next raffle registration period. Stay tuned to Paras’ social media channels for more info on the upcoming raffle! :blue_heart:',
+  //     ephemeral: false,
+  //   });
+  // }
+  const raffleId = "642a95b00e4aa1138038e24b"
   let accountId = '';
   try {
     accountId = interaction.options.get('account_id').value;
