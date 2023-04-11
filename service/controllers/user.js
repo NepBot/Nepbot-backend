@@ -10,6 +10,7 @@ const userDisconnects = require('../../pkg/models/object/user_disconnects');
 const schedule = require('node-schedule');
 const { MessageEmbed } = require('discord.js');
 const { user } = require('../discord_bot');
+const config = require('../../pkg/utils/config');
 
 const embed = new MessageEmbed()
   .setColor('#0099ff')
