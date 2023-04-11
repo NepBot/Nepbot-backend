@@ -95,7 +95,22 @@ const disconnectAccount = async (ctx, next) => {
   catch (e) {
     logger.error(e);
   }
-  ctx.body = new Resp({});
+
+  const nonce = Date.now();
+  const signature = await nearUtils.getSign({
+    nonce: nonce,
+    user_id: args.user_id,
+    guild_id: args.guild_id,
+  });
+  await userInfos.addUser({
+    user_id: args.user_id,
+    guild_id: args.guild_id,
+    nonce: nonce,
+  });
+  const newUrl = `${config.wallet_auth_url}/verify/?user_id=${args.user_id}&guild_id=${args.guild_id}&sign=${signature}`
+  ctx.body = new Resp({
+    data: newUrl
+  });
 };
 
 module.exports = {
