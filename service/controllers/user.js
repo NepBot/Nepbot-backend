@@ -54,19 +54,31 @@ const setInfo = async (ctx, next) => {
 
 const disconnectAccount = async (ctx, next) => {
   const EXPIRED_DAY = 1; // days
-  const args = ctx.request.body;
+  const req = ctx.request.body;
+  const args = req.args;
   logger.info(`revice request by access 'api/disconnectAccount': ${JSON.stringify(args)}`);
   // verify user account
-  // verify user id
-  if (!await userUtils.verifyUserSign({ user_id: args.user_id, guild_id: args.guild_id }, args.sign)) {
-    logger.error('fn verifyUserId failed in api/disconnectAccount');
+  if (!await nearUtils.verifyAccountOwner(req.account_id, args, req.sign)) {
+    logger.error('fn verifyAccountOwner failed in api/setInfo');
     ctx.body = new Resp({
       code: 500,
-      message: 'fn verifyUserId failed in api/disconnectAccount',
+      message: 'fn verifyAccountOwner failed in api/getOwnerSign',
       success: false,
     });
     return;
   }
+
+  if (!await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id }, args.sign)) {
+    logger.error('fn verifyUserId failed in api/setInfo');
+    ctx.body = new Resp({
+      code: 500,
+      message: 'fn verifyUserId failed in api/getOwnerSign',
+      success: false,
+    });
+    return;
+  }
+
+  
 
   /**
    * when user disconnect, the data in database will save @EXPIRED_DAY days, the following code will create a schedule job to delete data after that days
