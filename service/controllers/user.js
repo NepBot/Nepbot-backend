@@ -68,16 +68,6 @@ const disconnectAccount = async (ctx, next) => {
     return;
   }
 
-  if (!await userUtils.verifyUserId({ user_id: args.user_id, guild_id: args.guild_id }, args.sign)) {
-    logger.error('fn verifyUserId failed in api/setInfo');
-    ctx.body = new Resp({
-      code: 500,
-      message: 'fn verifyUserId failed in api/getOwnerSign',
-      success: false,
-    });
-    return;
-  }
-
   
 
   /**
