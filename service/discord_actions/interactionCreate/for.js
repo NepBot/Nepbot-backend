@@ -9,9 +9,8 @@ const logger = require('../../../pkg/utils/logger');
 const execute = async interaction => {
   const fields = interaction.message.embeds[0].fields;
   let contractAddress, proposalId;
-  console.log(config.fields)
   for (const field of fields) {
-    if (config.fields.contract_addresss.findIndex(item => item == field.name) > -1) {
+    if (config.fields.contract_address.findIndex(item => item == field.name) > -1) {
       contractAddress = field.value;
     }
     else if (config.fields.proposal_id.findIndex(item => item == field.name) > -1) {
