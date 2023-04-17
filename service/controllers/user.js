@@ -110,9 +110,8 @@ const disconnectAccount = async (ctx, next) => {
     guild_id: args.guild_id,
     nonce: nonce,
   });
-  const newUrl = `${config.wallet_auth_url}/verify/?user_id=${args.user_id}&guild_id=${args.guild_id}&sign=${signature}`
   ctx.body = new Resp({
-    data: newUrl
+    data: signature
   });
 };
 
