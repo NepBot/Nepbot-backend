@@ -43,7 +43,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  button.setURL(`${config.wallet_auth_url}/createsnapshot/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&channel_id=${interaction.channelId}&contract_address=${contractAddress}&sign=${sign}`);
+  button.setURL(`${config.wallet_auth_url}/snapshot/create/?user_id=${interaction.user.id}&guild_id=${interaction.guildId}&channel_id=${interaction.channelId}&contract_address=${contractAddress}&sign=${sign}`);
   content.setDescription(`Click the button below to create a snapshot.\n
 	This link is only valid for 5 mins. If the link expires, please use the command again to get a new link.\n
   Please have a double check that you are going to create a snapshot for ${contractAddress}`);

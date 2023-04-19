@@ -27,7 +27,7 @@
     "contract":"sputnikv2.testnet"
   },
   "twitter":{
-    "callback_url": "http://13.214.203.20:8080/twitterverify"
+    "callback_url": "http://13.214.203.20:8080/twitter/verify"
   },
   "near_lake_config": {
     "s3BucketName": "near-lake-data-testnet",

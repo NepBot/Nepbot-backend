@@ -85,7 +85,7 @@ const execute = async interaction => {
     guild_id: interaction.guildId,
     nonce: nonce,
   });
-  send.setURL(`${config.wallet_auth_url}/ftairdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&token_contract=${tokenContract}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
+  send.setURL(`${config.wallet_auth_url}/ft/airdrop/?user_id=${userId}&channel_id=${interaction.channelId}&guild_id=${interaction.guildId}&role_id=${roleId}&token_contract=${tokenContract}&total_amount=${totalAmount}&amount_per_share=${amountPerShare}&end_time=${endTime}&sign=${sign}`);
 
   await interaction.reply({
     content:'\n',
