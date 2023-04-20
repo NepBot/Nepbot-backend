@@ -178,11 +178,25 @@ const sendSnapshotMsg = async (ctx, next) => {
   }
 };
 
+const getTotalServerCount = async (ctx, next) => {
+  const count = await discordUtils.getGuildCount()
+  ctx.body = new Resp({ data: count });
+}
+
+const getTotalVerifiedCount = async (ctx, next) => {
+  const count = await userInfos.getUserCount({
+    near_wallet_id: {$ne: null}
+  })
+  ctx.body = new Resp({ data: count });
+}
+
 module.exports = {
   'GET /api/getRole/:guildId': getRole,
   'GET /api/getServer/:guildId': getServer,
   'GET /api/getUser/:guildId/:userId/:sign': getUser,
   'GET /api/getConnectedAccount/:guildId/:userId': getConnectedAccount,
+  'GET /api/getTotalServerCount': getTotalServerCount,
+  'GET /api/getTotalVerifiedCount': getTotalVerifiedCount,
   'POST /api/airdrop/sendFTMsg': sendFTAirdropMsg,
   'POST /api/airdrop/sendNFTMsg': sendNFTAirdropMsg,
   'POST /api/snapshot/sendMsg': sendSnapshotMsg,
