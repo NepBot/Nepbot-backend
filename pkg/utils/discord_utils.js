@@ -15,6 +15,10 @@ exports.getGuild = async (guildId) => {
   return await client.guilds.fetch(guildId);
 };
 
+exports.getGuildCount = async () => {
+  return await client.guilds.cache.size
+}
+
 // this.getMember('966966468774350948', '912438768043196456').then(e => console.log(e.guild.id));
 
 exports.getRoles = async (guildId, roleId) => {

@@ -46,6 +46,13 @@ exports.getUsers = async (data) => {
     where:data,
   });
 };
+
+exports.getUserCount = async (data) => {
+  return await UserInfos.count({
+    where: data
+  })
+}
+
 exports.updateUser = async (data) => {
   if (!data.user_id) return { msg:'Missing parameters user_id', code:0 };
   const params = {
