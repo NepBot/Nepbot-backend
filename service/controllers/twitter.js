@@ -41,7 +41,7 @@ const callback = async (ctx, next) => {
       // const dcMsg = await discordUtils.getMessage(ruleMsg.guild_id, ruleMsg.channel_id, ruleMsg.message_id);
       const result = [{
         name:'Already in role',
-        value: `✅ You are already in this role ${roleName}.`
+        value: `✅ You are already in this role .`
       }]       //await twitterUtils.verifyRuleFromDB(loggedClient, ruleMsg, dcMsg);
       await twitterRulesMsg.delete({ twitter_state: state });
       return ctx.body = new Resp({ data: result });
