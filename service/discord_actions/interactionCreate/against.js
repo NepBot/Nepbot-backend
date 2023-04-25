@@ -23,7 +23,7 @@ const execute = async interaction => {
     user_id: userId,
   });
   // if the user doesn't connect to any near wallet, it will reply the following content.
-  if (!userInfo.near_wallet_id.trim()) {
+  if (!userInfo.near_wallet_id) {
     await interaction.reply({
       content:'You are not connected to any Near wallet.',
       ephemeral: true,
