@@ -19,7 +19,12 @@ async function init() {
   let txs = (await client.scan(0, "MATCH", key + "*"))[1]
   let minBlockHeight = 0
   for (let tx of txs) {
-    tx = JSON.parse(tx)
+    try {
+        tx = JSON.parse(tx)
+    } catch (e) {
+        continue
+    }
+    
     const signerId = tx.transaction.signer_id
     if (!txMap[signerId]) {
       txMap[signerId] = []
