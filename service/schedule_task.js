@@ -17,6 +17,7 @@ const { provider } = require('../pkg/utils/near_utils');
 const twitterTask = require('./schedule_tasks/twitter_task');
 const { startStream } = require('../pkg/utils/block_stream');
 const parasLoyaltyTask = require('./schedule_tasks/paras_loyalty_task');
+const redis = require("../pkg/utils/redis")
 
 
 let showLog = false
@@ -99,6 +100,7 @@ async function handleStreamerMessage(streamerMessage) {
 }
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {
+
   if (fromBlockHeight > 0) {
     showLog = true
     resolveNewBlock(fromBlockHeight);
@@ -111,8 +113,14 @@ module.exports.scheduleTask = async function(fromBlockHeight = 0) {
       parasLoyaltyTask.checkLevel();
       parasLoyaltyTask.checkStaking();
     });
+    let unresolvedBlockHeight = await redis.init()
     const newestBlock = await provider.block({ finality: 'optimistic' });
-    resolveNewBlock(newestBlock.header.height);
+    if (unresolvedBlockHeight != 0) {
+      unresolvedBlockHeight = Math.min(newestBlock.header.height, unresolvedBlockHeight)
+    } else {
+      unresolvedBlockHeight = newestBlock.header.height
+    }
+    resolveNewBlock(unresolvedBlockHeight);
   }
 };
 
