@@ -19,11 +19,11 @@ const { startStream } = require('../pkg/utils/block_stream');
 const parasLoyaltyTask = require('./schedule_tasks/paras_loyalty_task');
 
 
-const txMap = [];
 let showLog = false
 
 async function resolveShard(shard) {
   try {
+    let promises = []
     for (let receiptItem of shard.receipt_execution_outcomes) {
       const receipt = receiptItem.receipt
       let txs = await redis.getTxs(receipt.receipt.Action.signer_id)
