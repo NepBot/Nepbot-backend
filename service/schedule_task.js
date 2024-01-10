@@ -20,59 +20,55 @@ const parasLoyaltyTask = require('./schedule_tasks/paras_loyalty_task');
 
 
 const txMap = [];
-const signerPerBlock = [];
 let showLog = false
 
-const resolveChunk = async (chunkData) => {
-  if (!chunkData) {
-    return
-  }
+async function resolveShard(shard) {
   try {
-    const promises = [];
-    resolveTxs(chunkData.transactions)
-    
-    
-    promises.push(updateGuildTask(chunkData.receipts, txMap));
-    promises.push(tokenTask(chunkData.receipts, txMap));
-    promises.push(balanceTask(chunkData.receipts, txMap));
-    promises.push(octTask(chunkData.receipts, txMap));
-    promises.push(ntfTask(chunkData.receipts, txMap));
-    promises.push(parasTask(chunkData.receipts, txMap));
-    promises.push(astrodaoTask(chunkData.receipts, txMap));
-    //promises.push(h00kdTask(chunkData.receipts, txMap))
-    await Promise.all(promises);
-  }
-  catch (e) {
-    console.log(e)
-  }
-
-};
-
-async function resolveTxs(transactions) {
-  const blockSigners = [];
-  for (const tx of transactions) {
-    const signerId = tx.transaction.signer_id;
-    blockSigners.push(signerId);
-    if (!txMap[signerId]) {
-      txMap[signerId] = [];
+    for (let receiptItem of shard.receipt_execution_outcomes) {
+      const receipt = receiptItem.receipt
+      let txs = await redis.getTxs(receipt.receipt.Action.signer_id)
+      if (!txs || txs.length == 0) {
+          if (receipt.receipt.Action.signer_id != "system") {
+              console.log("empty txs for this signer", receipt.receipt.Action.signer_id, receipt.receipt_id)
+          }
+          txs = []
+      }
+      let tx
+      let outcome
+      for (let t of txs) {
+          const index = t.outcome.execution_outcome.outcome.receipt_ids.findIndex(receiptId => receiptId == receipt.receipt_id)
+          if (index > -1) {
+              tx = t
+              outcome = receiptItem.execution_outcome
+              t.outcome.execution_outcome.outcome.receipt_ids = t.outcome.execution_outcome.outcome.receipt_ids.filter(receiptId => receiptId != receipt.receipt_id).concat(outcome.outcome.receipt_ids)
+              if (t.outcome.execution_outcome.outcome.receipt_ids.length <= 0) {
+                  redis.delTx(receipt.receipt.Action.signer_id, tx)
+              } else {
+                  redis.setTx(receipt.receipt.Action.signer_id, tx)
+              }
+              break
+          }
+      }
     }
-    txMap[signerId].push(tx.transaction);
+
+    promises.push(updateGuildTask(shard.chunk.receipts));
+    promises.push(tokenTask(shard.chunk.receipts));
+    promises.push(balanceTask(shard.chunk.receipts));
+    promises.push(octTask(shard.chunk.receipts));
+    promises.push(ntfTask(shard.chunk.receipts, shard.receipt_execution_outcomes));
+    promises.push(parasTask(shard.chunk.receipts, shard.receipt_execution_outcomes));
+    promises.push(astrodaoTask(shard.chunk.receipts));
+    await Promise.all(promises);
+  } catch (e) {
+      console.log(e)
   }
-  signerPerBlock.push(blockSigners);
 }
 
-function clearTxs(blockCount = 20) {
-  if (signerPerBlock.length >= blockCount) {
-      signerPerBlock.splice(0, signerPerBlock.length - blockCount);
-  }
-  for (const signerId in txMap) {
-      const index = signerPerBlock.findIndex(ids => {
-          return ids.findIndex(id => id == signerId) > -1;
-      });
-
-      if (index == -1) {
-          delete txMap[signerId];
-      }
+function resolveTxs(transactions, blockHeight) {
+  for (const tx of transactions) {
+      tx.blockHeight = blockHeight
+      const signerId = tx.transaction.signer_id;
+      redis.setTx(signerId, tx)
   }
 }
 
@@ -93,13 +89,13 @@ async function handleStreamerMessage(streamerMessage) {
 
   const promises = [];
   for (const shard of streamerMessage.shards) {
-    if (shard.chunk) {
-      resolveTxs(shard.chunk.transactions)
-      promises.push(resolveChunk(shard.chunk));
-    }
+      if (shard.chunk && shard.receipt_execution_outcomes) {
+          resolveTxs(shard.chunk.transactions, streamerMessage.block.header.height)
+          promises.push(resolveShard(shard, streamerMessage.block));
+      }
+
   }
-  await Promise.all(promises);
-  clearTxs()
+  await Promise.allSettled(promises);
 }
 
 module.exports.scheduleTask = async function(fromBlockHeight = 0) {

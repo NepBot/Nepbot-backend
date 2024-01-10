@@ -5,7 +5,7 @@ const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const BN = require('bn.js');
 
-const nft_task = async function(receipts, txMap) {
+const nft_task = async function(receipts, receiptOutcomes) {
   const allFieldList = await userFields.getUserFields({
     key: 'nft_contract_id',
   });
@@ -13,7 +13,7 @@ const nft_task = async function(receipts, txMap) {
   for (const field of allFieldList) {
     allContractList.push(field.value);
   }
-  const actions = await contractUtils.filterNftActions(allContractList, receipts, txMap);
+  const actions = await contractUtils.filterNftActions(allContractList, receipts, receiptOutcomes);
   const accountIdList = [];
   const contractList = [];
   for (const action of actions) {
