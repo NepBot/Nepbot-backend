@@ -106,7 +106,8 @@ async function parseEvents(receiptOutcomes, eventType) {
   //   }
   // }
   let ret = []
-  for (let outcome of receiptOutcomes) {
+  for (let receiptOutcome of receiptOutcomes) {
+    const outcome = receiptOutcome.execution_outcome
     const events = outcome.outcome.logs.filter(log => {
       try {
         const logObj = JSON.parse(log.replace("EVENT_JSON:", ""))
