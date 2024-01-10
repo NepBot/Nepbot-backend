@@ -92,21 +92,21 @@ exports.getCollectionsByGuild = async (guildId) => {
   }
 };
 
-async function parseEvents(receipt, txMap, eventType) {
-  let txDigests = txMap[receipt.receipt.Action.signer_id]
-  if (!txDigests || txDigests.length == 0) {
-    console.log(receipt)
-    return []
-  }
-  let tx = {}
-  for (let txDigest of txDigests) {
-    tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
-    if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
-      break
-    }
-  }
+async function parseEvents(receiptOutcomes, eventType) {
+  // let txDigests = txMap[receipt.receipt.Action.signer_id]
+  // if (!txDigests || txDigests.length == 0) {
+  //   console.log(receipt)
+  //   return []
+  // }
+  // let tx = {}
+  // for (let txDigest of txDigests) {
+  //   tx = await provider.txStatus(txDigest.hash, txDigest.signer_id)
+  //   if (tx.transaction_outcome.outcome.receipt_ids.findIndex(receipt_id => receipt_id == receipt.receipt_id) > -1) {
+  //     break
+  //   }
+  // }
   let ret = []
-  for (let outcome of tx.receipts_outcome) {
+  for (let outcome of receiptOutcomes) {
     const events = outcome.outcome.logs.filter(log => {
       try {
         const logObj = JSON.parse(log.replace("EVENT_JSON:", ""))
@@ -202,12 +202,12 @@ exports.filterTransferActions = (accountIds, receipts) => {
   return ret;
 };
 
-exports.filterNftActions = async (contractIds, receipts, txMap) => {
+exports.filterNftActions = async (contractIds, receipts, receiptOutcomes) => {
   const ret = [];
   const eventMap = {}
   receipts = receipts.filter(item => item.receipt.Action && contractIds.findIndex(contractId => contractId == item.receiver_id) > -1);
   for (receipt of receipts) {
-    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    const events = await parseEvents(receiptOutcomes, "nft_transfer")
     for (let event of events) {
       for (let item of event.data) {
         const obj = {};
@@ -234,11 +234,11 @@ exports.filterNftActions = async (contractIds, receipts, txMap) => {
   return ret;
 };
 
-exports.filterParasActions = async (receipts, txMap) => {
+exports.filterParasActions = async (receipts, receiptOutcomes) => {
   const ret = [];
   receipts = receipts.filter(item => item.receipt.Action && item.receiver_id == config.paras.nft_contract);
   for (receipt of receipts) {
-    const events = await parseEvents(receipt, txMap, "nft_transfer")
+    const events = await parseEvents(receiptOutcomes, "nft_transfer")
     for (let event of events) {
       for (let item of event.data) {
         for (let token_id of item.token_ids) {
