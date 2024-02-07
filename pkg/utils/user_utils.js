@@ -250,7 +250,7 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
       octRoles.push((await contractUtils.getOct2Role(walletId)))
     } catch (e) {}
 
-    if (octRoles.includes(ule.fields.oct_role)) {
+    if (octRoles.includes(rule.fields.oct_role)) {
       logger.debug(`satisfy the {appchain_id} rule walletId: ${walletId}`);
       return true;
     } else {
