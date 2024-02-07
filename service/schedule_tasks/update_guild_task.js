@@ -30,17 +30,17 @@ const update_guild_task = async (receipts) => {
             await guildMember.roles.add(ruleFromAction.role_id).then(logger.info(`${guildMember.user.username} add role_id ${ruleFromAction.role_id} in update_guild_task`)).catch(e => logger.error(e));
             logger.debug(`${user.user_id} add role & addUserFields`);
           }
-          await userFields.addUserField ({
-            near_wallet_id: user.near_wallet_id,
-            key: ruleFromAction.key_field[0],
-            value: ruleFromAction.key_field[1],
-          });
         }
         catch (e) {
           console.log(e)
           logger.error(e);
           continue;
         }
+        await userFields.addUserField ({
+          near_wallet_id: user.near_wallet_id,
+          key: ruleFromAction.key_field[0],
+          value: ruleFromAction.key_field[1],
+        });
       }
     }
 

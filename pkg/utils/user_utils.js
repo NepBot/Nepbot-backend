@@ -242,9 +242,15 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     }
   }
   else if (rule.key_field[0] == 'appchain_id') {
-    const octRole = await contractUtils.getOctAppchainRole(rule.key_field[1], walletId);
-    const oct2Role = await contractUtils.getOct2Role(walletId);
-    if (octRole == rule.fields.oct_role || oct2Role == rule.fields.oct_role) {
+    const octRoles = []
+    try {
+      octRoles.push((await contractUtils.getOctAppchainRole(rule.key_field[1], walletId)))
+    } catch (e) {}
+    try {
+      octRoles.push((await contractUtils.getOct2Role(walletId)))
+    } catch (e) {}
+
+    if (octRoles.includes(ule.fields.oct_role)) {
       logger.debug(`satisfy the {appchain_id} rule walletId: ${walletId}`);
       return true;
     } else {
