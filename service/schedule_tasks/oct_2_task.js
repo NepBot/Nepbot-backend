@@ -5,17 +5,21 @@ const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const oct_task = async function(receipts) {
   const actions = contractUtils.filterOct2Actions(receipts);
+  if (actions.length > 0) {
+    console.log("=============================")
+    console.log(actions)
+  }
   const accountIdList = [];
   for (const action of actions) {
     accountIdList.push(action.signer_id);
   }
-
   const _userFields = await userFields.getUserFields({
     key: 'appchain_id',
     near_wallet_id: {
       $in: accountIdList,
     },
   });
+  console.log(_userFields)
 
   for (const _userField of _userFields) {
     const octRole = await contractUtils.getOct2Role(_userField.near_wallet_id);
