@@ -5,10 +5,6 @@ const userFields = require('../../pkg/models/object/user_fields');
 const userInfos = require('../../pkg/models/object/user_infos');
 const oct_task = async function(receipts) {
   const actions = contractUtils.filterOct2Actions(receipts);
-  if (actions.length > 0) {
-    console.log("=============================")
-    console.log(actions)
-  }
   const accountIdList = [];
   for (const action of actions) {
     accountIdList.push(action.signer_id);
