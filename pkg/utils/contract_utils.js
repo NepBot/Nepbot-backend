@@ -73,9 +73,8 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
 
 exports.getOct2Role = async (account_id) => {
   const account = await this.contract()
-  const validator = await account.viewFunction(config.oct_contract_2, 'get_delegator_detail', {delegator_id: account_id})
-  const delegator = await account.viewFunction(config.oct_contract_2, 'get_validator_detail', {validator_id: account_id})
-  console.log(validator, delegator)
+  const validator = await account.viewFunction(config.oct_contract_2, 'get_validator_detail', {validator_id: account_id})
+  const delegator = await account.viewFunction(config.oct_contract_2, 'get_delegator_detail', {delegator_id: account_id})
   if (validator) {
     return 'validator';
   } else if (delegator) {

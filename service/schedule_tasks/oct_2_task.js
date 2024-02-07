@@ -21,7 +21,6 @@ const oct_task = async function(receipts) {
     const octRole = await contractUtils.getOct2Role(_userField.near_wallet_id);
     const rolesByField = await contractUtils.getRulesByField('appchain_id', _userField.value);
     const guild_ids = [];
-    console.log("=======================", octRole, rolesByField)
     rolesByField.forEach(item => {
       guild_ids.push(item.guild_id);
     });
