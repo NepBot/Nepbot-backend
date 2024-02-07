@@ -245,10 +245,10 @@ exports.isMemberSatisfyRule = async (walletId, rule) => {
     const octRoles = []
     try {
       octRoles.push((await contractUtils.getOctAppchainRole(rule.key_field[1], walletId)))
-    } catch (e) {}
+    } catch (e) {console.log(e)}
     try {
       octRoles.push((await contractUtils.getOct2Role(walletId)))
-    } catch (e) {}
+    } catch (e) {console.log(e)}
 
     if (octRoles.includes(rule.fields.oct_role)) {
       logger.debug(`satisfy the {appchain_id} rule walletId: ${walletId}`);
