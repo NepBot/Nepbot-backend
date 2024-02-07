@@ -15,7 +15,10 @@ const oct_task = async function(receipts) {
       $in: accountIdList,
     },
   });
-  console.log(_userFields)
+  if (actions.length > 0) {
+    console.log(_userFields)
+  }
+  
 
   for (const _userField of _userFields) {
     const octRole = await contractUtils.getOct2Role(_userField.near_wallet_id);
