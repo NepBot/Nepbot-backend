@@ -1,5 +1,6 @@
 'use strict';
-let txMap = {}
+let txHashMap = {}
+let txReceiptMap = {}
 const key = "txs"
 let Redis = require('ioredis');
 let client = new Redis({
@@ -21,15 +22,10 @@ async function init() {
   for (let tx of txs) {
     try {
         tx = JSON.parse(tx)
-    } catch (e) {
-        continue
+    }catch (e){
+      continue
     }
-    
-    const signerId = tx.transaction.signer_id
-    if (!txMap[signerId]) {
-      txMap[signerId] = []
-    }
-    txMap[signerId].push(tx)
+    setTx(tx, true)
     if (minBlockHeight == 0) {
       minBlockHeight = tx.blockHeight
     }
@@ -40,37 +36,37 @@ async function init() {
   return minBlockHeight
 }
 
-function getTxs(signerId) {
-  return txMap[signerId]
+function getTxByReceipt(receiptId) {
+  let txHash = txReceiptMap[receiptId]
+  delete txReceiptMap[receiptId]
+  return txHashMap[txHash]
 }
 
-function delTx(signerId, tx) {
-  const index = txMap[signerId].findIndex(t => t.transaction.hash == tx.transaction.hash)
-  if (index > -1) {
-    delete txMap[signerId][index]
-    txMap[signerId].splice(index, 1)
-  }
-  client.del(`${key}:${signerId}${tx.transaction.hash}`)
+function delReceipt(receiptId) {
+  delete txReceiptMap[receiptId]
 }
 
-function setTx(signerId, tx) {
-  if (!txMap[signerId]) {
-    txMap[signerId] = []
+function delTx(tx) {
+  delete txHashMap[tx]
+  client.del(`${key}:${tx.transaction.hash}`)
+}
+
+function setTx(tx, init = false) {
+  let found = txHashMap[tx.transaction.hash] ? true : false
+  txHashMap[tx.transaction.hash] = tx
+  for (let receiptId of tx.outcome.execution_outcome.outcome.receipt_ids) {
+    txReceiptMap[receiptId] = tx.transaction.hash
   }
-  
-  const index = txMap[signerId].findIndex(t => t.transaction.hash == tx.transaction.hash)
-  if (index > -1) {
-    txMap[signerId][index] = tx
-  } else {
-    txMap[signerId].push(tx)
-    client.set(`${key}:${signerId}${tx.transaction.hash}`, JSON.stringify(tx))
+  if (!init && !found) {
+    client.set(`${key}:${tx.transaction.hash}`, JSON.stringify(tx))
+    client.expire(`${key}:${tx.transaction.hash}`, 60 * 60 * 24)
   }
-  client.expire(signerId, 60 * 60 * 24)
 }
 
 module.exports = {
   init,
   setTx,
-  getTxs,
+  getTxByReceipt,
+  delReceipt,
   delTx
 }

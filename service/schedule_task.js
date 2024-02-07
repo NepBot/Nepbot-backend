@@ -28,28 +28,18 @@ async function resolveShard(shard) {
     let promises = []
     for (let receiptItem of shard.receipt_execution_outcomes) {
       const receipt = receiptItem.receipt
-      let txs = await redis.getTxs(receipt.receipt.Action.signer_id)
-      if (!txs || txs.length == 0) {
-          if (receipt.receipt.Action.signer_id != "system") {
-              console.log("empty txs for this signer", receipt.receipt.Action.signer_id, receipt.receipt_id)
-          }
-          txs = []
+      let receiptId = receipt.receipt_id
+      let tx = redis.getTxByReceipt(receiptId)
+      if (!tx) {
+          console.log("tx not found for ", receiptId)
+          continue
       }
-      let tx
-      let outcome
-      for (let t of txs) {
-          const index = t.outcome.execution_outcome.outcome.receipt_ids.findIndex(receiptId => receiptId == receipt.receipt_id)
-          if (index > -1) {
-              tx = t
-              outcome = receiptItem.execution_outcome
-              t.outcome.execution_outcome.outcome.receipt_ids = t.outcome.execution_outcome.outcome.receipt_ids.filter(receiptId => receiptId != receipt.receipt_id).concat(outcome.outcome.receipt_ids)
-              if (t.outcome.execution_outcome.outcome.receipt_ids.length <= 0) {
-                  redis.delTx(receipt.receipt.Action.signer_id, tx)
-              } else {
-                  redis.setTx(receipt.receipt.Action.signer_id, tx)
-              }
-              break
-          }
+      let outcome = receiptItem.execution_outcome
+      tx.outcome.execution_outcome.outcome.receipt_ids = tx.outcome.execution_outcome.outcome.receipt_ids.filter(receiptId => receiptId != receipt.receipt_id).concat(outcome.outcome.receipt_ids)
+      if (tx.outcome.execution_outcome.outcome.receipt_ids.length <= 0) {
+          redis.delTx(tx)
+      } else {
+          redis.setTx(tx)
       }
     }
 
@@ -70,8 +60,7 @@ async function resolveShard(shard) {
 function resolveTxs(transactions, blockHeight) {
   for (const tx of transactions) {
       tx.blockHeight = blockHeight
-      const signerId = tx.transaction.signer_id;
-      redis.setTx(signerId, tx)
+      redis.setTx(tx)
   }
 }
 
