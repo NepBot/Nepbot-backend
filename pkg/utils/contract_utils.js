@@ -216,9 +216,6 @@ exports.filterRoleActions = (receipts) => {
       ret.push(obj);
     }
   }
-  if (ret.length > 0) {
-    console.log("update_guild_tasks", ret)
-  }
   return ret;
 };
 

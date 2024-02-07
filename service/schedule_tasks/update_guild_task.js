@@ -37,6 +37,7 @@ const update_guild_task = async (receipts) => {
           });
         }
         catch (e) {
+          console.log(e)
           logger.error(e);
           continue;
         }
