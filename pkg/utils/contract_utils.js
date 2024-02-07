@@ -71,6 +71,17 @@ exports.getOctAppchainRole = async (appchain_id, account_id) => {
   }
 };
 
+exports.getOct2Role = async (account_id) => {
+  const account = await this.contract()
+  const validator = await account.viewFunction(config.oct_contract_2, 'get_delegator_detail', {delegator_id: account_id})
+  const delegator = await account.viewFunction(config.oct_contract_2, 'get_validator_detail', {validator_id: account_id})
+  if (validator) {
+    return 'validator';
+  } else if (delegator) {
+    return 'delegator'
+  }
+}
+
 exports.getCollectionSeries = async (collectionId) => {
   try {
     const account = await this.contract();
@@ -160,6 +171,27 @@ exports.filterOctActions = (receipts) => {
       const obj = {};
       const args = JSON.parse(Buffer.from(action.FunctionCall.args, 'base64').toString());
       obj.appchain_id = args.appchain_id;
+      obj.signer_id = receipt.receipt.Action.signer_id;
+      ret.push(obj);
+    }
+  }
+  return ret;
+};
+
+exports.filterOct2Actions = (receipts) => {
+  const ret = [];
+  receipts = receipts.filter(item => 
+    item.receipt.Action && item.receiver_id == config.oct_contract_2
+  ).map(item => {
+    item.receipt.Action.actions = item.receipt.Action.actions.filter(action => 
+      action.FunctionCall.method_name == 'delegate' ||
+      action.FunctionCall.method_name == 'undelegate'
+    )
+    return item
+  })
+  for (receipt of receipts) {
+    for (action of receipt.receipt.Action.actions) {
+      const obj = {};
       obj.signer_id = receipt.receipt.Action.signer_id;
       ret.push(obj);
     }

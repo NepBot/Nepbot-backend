@@ -9,6 +9,7 @@ const userUtils = require('../pkg/utils/user_utils');
 const balanceTask = require('./schedule_tasks/balance_task');
 const ntfTask = require('./schedule_tasks/nft_task');
 const octTask = require('./schedule_tasks/oct_task');
+const oct2Task = require('./schedule_tasks/oct_2_task')
 const parasTask = require('./schedule_tasks/paras_task');
 const tokenTask = require('./schedule_tasks/token_task');
 const updateGuildTask = require('./schedule_tasks/update_guild_task');
@@ -56,6 +57,7 @@ async function resolveShard(shard) {
     promises.push(tokenTask(shard.chunk.receipts));
     promises.push(balanceTask(shard.chunk.receipts));
     promises.push(octTask(shard.chunk.receipts));
+    promises.push(oct2Task(shard.chunk.receipts));
     promises.push(ntfTask(shard.chunk.receipts, shard.receipt_execution_outcomes));
     promises.push(parasTask(shard.chunk.receipts, shard.receipt_execution_outcomes));
     promises.push(astrodaoTask(shard.chunk.receipts));
